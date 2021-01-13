@@ -1,5 +1,7 @@
 # ARfx-Home-Studio
 
+This is a monorepo. Pleae consult packages for different project areas.
+
 ## Design
 https://www.figma.com/file/2d9z2olAvgUSR5OoeiJhHo/ARfx-Home-Studio-Wireframe
 
