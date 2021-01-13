@@ -1,0 +1,21 @@
+{
+  "name": "arfx-home-studio",
+  "version": "0.0.1",
+  "private": true,
+  "description": "## Design https://www.figma.com/file/2d9z2olAvgUSR5OoeiJhHo/ARfx-Home-Studio-Wireframe",
+  "main": "index.js",
+  "workspaces":["packages/*"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/The-Metaverse-Construction-Company/ARfx-Home-Studio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/The-Metaverse-Construction-Company/ARfx-Home-Studio/issues"
+  },
+  "homepage": "https://github.com/The-Metaverse-Construction-Company/ARfx-Home-Studio#readme"
+}
