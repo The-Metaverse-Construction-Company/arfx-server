@@ -13,8 +13,7 @@ Database will be **Cosmos DB**
 React front-ends and Node.js backend will be hosted on Azure
 
 ### Back end
-Express + Feathers.js (really nice framework with hooks, like Sails.js)
-Feathers-Mongoose with Cosmos DB MongoDB Connector
+Express + MongoDB + Mongoose (will be deployed to CosmosDB)
 
 ### Front End
 React + Material UI
