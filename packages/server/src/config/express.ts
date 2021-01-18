@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express'
+import routes from '../api/routes/v1'
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const compress = require('compression');
@@ -6,7 +7,6 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
-const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 const strategies = require('./passport');
 const error = require('../api/middlewares/error');
@@ -16,7 +16,6 @@ const error = require('../api/middlewares/error');
 * @public
 */
 const app = express();
-
 // request logging. dev: console | production: file
 app.use(morgan(logs));
 

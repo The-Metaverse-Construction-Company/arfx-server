@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const httpStatus = require('http-status');
+import mongoose from 'mongoose'
+import httpStatus from 'http-status'
+import bcrypt from 'bcryptjs'
+import moment from 'moment-timezone'
+import jwt from 'jwt-simple'
+import {v4 as uuidv4} from 'uuid'
 const { omitBy, isNil } = require('lodash');
-const bcrypt = require('bcryptjs');
-const moment = require('moment-timezone');
-const jwt = require('jwt-simple');
-const uuidv4 = require('uuid/v4');
 const APIError = require('../utils/APIError');
 const { env, jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 
@@ -18,13 +18,42 @@ const roles = ['user', 'admin'];
  * @private
  */
 const userSchema = new mongoose.Schema({
-  email: {
+  _id: {
     type: String,
-    match: /^\S+@\S+\.\S+$/,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
+    default: ''
+  },
+  email: {
+    value: {
+      type: String,
+      match: /^\S+@\S+\.\S+$/,
+      required: true,
+      // unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false
+    },
+    verifiedAt: {
+      type: Number,
+      default: 0
+    }
+  },
+  mobileNumber: {
+    value: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false
+    },
+    verifiedAt: {
+      type: Number,
+      default: 0
+    }
   },
   password: {
     type: String,
@@ -47,12 +76,18 @@ const userSchema = new mongoose.Schema({
     enum: roles,
     default: 'user',
   },
-  picture: {
+  avatarUrl: {
     type: String,
     trim: true,
   },
-}, {
-  timestamps: true,
+  updatedAt: {
+    type: Number,
+    default: 0
+  },
+  createdAt: {
+    type: Number,
+    default: 0
+  },
 });
 
 /**
@@ -61,36 +96,25 @@ const userSchema = new mongoose.Schema({
  * - validations
  * - virtuals
  */
-userSchema.pre('save', async function save(next) {
-  try {
-    if (!this.isModified('password')) return next();
+// userSchema.pre('save', async function save(next) {
+//   try {
+//     if (!this.isModified('password')) return next();
 
-    const rounds = env === 'test' ? 1 : 10;
+//     const rounds = env === 'test' ? 1 : 10;
 
-    const hash = await bcrypt.hash(this.password, rounds);
-    this.password = hash;
+//     const hash = await bcrypt.hash(this.password, rounds);
+//     this.password = hash;
 
-    return next();
-  } catch (error) {
-    return next(error);
-  }
-});
+//     return next();
+//   } catch (error) {
+//     return next(error);
+//   }
+// });
 
 /**
  * Methods
  */
 userSchema.method({
-  transform() {
-    const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
-
-    fields.forEach((field) => {
-      transformed[field] = this[field];
-    });
-
-    return transformed;
-  },
-
   token() {
     const playload = {
       exp: moment().add(jwtExpirationInterval, 'minutes').unix(),
@@ -101,6 +125,7 @@ userSchema.method({
   },
 
   async passwordMatches(password) {
+    //@ts-expect-error
     return bcrypt.compare(password, this.password);
   },
 });
@@ -109,9 +134,6 @@ userSchema.method({
  * Statics
  */
 userSchema.statics = {
-
-  roles,
-
   /**
    * Get user
    *
@@ -149,12 +171,14 @@ userSchema.statics = {
     if (!email) throw new APIError({ message: 'An email is required to generate a token' });
 
     const user = await this.findOne({ email }).exec();
-    const err = {
+    const err = <any>{
       status: httpStatus.UNAUTHORIZED,
       isPublic: true,
     };
     if (password) {
+        //@ts-expect-error
       if (user && await user.passwordMatches(password)) {
+        //@ts-expect-error
         return { user, accessToken: user.token() };
       }
       err.message = 'Incorrect email or password';
@@ -162,6 +186,7 @@ userSchema.statics = {
       if (moment(refreshObject.expires).isBefore()) {
         err.message = 'Invalid refresh token.';
       } else {
+        //@ts-expect-error
         return { user, accessToken: user.token() };
       }
     } else {
@@ -181,7 +206,6 @@ userSchema.statics = {
     page = 1, perPage = 30, name, email, role,
   }) {
     const options = omitBy({ name, email, role }, isNil);
-
     return this.find(options)
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
@@ -189,37 +213,16 @@ userSchema.statics = {
       .exec();
   },
 
-  /**
-   * Return new validation error
-   * if error is a mongoose duplicate key error
-   *
-   * @param {Error} error
-   * @returns {Error|APIError}
-   */
-  checkDuplicateEmail(error) {
-    if (error.name === 'MongoError' && error.code === 11000) {
-      return new APIError({
-        message: 'Validation Error',
-        errors: [{
-          field: 'email',
-          location: 'body',
-          messages: ['"email" already exists'],
-        }],
-        status: httpStatus.CONFLICT,
-        isPublic: true,
-        stack: error.stack,
-      });
-    }
-    return error;
-  },
-
   async oAuthLogin({
     service, id, email, name, picture,
   }) {
     const user = await this.findOne({ $or: [{ [`services.${service}`]: id }, { email }] });
     if (user) {
+        //@ts-expect-error
       user.services[service] = id;
+      //@ts-expect-error
       if (!user.name) user.name = name;
+      //@ts-expect-error
       if (!user.picture) user.picture = picture;
       return user.save();
     }
@@ -233,4 +236,4 @@ userSchema.statics = {
 /**
  * @typedef User
  */
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

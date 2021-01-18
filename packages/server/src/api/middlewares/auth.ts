@@ -1,13 +1,15 @@
-const httpStatus = require('http-status');
-const passport = require('passport');
-const User = require('../models/user.model');
-const APIError = require('../utils/APIError');
+import httpStatus from 'http-status'
+import passport from 'passport'
+import APIError from '../utils/APIError'
+import {
+  Request, Response, NextFunction
+} from 'express'
+export const ADMIN = 'admin';
+export const LOGGED_USER = '_loggedUser';
 
-const ADMIN = 'admin';
-const LOGGED_USER = '_loggedUser';
-
-const handleJWT = (req, res, next, roles) => async (err, user, info) => {
+const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err, user, info) => {
   const error = err || info;
+  //@ts-expect-error
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({
     message: error ? error.message : 'Unauthorized',
@@ -40,15 +42,12 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
 
   return next();
 };
-
-exports.ADMIN = ADMIN;
-exports.LOGGED_USER = LOGGED_USER;
-
-exports.authorize = (roles = User.roles) => (req, res, next) =>
+//@ts-expect-error
+export const authorize = (roles = User.roles) => (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
     'jwt', { session: false },
     handleJWT(req, res, next, roles),
   )(req, res, next);
 
-exports.oAuth = service =>
+export const oAuth = service =>
   passport.authenticate(service, { session: false });

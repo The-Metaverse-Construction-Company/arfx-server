@@ -1,18 +1,23 @@
-const httpStatus = require('http-status');
+import httpStatus from 'http-status'
+import {
+  Response, Request, NextFunction
+} from 'express'
+import {UserSignUp} from '../services/users'
 const User = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 const PasswordResetToken = require('../models/passwordResetToken.model');
 const moment = require('moment-timezone');
 const { jwtExpirationInterval } = require('../../config/vars');
-const { omit } = require('lodash');
+
 const APIError = require('../utils/APIError');
 const emailProvider = require('../services/emails/emailProvider');
+const { ALLOWED_USER_ROLE } = require('../entities/users/constants');
 
 /**
  * Returns a formated object with tokens
  * @private
  */
-function generateTokenResponse(user, accessToken) {
+function generateTokenResponse(user: any, accessToken: string) {
   const tokenType = 'Bearer';
   const refreshToken = RefreshToken.generate(user).token;
   const expiresIn = moment().add(jwtExpirationInterval, 'minutes');
@@ -28,14 +33,19 @@ function generateTokenResponse(user, accessToken) {
  * Returns jwt token if registration was successful
  * @public
  */
-exports.register = async (req, res, next) => {
+exports.register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userData = omit(req.body, 'role');
-    const user = await new User(userData).save();
-    const userTransformed = user.transform();
-    const token = generateTokenResponse(user, user.token());
+    // const userData = omit(req.body, 'role');
+    const newUser = await new UserSignUp()
+      .signIn({
+        ...req.body,
+        role: ALLOWED_USER_ROLE.USER
+      })
+    // const token = generateTokenResponse(user, user.token());
     res.status(httpStatus.CREATED);
-    return res.json({ token, user: userTransformed });
+    delete newUser.password
+    return res.json({ user: newUser });
+    // return res.json({ token, user: newUser });
   } catch (error) {
     return next(User.checkDuplicateEmail(error));
   }
@@ -45,7 +55,7 @@ exports.register = async (req, res, next) => {
  * Returns jwt token if valid username and password is provided
  * @public
  */
-exports.login = async (req, res, next) => {
+exports.login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
     const token = generateTokenResponse(user, accessToken);
@@ -61,11 +71,13 @@ exports.login = async (req, res, next) => {
  * Returns jwt token
  * @public
  */
-exports.oAuth = async (req, res, next) => {
+exports.oAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user } = req;
+    //@ts-expect-error
     const accessToken = user.token();
     const token = generateTokenResponse(user, accessToken);
+    //@ts-expect-error
     const userTransformed = user.transform();
     return res.json({ token, user: userTransformed });
   } catch (error) {
@@ -77,7 +89,7 @@ exports.oAuth = async (req, res, next) => {
  * Returns a new jwt when given a valid refresh token
  * @public
  */
-exports.refresh = async (req, res, next) => {
+exports.refresh = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, refreshToken } = req.body;
     const refreshObject = await RefreshToken.findOneAndRemove({
@@ -92,7 +104,7 @@ exports.refresh = async (req, res, next) => {
   }
 };
 
-exports.sendPasswordReset = async (req, res, next) => {
+exports.sendPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email }).exec();
@@ -112,7 +124,7 @@ exports.sendPasswordReset = async (req, res, next) => {
   }
 };
 
-exports.resetPassword = async (req, res, next) => {
+exports.resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password, resetToken } = req.body;
     const resetTokenObject = await PasswordResetToken.findOneAndRemove({
@@ -125,11 +137,11 @@ exports.resetPassword = async (req, res, next) => {
       isPublic: true,
     };
     if (!resetTokenObject) {
-      err.message = 'Cannot find matching reset token';
+      // err.message = 'Cannot find matching reset token';
       throw new APIError(err);
     }
     if (moment().isAfter(resetTokenObject.expires)) {
-      err.message = 'Reset token is expired';
+      // err.message = 'Reset token is expired';
       throw new APIError(err);
     }
 

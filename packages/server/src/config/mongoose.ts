@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 const logger = require('./../config/logger');
 const { mongo, env } = require('./vars');
 
 // set mongoose Promise to Bluebird
+//@ts-expect-error
 mongoose.Promise = Promise;
 
 // Exit application on error
@@ -22,15 +23,17 @@ if (env === 'development') {
  * @returns {object} Mongoose connection
  * @public
  */
-exports.connect = () => {
-  mongoose
-    .connect(mongo.uri, {
-      useCreateIndex: true,
-      keepAlive: 1,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-    })
-    .then(() => console.log('mongoDB connected...'));
-  return mongoose.connection;
-};
+export default {
+  connect: () => {
+    mongoose
+      .connect(mongo.uri, {
+        useCreateIndex: true,
+        keepAlive: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      })
+      .then(() => console.log('mongoDB connected...'));
+    return mongoose.connection;
+  }
+}

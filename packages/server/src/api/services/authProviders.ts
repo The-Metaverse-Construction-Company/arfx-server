@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-const axios = require('axios');
+import axios from 'axios'
 
-exports.facebook = async (access_token) => {
+export const facebook = async (access_token: string) => {
   const fields = 'id, name, email, picture';
   const url = 'https://graph.facebook.com/me';
   const params = { access_token, fields };
@@ -18,7 +18,7 @@ exports.facebook = async (access_token) => {
   };
 };
 
-exports.google = async (access_token) => {
+export const google = async (access_token: string) => {
   const url = 'https://www.googleapis.com/oauth2/v3/userinfo';
   const params = { access_token };
   const response = await axios.get(url, { params });

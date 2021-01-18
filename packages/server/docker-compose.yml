@@ -13,5 +13,7 @@ services:
 
   mongodb:
     image: mongo
+    logging:
+      driver: "none"
     ports:
       - "27017:27017"

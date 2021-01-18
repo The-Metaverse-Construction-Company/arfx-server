@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi'
 const User = require('../models/user.model');
 
 module.exports = {

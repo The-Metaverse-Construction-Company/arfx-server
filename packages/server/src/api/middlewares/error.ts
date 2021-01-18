@@ -1,7 +1,7 @@
-const httpStatus = require('http-status');
-const expressValidation = require('express-validation');
-const APIError = require('../utils/APIError');
-const { env } = require('../../config/vars');
+import httpStatus from 'http-status'
+import expressValidation from 'express-validation'
+import APIError from '../utils/APIError'
+import { env } from '../../config/vars'
 
 /**
  * Error handler. Send stacktrace only during development
