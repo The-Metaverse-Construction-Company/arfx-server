@@ -1,9 +1,8 @@
-import {
-  UserEntity
-} from '../../entities'
 import UserModel from '../../../models/user.model'
+import { IVerifyToken } from '../../interfaces'
+import { TOKEN_TYPE } from '../../../utils/constants'
 interface Deps {
-  verifyToken(token: string): Promise<{referenceId: string}>
+  verifyToken: IVerifyToken
 }
 export default class VerifyUser {
   constructor (protected deps: Deps) {
@@ -11,7 +10,7 @@ export default class VerifyUser {
   verifyOne = async (token: string) => {
     try {
       // initiate user entity to run the validation for business rules.
-      const {referenceId = ''} = await this.deps.verifyToken(token)
+      const {referenceId = ''} = await this.deps.verifyToken(token, TOKEN_TYPE.SIGN_IN)
       const user = await UserModel.findOne({
         _id: referenceId,
       })

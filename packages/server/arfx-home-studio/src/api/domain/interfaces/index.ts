@@ -60,3 +60,13 @@ export interface ICurrentAccount  {
 export interface IValidateMobileNumber {
   (mobileNumber: string): string|null
 }
+interface ITokenPayload {
+  referenceId: string
+  tokenType: string
+}
+export interface IGenerateToken {
+  (payload: ITokenPayload, duration?: number): Promise<string>
+}
+export interface IVerifyToken {
+  (token: string, tokenType: string): Promise<ITokenPayload>
+}

@@ -5,10 +5,17 @@ import express, {
 import moment from 'moment-timezone'
 import {
   userSignUp, verifyUser
-} from '../service-configurations/users'
+} from '../service-configurations/sign-up'
 import {
   userSignIn
-} from '../service-configurations/auth'
+} from '../service-configurations/sign-in'
+
+import {
+  sendResetPassword,
+  updateResetPassword,
+  verifyResetPassword
+} from '../service-configurations/reset-password'
+
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import User from '../models/user.model'
 import * as emailProvider from '../domain/services/emails/emailProvider'
@@ -146,17 +153,11 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
 export const sendPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email }).exec();
-
-    if (user) {
-      const passwordResetObj = await PasswordResetToken.generate(user);
-      emailProvider.sendPasswordReset(passwordResetObj);
-      res.status(httpStatus.OK);
-      return res.json('success');
-    }
-    throw new APIError({
-      status: httpStatus.UNAUTHORIZED,
-      message: 'No account found with that email',
+    const redisPublish = req.app.get('redisPublisher')
+    const response = await sendResetPassword(redisPublish).resetOne(email)
+    res.status(httpStatus.OK);
+    res.json({
+      result: response
     });
   } catch (error) {
     return next(error);

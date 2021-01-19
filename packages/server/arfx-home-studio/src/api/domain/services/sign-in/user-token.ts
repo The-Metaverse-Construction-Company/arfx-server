@@ -35,8 +35,8 @@ export default class AuthToken {
   private setRefreshTokenSecretKey = (secretKey: string) => {
     return this.RefreshToken = new Token(secretKey)
   }
-  private getKey (data: any, tokenType: string) {
-    return `${data.referenceId}:${tokenType}`
+  private getKey (data: {referenceId: string, tokenType: string}, tokenLabel: string) {
+    return `${data.referenceId}:${tokenLabel}:${data.tokenType}`
   }
   /**
    * generate the refresh token with fingerprint as a primary id
@@ -73,7 +73,6 @@ export default class AuthToken {
       this.RefreshToken
         .verify(token)
         .then((data: any) => {
-          console.log('`${data.sourceId}:${data.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}` :>> ', `${data.sourceId}:${data.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`);
           // check if the refresh token is exist
           this.deps.redisClient.EXISTS(`${data.sourceId}:${data.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`, (err, isExist) => {
             if (err) {
@@ -132,14 +131,15 @@ export default class AuthToken {
    * @param token 
    * @param fingerprint 
    */
-  public verifyAccessToken = (token: string):Promise<any> => {
+  public verifyAccessToken = (token: string, tokenType: string):Promise<any> => {
     return new Promise((resolve, reject) => {
       this.AccessToken
         .verify(token)
         .then((data: any) => {
+          console.log('this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS) :>> ', this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS));
           // check if the access token name with fingerprint within
           // console.log(' >> this.deps.redisClient', this.deps.redisClient)
-          this.deps.redisClient.EXISTS(this.getKey(data, TOKEN_LABEL.ACCESS), (err, isExist) => {
+          this.deps.redisClient.EXISTS(this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS), (err, isExist) => {
           // this.deps.redisClient.EXISTS(`${data.sourceId}:${data.platform}:${TOKEN_LABEL.ACCESS}:${fingerprint}`, (err, isExist) => {
             if (err) {
               reject(new Error('Failed to verify access token. Error: ' + err.message))
@@ -207,8 +207,8 @@ export default class AuthToken {
    * @param fingerprint 
    */
   public removeTokens = async (accountId: string, platform: string, fingerprint: string) => {
-    await this.removeAccessToken(accountId, platform, fingerprint)
-    await this.removeRefreshToken(accountId, platform, fingerprint)
+    await this.removeAccessToken(accountId, platform)
+    // await this.removeRefreshToken(accountId, platform)
     return true
   }
   /**
@@ -217,8 +217,8 @@ export default class AuthToken {
    * @param platform 
    * @param fingerprint 
    */
-  public removeAccessToken = (referenceId: string, platform: string, fingerprint: string) => {
-    this.deps.redisClient.DEL(this.getKey({referenceId: referenceId}, TOKEN_LABEL.ACCESS))
+  public removeAccessToken = (referenceId: string, tokenType: string) => {
+    this.deps.redisClient.DEL(this.getKey({referenceId: referenceId, tokenType}, TOKEN_LABEL.ACCESS))
   }
   /**
    * remove refresh token

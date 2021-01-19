@@ -1,12 +1,8 @@
 import {RedisClient} from 'redis'
 import {
   UserSignIn
-} from '../domain/services/auth'
-import AuthToken from '../domain/services/auth/user-token'
-import {
-  generateToken,
-  verifyToken
-} from '../helper/token'
+} from '../domain/services/sign-in'
+import AuthToken from '../domain/services/sign-in/user-token'
 import bcrypt from 'bcryptjs'
 
 

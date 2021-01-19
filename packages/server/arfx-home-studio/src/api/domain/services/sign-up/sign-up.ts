@@ -2,9 +2,11 @@ import {
   UserEntity
 } from '../../entities'
 import UserModel from '../../../models/user.model'
+import { IGenerateToken } from '../../interfaces'
+import { TOKEN_TYPE } from '../../../utils/constants'
 interface Deps {
-  generateToken(payload: {referenceId: string}): Promise<string>
-  sendEmail(data: {userId: string, email: string, name: string, token: string}): Promise<any>
+  generateToken: IGenerateToken
+  sendEmail(userId: string, token: string): Promise<any>
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
 export default class UserSignUp {
@@ -30,14 +32,10 @@ export default class UserSignUp {
       await UserModel.create(newUser)
       const token = await this.deps.generateToken({
         referenceId: newUser._id,
+        tokenType: TOKEN_TYPE.SIGN_UP
       })
       // send email notifications
-      await this.deps.sendEmail({
-        userId: newUser._id,
-        email: newUser.email.value,
-        name: newUser.name,
-        token: token
-      })
+      await this.deps.sendEmail(newUser._id, token)
       //add some logs
       return {
         user: newUser,

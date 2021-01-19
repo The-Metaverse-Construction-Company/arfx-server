@@ -2,11 +2,13 @@ import httpStatus from 'http-status'
 import {
   Request, Response, NextFunction,
 } from 'express'
-
 import {
   userSignUp,
+} from '../service-configurations/sign-up'
+import {
   userList
 } from '../service-configurations/users'
+
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 const { omit } = require('lodash');
 const User = require('../models/user.model');
