@@ -15,6 +15,6 @@ router.get('/status', (req: Request, res: Response) => res.send('OK'));
 router.use('/docs', express.static('docs'));
 
 router.use('/users', userRoutes);
-// router.use('/auth', authRoutes);
+router.use('/auth', authRoutes);
 
 export default router

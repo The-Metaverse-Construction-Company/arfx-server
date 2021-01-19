@@ -8,12 +8,12 @@ import {
 } from '../service-configurations/users'
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import User from '../models/user.model'
+import * as emailProvider from '../domain/services/emails/emailProvider'
 const RefreshToken = require('../models/refreshToken.model');
 const PasswordResetToken = require('../models/passwordResetToken.model');
 const { jwtExpirationInterval } = require('../../config/vars');
 
 const APIError = require('../utils/APIError');
-const emailProvider = require('../services/emails/emailProvider');
 
 /**
  * Returns a formated object with tokens
