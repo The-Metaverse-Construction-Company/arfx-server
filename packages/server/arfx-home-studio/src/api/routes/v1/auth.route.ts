@@ -43,6 +43,8 @@ const router = express.Router();
  */
 router.route('/register')
   .post(validate(register), controller.register);
+router.route('/verify')
+  .get(controller.verifyUserRoute);
 
 
 /**

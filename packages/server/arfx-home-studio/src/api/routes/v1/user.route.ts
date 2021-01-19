@@ -1,6 +1,7 @@
 import express from 'express'
 import validate from 'express-validation'
 import * as controller from '../../controllers/user.controller'
+import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import {
   authorize, ADMIN, LOGGED_USER
 } from '../../middlewares/auth'
@@ -38,8 +39,9 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(validate(listUsers), controller.list)
-  // .get(authorize(ADMIN), validate(listUsers), controller.list)
+  // .get(validate(listUsers), controller.list)
+  .get(authorize(LOGGED_USER), validate(listUsers), controller.list)
+  // .get(authorize(ALLOWED_USER_ROLE.ADMIN), validate(listUsers), controller.list)
   /**
    * @api {post} v1/users Create User
    * @apiDescription Create a new user
@@ -66,7 +68,7 @@ router
    * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
    */
   // .post(validate(createUser), controller.create);
-  .post(authorize(ADMIN), validate(createUser), controller.create);
+  .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(createUser), controller.create);
 
 
 router

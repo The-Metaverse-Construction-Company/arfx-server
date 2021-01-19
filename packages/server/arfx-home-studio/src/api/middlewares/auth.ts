@@ -24,7 +24,6 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
   } catch (e) {
     return next(apiError);
   }
-
   if (roles === LOGGED_USER) {
     if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
       apiError.status = httpStatus.FORBIDDEN;

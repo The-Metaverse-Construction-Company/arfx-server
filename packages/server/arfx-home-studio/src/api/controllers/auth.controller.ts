@@ -1,14 +1,20 @@
 import httpStatus from 'http-status'
-import {
+import express, {
   Response, Request, NextFunction
 } from 'express'
 import moment from 'moment-timezone'
 import {
-  userSignUp
+  userSignUp, verifyUser
 } from '../service-configurations/users'
+import {
+  userSignIn
+} from '../service-configurations/auth'
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import User from '../models/user.model'
 import * as emailProvider from '../domain/services/emails/emailProvider'
+
+import Token from '../helper/token'
+import { JWT_ACCESS_TOKEN_SECRET } from '../utils/constants'
 const RefreshToken = require('../models/refreshToken.model');
 const PasswordResetToken = require('../models/passwordResetToken.model');
 const { jwtExpirationInterval } = require('../../config/vars');
@@ -37,8 +43,8 @@ function generateTokenResponse(user: any, accessToken: string) {
  */
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const userData = omit(req.body, 'role');
-    const newUser = await userSignUp()
+    let redisPublisher = req.app.get('redisPublisher')
+    const newUser = await userSignUp(redisPublisher)
       .signIn({
         ...req.body,
         role: ALLOWED_USER_ROLE.USER
@@ -50,8 +56,27 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     return res.json({ user: newUser });
     // return res.json({ token, user: newUser });
   } catch (error) {
-    //@ts-expect-error
-    return next(User.checkDuplicateEmail(error));
+    next(error);
+  }
+};
+/**
+ * Returns jwt token if registration was successful
+ * @public
+ */
+export const verifyUserRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let redisPublisher = req.app.get('redisPublisher')
+    const {token = ''} = <any>req.query
+    const newUser = await verifyUser(redisPublisher)
+      .verifyOne(token)
+    // const token = generateTokenResponse(user, user.token());
+    res.status(httpStatus.OK);
+    //@ts-ignore
+    // delete newUser.password
+    return res.json({ user: newUser });
+    // return res.json({ token, user: newUser });
+  } catch (error) {
+    next(error)
   }
 };
 
@@ -61,11 +86,19 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
  */
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    //@ts-expect-error
-    const { user, accessToken } = await User.findAndGenerateToken(req.body);
-    const token = generateTokenResponse(user, accessToken);
-    const userTransformed = user.transform();
-    return res.json({ token, user: userTransformed });
+    const {
+      username = '',
+      password = '',
+    } = req.body
+    let redisPublisher = req.app.get('redisPublisher')
+    const response = await userSignIn(redisPublisher).signIn({
+      username: username.trim(),
+      password: password.trim()
+    })
+    // const { user, accessToken } = await User.findAndGenerateToken(req.body);
+    // const token = generateTokenResponse(user, accessToken);
+    // const userTransformed = user.transform();
+    return res.json(response);
   } catch (error) {
     return next(error);
   }

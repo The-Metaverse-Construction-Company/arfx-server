@@ -4,7 +4,8 @@ import {
 } from 'express'
 
 import {
-  userSignUp
+  userSignUp,
+  userList
 } from '../service-configurations/users'
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 const { omit } = require('lodash');
@@ -48,7 +49,8 @@ export const loggedIn = (req: Request, res: Response) => {
  */
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newUser = await userSignUp()
+    const redisPublisher = req.app.get('redisPublisher')
+    const newUser = await userSignUp(redisPublisher)
       .signIn({
         ...req.body,
         role: ALLOWED_USER_ROLE.USER
@@ -105,8 +107,9 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
  */
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await User.list(req.query);
-    // const transformedUsers = users.map(user => user.transform());
+    const users = await userList({
+      ...req.query,
+    })
     res.json(users);
   } catch (error) {
     next(error);

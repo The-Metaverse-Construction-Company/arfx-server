@@ -11,7 +11,7 @@ const jwtOptions = {
 
 const JWTAuthHandler = async (payload: any, done: any = () => null) => {
   try {
-    const user = await User.findById(payload.sub);
+    const user = await User.findById(payload.referenceId);
     if (user) return done(null, user);
     return done(null, false);
   } catch (error) {

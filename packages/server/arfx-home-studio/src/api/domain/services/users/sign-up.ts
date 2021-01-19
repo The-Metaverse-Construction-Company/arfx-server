@@ -3,7 +3,7 @@ import {
 } from '../../entities'
 import UserModel from '../../../models/user.model'
 interface Deps {
-  generateToken(payload: {referenceId: string}): string
+  generateToken(payload: {referenceId: string}): Promise<string>
   sendEmail(data: {userId: string, email: string, name: string, token: string}): Promise<any>
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
@@ -27,11 +27,10 @@ export default class UserSignUp {
       // check duplicate email.
       await this.deps.validateEmail({email})
       // insert to repository.
-      // await UserModel.create(newUser)
-      const token = this.deps.generateToken({
+      await UserModel.create(newUser)
+      const token = await this.deps.generateToken({
         referenceId: newUser._id,
       })
-      console.log('token :>> ', token);
       // send email notifications
       await this.deps.sendEmail({
         userId: newUser._id,
@@ -40,7 +39,10 @@ export default class UserSignUp {
         token: token
       })
       //add some logs
-      return newUser
+      return {
+        user: newUser,
+        token
+      }
     } catch (error) {
       console.log('error :>> ', error);
       throw error

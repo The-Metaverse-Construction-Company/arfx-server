@@ -15,7 +15,7 @@ export const register = {
   // POST /v1/auth/login
 export const login = {
   body: {
-    email: Joi.string()
+    username: Joi.string()
       .email()
       .required(),
     password: Joi.string()

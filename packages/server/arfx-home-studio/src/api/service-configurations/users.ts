@@ -1,9 +1,12 @@
+import {RedisClient} from 'redis'
 import {
   UserSignUp,
   SendEmailVerification,
-  ValidateUserEmail
+  ValidateUserEmail,
+  VerifyUser,
+  UserList
 } from '../domain/services/users'
-
+import AuthToken from '../domain/services/auth/user-token'
 import {
   generateToken,
   verifyToken
@@ -22,10 +25,16 @@ export const sendEmailVerification = () => (
     repositoryGateway: <any> (() => ({}))
   })
 )
-export const userSignUp = () => (
+export const userSignUp = (redis: RedisClient) => (
   new UserSignUp({
-    generateToken: generateToken,
+    generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     sendEmail: sendEmailVerification().sendOne,
     validateEmail: validateUserEmail().validateOne
   })
 )
+export const verifyUser = (redis: RedisClient) => (
+  new VerifyUser({
+    verifyToken: new AuthToken({redisClient: redis}).verifyAccessToken
+  })
+)
+export const userList = UserList()

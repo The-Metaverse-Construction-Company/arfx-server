@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { NextFunction } from 'express'
 import routes from '../api/routes/v1'
 import bodyParser from 'body-parser'
 import methodOverride from 'method-override'
@@ -7,6 +7,8 @@ import passport from 'passport'
 import { logs } from './vars'
 import * as strategies from './passport'
 import * as error from '../api/middlewares/error'
+
+import RedisClient from './redis'
 
 const helmet = require('helmet')
 const compress = require('compression')
@@ -19,10 +21,13 @@ const cors = require('cors')
 const app = express();
 // request logging. dev: console | production: file
 app.use(morgan(logs));
-
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// // console.log('RedisClient :>> ', RedisClient);
+// load redis
+app.set('redisPublisher', RedisClient)
 
 // gzip compression
 app.use(compress());
