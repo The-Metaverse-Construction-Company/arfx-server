@@ -1,11 +1,12 @@
-version: "2"
+version: "3.4"
 services:
-  boilerplate-api:
-    build: .
+  arfx-home-studio:
+    container_name: arfx-home-studio
+    build: ../arfx-home-studio
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/express-rest-es2017-boilerplate
+      - MONGO_URI=mongodb://mongodb:27017/arfx-home-studio
     volumes:
-      - .:/app
+      - ../arfx-home-studio/dist:/usr/src/app/dist
     ports:
       - "3000:3000"
     depends_on:
@@ -17,3 +18,8 @@ services:
       driver: "none"
     ports:
       - "27017:27017"
+  redis:
+    container_name: redis
+    build: ../redis-service/.
+    ports:
+      - '6379:6379'
