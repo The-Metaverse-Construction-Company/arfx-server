@@ -70,3 +70,6 @@ export interface IGenerateToken {
 export interface IVerifyToken {
   (token: string, tokenType: string): Promise<ITokenPayload>
 }
+export interface IRevokeToken {
+  (referenceId: string, tokenType: string): Promise<Boolean>
+}

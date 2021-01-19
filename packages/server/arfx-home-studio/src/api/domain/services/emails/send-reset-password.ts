@@ -21,7 +21,7 @@ export default class SendResetPassword {
       // if the email is already verified, then skip sending email.
       if (user) {
         this.deps.sendEmail({
-          name,
+          name: user.name,
           token,
           email: user.email.value,
           url: `${CLIENT_HOST}/ui/reset-password?token${token}&tokenType=${TOKEN_TYPE.RESET_PASSWORD}`

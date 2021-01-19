@@ -1,0 +1,22 @@
+import { IVerifyToken } from '../../interfaces'
+import { TOKEN_TYPE } from '../../../utils/constants'
+import {VerifyUserToken} from '../users'
+
+interface Deps {
+  verifyUserToken: VerifyUserToken
+}
+export default class VerifyUser {
+  constructor (protected deps: Deps) {
+  }
+  verifyOne = async (token: string) => {
+    try {
+      const user = await this.deps.verifyUserToken.verifyOne(token, TOKEN_TYPE.SIGN_UP)
+      if (user.email.verified) {
+        throw new Error('User already verified.')
+      }
+      return user
+    } catch (error) {
+      throw error
+    }
+  }
+}

@@ -2,14 +2,16 @@ import {
   UserEntity
 } from '../../entities'
 import UserModel from '../../../models/user.model'
+import { IGenerateToken } from '../../interfaces'
+import { TOKEN_TYPE } from '../../../utils/constants'
 interface Deps {
-  generateToken(payload: {referenceId: string}): Promise<string>
+  generateToken: IGenerateToken
   comparePassword(password: string, hashPassword: string): boolean
 }
 export default class UserSignIn {
   constructor (protected deps: Deps) {
   }
-  signIn = async ({
+  public signIn = async ({
     username = '',
     password = '',
   }) => {
@@ -28,6 +30,7 @@ export default class UserSignIn {
       }
       const token = await this.deps.generateToken({
         referenceId: user._id,
+        tokenType: TOKEN_TYPE.SIGN_IN
       })
       // add some logs or notification.
       return {

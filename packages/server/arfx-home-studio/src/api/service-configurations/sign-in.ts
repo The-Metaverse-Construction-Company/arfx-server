@@ -1,14 +1,20 @@
 import {RedisClient} from 'redis'
 import {
-  UserSignIn
+  UserSignIn,
+  UserSignOut
 } from '../domain/services/sign-in'
-import AuthToken from '../domain/services/sign-in/user-token'
+import AuthToken from '../helper/user-token'
 import bcrypt from 'bcryptjs'
-
 
 export const userSignIn = (redis: RedisClient) => (
   new UserSignIn({
     comparePassword: bcrypt.compareSync,
     generateToken: new AuthToken({redisClient: redis}).generateAccessToken
+  })
+)
+
+export const userSignOut = (redis: RedisClient) => (
+  new UserSignOut({
+    revokeToken: new AuthToken({redisClient: redis}).removeAccessToken
   })
 )

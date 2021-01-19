@@ -47,16 +47,19 @@ export const sendPasswordReset = {
       .required(),
   },
 }
-// POST /v1/auth/password-reset
-export const passwordReset = {
-  body: {
-    email: Joi.string()
-      .email()
+  // GET /v1/auth/reset-password
+export const verifyResetPasswordToken = {
+  query: {
+    token: Joi.string()
       .required(),
+  },
+}
+// POST /v1/auth/password-reset
+export const updateResetPasswordValidation = {
+  body: {
     password: Joi.string()
       .required()
       .min(6)
-      .max(128),
-    resetToken: Joi.string().required(),
+      .max(128)
   },
 }

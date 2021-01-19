@@ -1,52 +1,17 @@
 import express, {Request, Response} from 'express'
 import validate from 'express-validation'
+import { authorize } from '../../middlewares/auth'
 import * as controller from '../../controllers/auth.controller'
-import {oAuth as oAuthLogin} from '../../middlewares/auth'
+import {LOGGED_USER, oAuth as oAuthLogin} from '../../middlewares/auth'
 
 import {
   login,
   register,
   oAuth,
   refresh,
-  sendPasswordReset,
-  passwordReset,
 } from '../../validations/auth.validation'
 
 const router = express.Router();
-
-/**
- * @api {post} v1/auth/register Register
- * @apiDescription Register a new user
- * @apiVersion 1.0.0
- * @apiName Register
- * @apiGroup Auth
- * @apiPermission public
- *
- * @apiParam  {String}          email     User's email
- * @apiParam  {String{6..128}}  password  User's password
- *
- * @apiSuccess (Created 20x1) {String}  token.tokenType     Access Token's type
- * @apiSuccess (Created 201) {String}  token.accessToken   Authorization Token
- * @apiSuccess (Created 201) {String}  token.refreshToken  Token to get a new accessToken
- *                                                   after expiration time
- * @apiSuccess (Created 201) {Number}  token.expiresIn     Access Token's expiration time
- *                                                   in miliseconds
- * @apiSuccess (Created 201) {String}  token.timezone      The server's Timezone
- *
- * @apiSuccess (Created 201) {String}  user.id         User's id
- * @apiSuccess (Created 201) {String}  user.name       User's name
- * @apiSuccess (Created 201) {String}  user.email      User's email
- * @apiSuccess (Created 201) {String}  user.role       User's role
- * @apiSuccess (Created 201) {Date}    user.createdAt  Timestamp
- *
- * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
- */
-router.route('/register')
-  .post(validate(register), controller.register);
-router.route('/verify')
-  .get(controller.verifyUserRoute);
-
-
 /**
  * @api {post} v1/auth/login Login
  * @apiDescription Get an accessToken
@@ -74,8 +39,14 @@ router.route('/verify')
  * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
  * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
  */
+router.route('/')
+  .get(controller.login);
 router.route('/login')
+  .post(validate(login), controller.login)
   .post(validate(login), controller.login);
+
+router.route('/sign-out')
+  .post(controller.userSignOutRoute)
 
 
 /**
@@ -99,13 +70,6 @@ router.route('/login')
  */
 router.route('/refresh-token')
   .post(validate(refresh), controller.refresh);
-
-
-router.route('/send-password-reset')
-  .post(validate(sendPasswordReset), controller.sendPasswordReset);
-
-router.route('/reset-password')
-  .post(validate(passwordReset), controller.resetPassword);
 
 /**
  * @api {post} v1/auth/facebook Facebook Login

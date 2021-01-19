@@ -12,7 +12,7 @@ interface Deps {
 export default class UserSignUp {
   constructor (protected deps: Deps) {
   }
-  signIn = async ({
+  public createOne = async ({
     email = '',
     name = '',
     password = '',

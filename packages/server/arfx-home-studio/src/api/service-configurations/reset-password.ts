@@ -2,10 +2,9 @@ import { RedisClient } from 'redis'
 import {
   SendResetPassword,
   UpdateResetPassword,
-  VerifyResetPassword
 } from '../domain/services/reset-password'
 
-import AuthToken from '../domain/services/sign-in/user-token'
+import AuthToken from '../helper/user-token'
 
 import {
   findOneById
@@ -21,13 +20,9 @@ export const sendResetPassword = (redis: RedisClient) => (
     sendEmail: sendResetPasswordEmail().sendOne
   })
 )
-export const updateResetPassword = () => (
+export const updateResetPassword = (redis: RedisClient) => (
   new UpdateResetPassword({
-    findUserDetailsById: findOneById
-  })
-)
-export const verifyResetPassword = (redis: RedisClient) => (
-  new VerifyResetPassword({
-    verifyToken: new AuthToken({redisClient: redis}).verifyAccessToken,
+    findUserDetailsById: findOneById,
+    revokeToken: new AuthToken({redisClient: redis}).removeAccessToken
   })
 )

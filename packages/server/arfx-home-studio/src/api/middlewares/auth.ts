@@ -17,7 +17,6 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
     status: httpStatus.UNAUTHORIZED,
     stack: error ? error.stack : undefined,
   });
-
   try {
     if (error || !user) throw error;
     await logIn(user, { session: false });
@@ -25,11 +24,11 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
     return next(apiError);
   }
   if (roles === LOGGED_USER) {
-    if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
-      apiError.status = httpStatus.FORBIDDEN;
-      apiError.message = 'Forbidden';
-      return next(apiError);
-    }
+    // if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
+    //   apiError.status = httpStatus.FORBIDDEN;
+    //   apiError.message = 'Forbidden';
+    //   return next(apiError);
+    // }
   } else if (!roles.includes(user.role)) {
     apiError.status = httpStatus.FORBIDDEN;
     apiError.message = 'Forbidden';

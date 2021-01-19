@@ -16,7 +16,7 @@ export default class UserResetPassword {
       // fetch user by email.
       const user = await UserModel.findOne({
         "email.value": email
-      })
+      }, {password: 0})
       if (!user) {
         // just return false if no user.
         return false

@@ -13,7 +13,7 @@ interface IDependencies extends IGeneralServiceDependencies<IUserEntity> {
 export default class SendEmailVerification {
   constructor (protected deps: IDependencies) {
   }
-  sendOne = async (userId: string, token: string) => {
+  public sendOne = async (userId: string, token: string) => {
     try {
       // initiate user entity to run the validation for business rules.
       // insert to repository.
@@ -21,7 +21,7 @@ export default class SendEmailVerification {
       // if the email is already verified, then skip sending email.
       if (user && !user.email.verified) {
         this.deps.sendEmail({
-          name,
+          name: user.name,
           token,
           email: user.email.value,
           url: `${CLIENT_HOST}/ui/verification?token${token}&tokenType=${TOKEN_TYPE.SIGN_UP}`

@@ -53,7 +53,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const redisPublisher = req.app.get('redisPublisher')
     const newUser = await userSignUp(redisPublisher)
-      .signIn({
+      .createOne({
         ...req.body,
         role: ALLOWED_USER_ROLE.USER
       })

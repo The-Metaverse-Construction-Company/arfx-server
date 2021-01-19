@@ -1,13 +1,11 @@
 
 import {RedisClient} from 'redis'
-import { TOKEN_LABEL } from '../../../utils/constants'
-import Token from '../../../helper/token'
-import {
+import { TOKEN_LABEL,
   JWT_ACCESS_TOKEN_DURATION_MINUTES,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_DURATION_MINUTES,
-  JWT_REFRESH_TOKEN_SECRET
-} from '../../../utils/constants'
+  JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
+import Token from '../helper/token'
 // import Token from '../../../helper/token'
 // import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
 // import Redis from '../../../../config/redis'
@@ -136,7 +134,6 @@ export default class AuthToken {
       this.AccessToken
         .verify(token)
         .then((data: any) => {
-          console.log('this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS) :>> ', this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS));
           // check if the access token name with fingerprint within
           // console.log(' >> this.deps.redisClient', this.deps.redisClient)
           this.deps.redisClient.EXISTS(this.getKey({...data, tokenType}, TOKEN_LABEL.ACCESS), (err, isExist) => {
@@ -217,8 +214,13 @@ export default class AuthToken {
    * @param platform 
    * @param fingerprint 
    */
-  public removeAccessToken = (referenceId: string, tokenType: string) => {
-    this.deps.redisClient.DEL(this.getKey({referenceId: referenceId, tokenType}, TOKEN_LABEL.ACCESS))
+  public removeAccessToken = async (referenceId: string, tokenType: string) => {
+    try {
+      this.deps.redisClient.DEL(this.getKey({referenceId: referenceId, tokenType}, TOKEN_LABEL.ACCESS))
+      return true
+    } catch (error) {
+      throw error
+    }
   }
   /**
    * remove refresh token

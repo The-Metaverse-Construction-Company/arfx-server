@@ -2,15 +2,18 @@ import {RedisClient} from 'redis'
 import {
   UserSignUp,
   VerifyUser,
+  VerifyToken
 } from '../domain/services/sign-up'
 import {
   sendVerificationEmail
 } from './email'
 import {
-  validateUserEmail
+  validateUserEmail,
+  findOneById,
+  verifyUserToken
 } from './users'
 
-import AuthToken from '../domain/services/sign-in/user-token'
+import AuthToken from '../helper/user-token'
 export const userSignUp = (redis: RedisClient) => (
   new UserSignUp({
     generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
@@ -18,8 +21,15 @@ export const userSignUp = (redis: RedisClient) => (
     validateEmail: validateUserEmail().validateOne
   })
 )
-export const verifyUser = (redis: RedisClient) => (
-  new VerifyUser({
-    verifyToken: new AuthToken({redisClient: redis}).verifyAccessToken
+export const verifyUser = (redis: RedisClient) => {
+  const authToken = new AuthToken({redisClient: redis})
+  return new VerifyUser({
+    revokeToken: authToken.removeAccessToken,
+    findOneById: findOneById
   })
-)
+}
+export const verifySignUpToken = (redis: RedisClient) => {
+  return new VerifyToken({
+    verifyUserToken: verifyUserToken(redis)
+  })
+}
