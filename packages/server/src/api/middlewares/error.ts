@@ -1,3 +1,7 @@
+import {
+  NextFunction,
+Request, Response
+} from 'express'
 import httpStatus from 'http-status'
 import expressValidation from 'express-validation'
 import APIError from '../utils/APIError'
@@ -7,7 +11,7 @@ import { env } from '../../config/vars'
  * Error handler. Send stacktrace only during development
  * @public
  */
-const handler = (err, req, res, next) => {
+const requestHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   const response = {
     code: err.status,
     message: err.message || httpStatus[err.status],
@@ -22,13 +26,13 @@ const handler = (err, req, res, next) => {
   res.status(err.status);
   res.json(response);
 };
-exports.handler = handler;
+export const handler = requestHandler;
 
 /**
  * If error is not an instanceOf APIError, convert it.
  * @public
  */
-exports.converter = (err, req, res, next) => {
+export const converter = (err: any, req: Request, res: Response, next: NextFunction) => {
   let convertedError = err;
 
   if (err instanceof expressValidation.ValidationError) {
@@ -36,6 +40,7 @@ exports.converter = (err, req, res, next) => {
       message: 'Validation Error',
       errors: err.errors,
       status: err.status,
+      //@ts-expect-error
       stack: err.stack,
     });
   } else if (!(err instanceof APIError)) {
@@ -46,17 +51,17 @@ exports.converter = (err, req, res, next) => {
     });
   }
 
-  return handler(convertedError, req, res);
+  return requestHandler(convertedError, req, res, next);
 };
 
 /**
  * Catch 404 and forward to error handler
  * @public
  */
-exports.notFound = (req, res, next) => {
+export const notFound = (req: Request, res: Response, next: NextFunction) => {
   const err = new APIError({
     message: 'Not found',
     status: httpStatus.NOT_FOUND,
   });
-  return handler(err, req, res);
+  return requestHandler(err, req, res, next);
 };

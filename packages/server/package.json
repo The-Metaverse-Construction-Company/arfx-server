@@ -28,6 +28,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
+    "@types/mocha": "^8.2.0",
     "axios": "^0.19.0",
     "bcrypt": "^5.0.0",
     "bcryptjs": "2.4.3",
@@ -61,7 +62,10 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.9",
+    "@types/helmet": "^4.0.0",
     "@types/jwt-simple": "^0.5.33",
+    "@types/method-override": "0.0.31",
     "@types/passport-http-bearer": "^1.0.36",
     "@types/passport-jwt": "^3.0.3",
     "@types/uuid": "^8.3.0",

@@ -1,13 +1,17 @@
-import mongoose from 'mongoose'
+import mongoose, {Document} from 'mongoose'
 import httpStatus from 'http-status'
 import bcrypt from 'bcryptjs'
 import moment from 'moment-timezone'
 import jwt from 'jwt-simple'
 import {v4 as uuidv4} from 'uuid'
+import {IUserEntity} from '../domain/entities/users'
 const { omitBy, isNil } = require('lodash');
 const APIError = require('../utils/APIError');
 const { env, jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 
+interface IUserCollectionModel extends Document, IUserEntity {
+  _id: any
+}
 /**
 * User Roles
 */
@@ -236,4 +240,4 @@ userSchema.statics = {
 /**
  * @typedef User
  */
-export default mongoose.model('User', userSchema);
+export default mongoose.model<IUserCollectionModel>('User', userSchema);

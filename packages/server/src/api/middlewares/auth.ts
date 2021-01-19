@@ -7,7 +7,7 @@ import {
 export const ADMIN = 'admin';
 export const LOGGED_USER = '_loggedUser';
 
-const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err, user, info) => {
+const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
   const error = err || info;
   //@ts-expect-error
   const logIn = Promise.promisify(req.logIn);
@@ -49,5 +49,5 @@ export const authorize = (roles = User.roles) => (req: Request, res: Response, n
     handleJWT(req, res, next, roles),
   )(req, res, next);
 
-export const oAuth = service =>
+export const oAuth = (service: string) =>
   passport.authenticate(service, { session: false });

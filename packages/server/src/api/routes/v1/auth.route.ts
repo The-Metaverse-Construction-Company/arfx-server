@@ -1,7 +1,7 @@
-const express = require('express');
-const validate = require('express-validation');
-const controller = require('../../controllers/auth.controller');
-const oAuthLogin = require('../../middlewares/auth').oAuth;
+import express, {Request, Response} from 'express'
+import validate from 'express-validation'
+import * as controller from '../../controllers/auth.controller'
+import {oAuth as oAuthLogin} from '../../middlewares/auth'
 const {
   login,
   register,
@@ -24,7 +24,7 @@ const router = express.Router();
  * @apiParam  {String}          email     User's email
  * @apiParam  {String{6..128}}  password  User's password
  *
- * @apiSuccess (Created 201) {String}  token.tokenType     Access Token's type
+ * @apiSuccess (Created 20x1) {String}  token.tokenType     Access Token's type
  * @apiSuccess (Created 201) {String}  token.accessToken   Authorization Token
  * @apiSuccess (Created 201) {String}  token.refreshToken  Token to get a new accessToken
  *                                                   after expiration time
@@ -147,4 +147,4 @@ router.route('/google')
   .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
 
 
-module.exports = router;
+export default router;

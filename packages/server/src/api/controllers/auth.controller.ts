@@ -33,7 +33,7 @@ function generateTokenResponse(user: any, accessToken: string) {
  * Returns jwt token if registration was successful
  * @public
  */
-exports.register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // const userData = omit(req.body, 'role');
     const newUser = await new UserSignUp()
@@ -55,7 +55,7 @@ exports.register = async (req: Request, res: Response, next: NextFunction) => {
  * Returns jwt token if valid username and password is provided
  * @public
  */
-exports.login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
     const token = generateTokenResponse(user, accessToken);
@@ -71,7 +71,7 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
  * Returns jwt token
  * @public
  */
-exports.oAuth = async (req: Request, res: Response, next: NextFunction) => {
+export const oAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { user } = req;
     //@ts-expect-error
@@ -89,7 +89,7 @@ exports.oAuth = async (req: Request, res: Response, next: NextFunction) => {
  * Returns a new jwt when given a valid refresh token
  * @public
  */
-exports.refresh = async (req: Request, res: Response, next: NextFunction) => {
+export const refresh = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, refreshToken } = req.body;
     const refreshObject = await RefreshToken.findOneAndRemove({
@@ -104,7 +104,7 @@ exports.refresh = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-exports.sendPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
+export const sendPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email }).exec();
@@ -124,7 +124,7 @@ exports.sendPasswordReset = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-exports.resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password, resetToken } = req.body;
     const resetTokenObject = await PasswordResetToken.findOneAndRemove({

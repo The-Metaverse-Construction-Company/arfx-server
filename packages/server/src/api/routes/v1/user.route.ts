@@ -192,4 +192,4 @@ router
   .delete(authorize(LOGGED_USER), controller.remove);
 
 
-module.exports = router;
+export default router;

@@ -11,7 +11,7 @@ const { ALLOWED_USER_ROLE } = require('../entities/users/constants');
  * Load user and append to req.
  * @public
  */
-exports.load = async (req: Request, res: Response, next: NextFunction, id: any) => {
+export const load = async (req: Request, res: Response, next: NextFunction, id: any) => {
   try {
     const user = await User.get(id);
   //@ts-expect-error
@@ -26,7 +26,7 @@ exports.load = async (req: Request, res: Response, next: NextFunction, id: any) 
  * Get user
  * @public
  */
-exports.get = (req: Request, res: Response) => {
+export const get = (req: Request, res: Response) => {
   //@ts-expect-error
   res.json(req.locals.user.transform());
 }
@@ -35,7 +35,7 @@ exports.get = (req: Request, res: Response) => {
  * Get logged in user info
  * @public
  */
-exports.loggedIn = (req: Request, res: Response) => {
+export const loggedIn = (req: Request, res: Response) => {
   res.json(JSON.parse(JSON.stringify(req.user)));
 }
 
@@ -43,7 +43,7 @@ exports.loggedIn = (req: Request, res: Response) => {
  * Create new user
  * @public
  */
-exports.create = async (req: Request, res: Response, next: NextFunction) => {
+export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const newUser = await new UserSignUp()
       .signIn({
@@ -63,7 +63,7 @@ exports.create = async (req: Request, res: Response, next: NextFunction) => {
  * Replace existing user
  * @public
  */
-exports.replace = async (req: Request, res: Response, next: NextFunction) => {
+export const replace = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //@ts-expect-error
     const { user } = req.locals;
@@ -84,7 +84,7 @@ exports.replace = async (req: Request, res: Response, next: NextFunction) => {
  * Update existing user
  * @public
  */
-exports.update = (req: Request, res: Response, next: NextFunction) => {
+export const update = (req: Request, res: Response, next: NextFunction) => {
     //@ts-expect-error
   const ommitRole = req.locals.user.role !== 'admin' ? 'role' : '';
   const updatedUser = omit(req.body, ommitRole);
@@ -100,7 +100,7 @@ exports.update = (req: Request, res: Response, next: NextFunction) => {
  * Get user list
  * @public
  */
-exports.list = async (req: Request, res: Response, next: NextFunction) => {
+export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const users = await User.list(req.query);
     // const transformedUsers = users.map(user => user.transform());
@@ -114,7 +114,7 @@ exports.list = async (req: Request, res: Response, next: NextFunction) => {
  * Delete user
  * @public
  */
-exports.remove = (req: Request, res: Response, next: NextFunction) => {
+export const remove = (req: Request, res: Response, next: NextFunction) => {
     //@ts-expect-error
   const { user } = req.locals;
 

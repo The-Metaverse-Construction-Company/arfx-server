@@ -1,6 +1,9 @@
 import {
   IGeneralEntityDependencies
 } from '../../interfaces'
+
+export * from './interfaces'
+
 const { ALLOWED_USER_ROLE } = require("./constants")
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
 interface IDeps extends IGeneralEntityDependencies {

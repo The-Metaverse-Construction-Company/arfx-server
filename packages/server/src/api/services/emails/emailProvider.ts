@@ -18,13 +18,13 @@ const transporter = nodemailer.createTransport({
 });
 
 // verify connection configuration
-transporter.verify((error) => {
+transporter.verify((error: Error) => {
   if (error) {
     console.log('error with email connection');
   }
 });
 
-exports.sendPasswordReset = async (passwordResetObject) => {
+exports.sendPasswordReset = async (passwordResetObject: any) => {
   const email = new Email({
     views: { root: __dirname },
     message: {
@@ -51,7 +51,7 @@ exports.sendPasswordReset = async (passwordResetObject) => {
     .catch(() => console.log('error sending password reset email'));
 };
 
-exports.sendPasswordChangeEmail = async (user) => {
+exports.sendPasswordChangeEmail = async (user: any) => {
   const email = new Email({
     views: { root: __dirname },
     message: {

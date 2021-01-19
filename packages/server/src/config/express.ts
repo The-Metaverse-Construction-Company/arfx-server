@@ -1,16 +1,17 @@
 import express from 'express'
 import routes from '../api/routes/v1'
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const compress = require('compression');
-const methodOverride = require('method-override');
-const cors = require('cors');
-const helmet = require('helmet');
-const passport = require('passport');
-const { logs } = require('./vars');
-const strategies = require('./passport');
-const error = require('../api/middlewares/error');
+import bodyParser from 'body-parser'
+import methodOverride from 'method-override'
 
+import passport from 'passport'
+import { logs } from './vars'
+import * as strategies from './passport'
+import * as error from '../api/middlewares/error'
+
+const helmet = require('helmet')
+const compress = require('compression')
+const morgan = require('morgan')
+const cors = require('cors')
 /**
 * Express instance
 * @public
@@ -54,4 +55,4 @@ app.use(error.notFound);
 // error handler, send stacktrace only during development
 app.use(error.handler);
 
-module.exports = app;
+export default app;

@@ -11,7 +11,7 @@ export interface IGeneralEntityPropertiesWithAddedBy extends IGeneralEntityPrope
 export interface IGeneralVerificationEntityProperties  {
   value: string
   verifiedAt: number
-  isVerified: boolean
+  verified: boolean
 }
 export interface IAddedBy {
   _id: string
