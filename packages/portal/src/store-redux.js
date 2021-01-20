@@ -1,16 +1,16 @@
 import {createStore, applyMiddleware} from 'redux'
 import rootReducers from './redux/reducers'
 
-// import createSagaMiddleware from 'redux-saga'
-// import rootSaga from './redux/sagas'
+import createSagaMiddleware from 'redux-saga'
+import rootSaga from './redux/sagas'
 // import {IFetchOrderAction} from './redux/sign-in/interfaces'
 
-// const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware()
 
 // export type AppState = ReturnType<typeof rootReducers>
 const store = createStore(
     rootReducers,
-    // applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware)
   )
-// sagaMiddleware.run(rootSaga)
+sagaMiddleware.run(rootSaga)
 export default store

@@ -7,7 +7,7 @@ import {
   Route,
   Switch,} from 'react-router-dom'
 import SignInFormComponents from './sign-in-form'
-import SignUpFormComponents from './sign-up-form'
+import SignUpFormComponents from './sign-up-form/index'
 import ResetPaswordFormComponents from './reset-password-form'
 // import Toast from '../utils/Toast'
 // import {bindActionCreators} from 'redux'
