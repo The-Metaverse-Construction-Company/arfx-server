@@ -1,15 +1,15 @@
-import {
-  UserEntity
-} from '../../entities'
-import UserModel from '../../../models/user.model'
 import { IGenerateToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-interface Deps {
+import {
+  IGeneralServiceDependencies
+} from '../../interfaces'
+import { IUserRepositoryGateway } from '../../entities/users'
+interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   generateToken: IGenerateToken
   comparePassword(password: string, hashPassword: string): boolean
 }
-export default class UserSignIn {
-  constructor (protected deps: Deps) {
+export class UserSignInService {
+  constructor (protected deps: IServiceDependencies) {
   }
   public signIn = async ({
     username = '',
@@ -17,11 +17,9 @@ export default class UserSignIn {
   }) => {
     try {
       // initiate user entity to run the validation for business rules.
-      const user = await UserModel.findOne({
+      const user = await this.deps.repositoryGateway.findOne({
+        //@ts-expect-error
         "email.value": username
-      })
-      .sort({
-        createdAt: 1
       })
       if (!user || !(this.deps.comparePassword(password, user.password))) {
         throw new Error('Invalid credentials.')
@@ -32,6 +30,9 @@ export default class UserSignIn {
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN
       })
+      // removing password field on responsing user data
+      //@ts-ignore
+      delete user.password
       // add some logs or notification.
       return {
         user: user,

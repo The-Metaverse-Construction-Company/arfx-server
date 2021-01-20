@@ -9,7 +9,7 @@ import {
   updateResetPassword,
 } from '../service-configurations/reset-password'
 import {
-  verifyUserToken,
+  userVerifyToken,
 } from '../service-configurations/users'
 
 import {
@@ -22,7 +22,7 @@ export const verifyResetPasswordMiddleWare = async (req: Request, res: Response,
   try {
     const { token = '', tokenType = '' } = <any>req.query;
     const redisPublish = req.app.get('redisPublisher')
-    const response = await verifyUserToken(redisPublish)
+    const response = await userVerifyToken(redisPublish)
       .verifyOne(token, TOKEN_TYPE.RESET_PASSWORD)
     res.locals.resetPasswordData = response
     next()

@@ -1,11 +1,10 @@
-import { IVerifyToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-import {VerifyUserToken} from '../users'
+import {UserVerifyTokenService} from '../users'
 
 interface Deps {
-  verifyUserToken: VerifyUserToken
+  verifyUserToken: UserVerifyTokenService
 }
-export default class VerifyUser {
+export class VerifyUserTokenService {
   constructor (protected deps: Deps) {
   }
   verifyOne = async (token: string) => {

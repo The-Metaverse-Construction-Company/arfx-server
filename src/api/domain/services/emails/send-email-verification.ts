@@ -1,23 +1,23 @@
 
-import UserModel from '../../../models/user.model'
 import { CLIENT_HOST, TOKEN_TYPE } from '../../../utils/constants'
 import {
-  IUserEntity
+  IUserEntity,
+  IUserRepositoryGateway
 } from '../../entities/users/index'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
-interface IDependencies extends IGeneralServiceDependencies<IUserEntity> {
+interface IDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway> {
   sendEmail(data: {name: string, token: string, email: string, url: string}): Promise<any>
 }
-export default class SendEmailVerification {
+export class SendEmailVerificationService {
   constructor (protected deps: IDependencies) {
   }
   public sendOne = async (userId: string, token: string) => {
     try {
       // initiate user entity to run the validation for business rules.
       // insert to repository.
-      const user = await UserModel.findOne({_id: userId})
+      const user = await this.deps.repositoryGateway.findOne({_id: userId})
       // if the email is already verified, then skip sending email.
       if (user && !user.email.verified) {
         this.deps.sendEmail({

@@ -1,7 +1,19 @@
+/**
+ * @libraries
+ */
 import express from 'express'
 import validate from 'express-validation'
+/**
+ * @controllers
+ */
 import * as controller from '../../controllers/user.controller'
+/**
+ * @entities
+ */
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
+/**
+ * @middlewares
+ */
 import {
   authorize, ADMIN, LOGGED_USER
 } from '../../middlewares/auth'
@@ -11,7 +23,23 @@ import {
   replaceUser,
   updateUser,
 } from '../../validations/user.validation'
-const router = express.Router();
+
+/**
+ * @routes
+ */
+import SettingsRoute from './settings'
+import UserProductsRoute from './user-products.route'
+import PurchaseHistoryRoute from './purchase-history.route'
+
+const router = express.Router({mergeParams: true});
+
+/**
+ * expose settings route here
+ */
+router
+  .use('/:userId/settings', authorize(LOGGED_USER), SettingsRoute)
+  .use('/:userId/products', authorize(LOGGED_USER), UserProductsRoute)
+  .use('/:userId/purchase-history', authorize(LOGGED_USER), PurchaseHistoryRoute)
 /**
  * Load user when API with userId route parameter is hit
  */

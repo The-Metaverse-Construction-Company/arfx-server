@@ -6,12 +6,11 @@ export interface IAggregatePagination<T> {
 }
 export type IAggregatePaginationResponse<T> = IAggregatePagination<T>
 export interface IPaginationParameters {
-  limitTo?: number
-  startAt?: number
+ limit?: number
+ pageNo?: number//page number
+ searchText?: string
 }
 export interface IPaginationQueryParams extends IPaginationParameters {
-  limitTo?: number
-  searchText?: string
   sortBy?: ISortBy | ISortBy[]
 }
 export interface IStateChangeData<T> {
@@ -31,17 +30,18 @@ interface ISortBy {
   status: number
 }
 type IRepositoryGatewayData<T>  = Omit<Partial<T>, '_id' | 'id' | 'createdAt'>
-type IRespositoryGatewayQuery<T> = Partial<Record<keyof T, any>>
+export type IRespositoryGatewayEntityFields<T> = Partial<Record<keyof T, any>>
 export interface IGeneralRepositoryGateway<T> {
-  findAll (queryParams?: IRespositoryGatewayQuery<T>, paginationQuery?: IPaginationParameters, project?: Partial<Record<keyof T, 1|0>>): Promise<T[]>
-  insertOne (data: T): Promise<T>
-  insertMany (data: T[]): Promise<T[]>
+  findAll (queryParams?: IRespositoryGatewayEntityFields<T>, paginationQuery?: IPaginationParameters, project?: Partial<Record<keyof T, 1|0>>): Promise<T[]>
   findById (id: string): Promise<T>
   findOne (query: Partial<T>, projection?: Partial<Record<keyof T, 1|0>>): Promise<T>
+  insertOne (data: T): Promise<T>
+  insertMany (data: T[]): Promise<T[]>
   updateById (id: string, data: IRepositoryGatewayData<T>): Promise<T>
-  updateOne (query: IRespositoryGatewayQuery<T>, data: IRepositoryGatewayData<T>): Promise<T>
-  updateMany (query: IRespositoryGatewayQuery<T>, data: IRepositoryGatewayData<T>): Promise<T[]>
+  updateOne (query: IRespositoryGatewayEntityFields<T>, data: IRepositoryGatewayData<T>): Promise<T>
+  updateMany (query: IRespositoryGatewayEntityFields<T>, data: IRepositoryGatewayData<T>): Promise<T[]>
   removeById (id: string): Promise<T>
+  removeOne (query: IRespositoryGatewayEntityFields<T>): Promise<T>
 }
 export interface IGeneralPaginationListGateway<T> {
   getListWithPagination (filterQuery: IPaginationQueryParams): Promise<IAggregatePagination<T>>

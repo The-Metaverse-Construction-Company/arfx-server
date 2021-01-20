@@ -1,16 +1,16 @@
 import {
   UserEntity
 } from '../../entities'
-import UserModel from '../../../models/user.model'
-import { IGenerateToken } from '../../interfaces'
+import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-interface Deps {
+import { IUserRepositoryGateway } from '../../entities/users'
+interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   generateToken: IGenerateToken
   sendEmail(userId: string, token: string): Promise<any>
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
-export default class UserSignUp {
-  constructor (protected deps: Deps) {
+export class UserSignUpService {
+  constructor (protected deps: IServiceDependencies) {
   }
   public createOne = async ({
     email = '',
@@ -21,15 +21,20 @@ export default class UserSignUp {
     try {
       // initiate user entity to run the validation for business rules.
       const newUser = new UserEntity({
-        email,
+        email: {
+          value: email,
+          verifiedAt: 0,
+          verified: false
+        },
         name,
         password,
         role,
       })
       // check duplicate email.
-      await this.deps.validateEmail({email})
+      await this.deps.validateEmail({email: newUser.email.value})
+      console.log('object :>> ', JSON.stringify(newUser, null, 2));
       // insert to repository.
-      await UserModel.create(newUser)
+      await this.deps.repositoryGateway.insertOne(newUser)
       const token = await this.deps.generateToken({
         referenceId: newUser._id,
         tokenType: TOKEN_TYPE.SIGN_UP

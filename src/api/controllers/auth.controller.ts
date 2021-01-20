@@ -1,17 +1,23 @@
+/**
+ * @libraries
+ */
 import httpStatus from 'http-status'
+import moment from 'moment-timezone'
 import express, {
   Response, Request, NextFunction
 } from 'express'
-import moment from 'moment-timezone'
+
 import {
-  userSignIn,
-  userSignOut
+  userSignInService,
+  userSignOutService
 } from '../service-configurations/sign-in'
+
 import {
-  verifyUserToken
+  userVerifyToken
 } from '../service-configurations/users'
+
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
-import User from '../models/user.model'
+// import User from '../models/user.model'
 import * as emailProvider from '../domain/services/emails/emailProvider'
 import { successReponse } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
@@ -46,7 +52,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       password = '',
     } = req.body
     let redisPublisher = req.app.get('redisPublisher')
-    const response = await userSignIn(redisPublisher)
+    const response = await userSignInService(redisPublisher)
       .signIn({
         username: username.trim(),
         password: password.trim()
@@ -68,14 +74,14 @@ export const userSignOutRoute = async (req: Request, res: Response, next: NextFu
     const {authorization = ''} = req.headers
     const accessToken = authorization.split(' ')[1]
     let redisPublisher = req.app.get('redisPublisher')
-    const user = await verifyUserToken(redisPublisher)
+    const user = await userVerifyToken(redisPublisher)
       .verifyOne(accessToken, TOKEN_TYPE.SIGN_IN)
       .catch(() => null)
     if (!user) {
       res.status(httpStatus.OK).send(successReponse(false))
       return
     }
-    const response = await userSignOut(redisPublisher)
+    const response = await userSignOutService(redisPublisher)
       .signOut(user._id)
     res.status(httpStatus.OK).send(successReponse(response))
   } catch (error) {

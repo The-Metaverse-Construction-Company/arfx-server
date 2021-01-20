@@ -1,20 +1,21 @@
-import UserModel from '../../../models/user.model'
 import { TOKEN_TYPE } from '../../../utils/constants'
 import { IGenerateToken } from '../../interfaces'
-import findOneById from '../users/find-one-by-id'
-
-interface Deps {
+import {
+  IGeneralServiceDependencies
+} from '../../interfaces'
+import { IUserRepositoryGateway } from '../../entities/users'
+interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   generateToken: IGenerateToken
   sendEmail(userId: string, token: string): Promise<any>
-  findUserDetailsById: ReturnType<typeof findOneById>
 }
-export default class UserResetPassword {
-  constructor (protected deps: Deps) {
+export class UserResetPasswordService {
+  constructor (protected deps: IServiceDependencies) {
   }
   public resetOne = async (email: string) => {
     try {
       // fetch user by email.
-      const user = await UserModel.findOne({
+      const user = await this.deps.repositoryGateway.findOne({
+        //@ts-expect-error
         "email.value": email
       }, {password: 0})
       if (!user) {

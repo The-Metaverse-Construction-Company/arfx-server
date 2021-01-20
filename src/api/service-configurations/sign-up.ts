@@ -1,21 +1,28 @@
+import PaymentGateway from '../../config/payment-gateway'
+
 import {RedisClient} from 'redis'
 import {
-  UserSignUp,
-  VerifyUser,
-  VerifyToken
+  UserSignUpService,
+  VerifyUserTokenService,
+  VerifiedUserService
 } from '../domain/services/sign-up'
 import {
   sendVerificationEmail
 } from './email'
 import {
   validateUserEmail,
-  findOneById,
-  verifyUserToken
+  userDetails,
+  userVerifyToken
 } from './users'
+
+import {
+  UserRepository
+} from '../../app-plugins/persistence/repository'
 
 import AuthToken from '../helper/user-token'
 export const userSignUp = (redis: RedisClient) => (
-  new UserSignUp({
+  new UserSignUpService({
+    repositoryGateway: new UserRepository(),
     generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     sendEmail: sendVerificationEmail().sendOne,
     validateEmail: validateUserEmail().validateOne
@@ -23,13 +30,15 @@ export const userSignUp = (redis: RedisClient) => (
 )
 export const verifyUser = (redis: RedisClient) => {
   const authToken = new AuthToken({redisClient: redis})
-  return new VerifyUser({
+  return new VerifiedUserService({
     revokeToken: authToken.removeAccessToken,
-    findOneById: findOneById
+    repositoryGateway: new UserRepository(),
+    userDetails: userDetails(),
+    createPaymentGatewayAccount: PaymentGateway.customer.create,
   })
 }
 export const verifySignUpToken = (redis: RedisClient) => {
-  return new VerifyToken({
-    verifyUserToken: verifyUserToken(redis)
+  return new VerifyUserTokenService({
+    verifyUserToken: userVerifyToken(redis)
   })
 }

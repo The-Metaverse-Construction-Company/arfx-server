@@ -60,13 +60,13 @@ export default Token
  * @services
  */
 
-export const generateToken = (payload: any) => {
-  return jwt.sign({
-    ...payload,
-    exp: Date.now() * (jwtExpirationInterval * 1000),
-    iat: Date.now(),
-  }, jwtSecret)
-}
-export  const verifyToken = (token: string) => {
-  return jwt.verify(token, jwtSecret)
-}
+// export const generateToken = (payload: any) => {
+//   return jwt.sign({
+//     ...payload,
+//     exp: Date.now() * (jwtExpirationInterval * 1000),
+//     iat: Date.now(),
+//   }, jwtSecret)
+// }
+// export  const verifyToken = (token: string) => {
+//   return jwt.verify(token, jwtSecret)
+// }

@@ -16,3 +16,7 @@ export const JWT_REFRESH_TOKEN_DURATION_MINUTES = process.env.JWT_REFRESH_TOKEN_
 // CLIENTS/FRONTEND //
 
 export const CLIENT_HOST= process.env.CLIENT_HOST || `http://localhost:3001`
+
+/// STRIPE KEYS ////
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
+export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''

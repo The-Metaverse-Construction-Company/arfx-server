@@ -1,20 +1,24 @@
 import {
-  SendResetPasswordEmail,
-  SendVerificationEmail
+  SendEmailVerificationService,
+  SendResetPasswordService
 } from '../domain/services/emails'
+
+import {
+  UserRepository
+} from '../../app-plugins/persistence/repository'
+// need to change this to a functional one.
 const dummyEmailSender = async (emailData: any) => {
-  console.log('emailData :>> ', emailData);
   return true
 }
 export const sendVerificationEmail = () => (
-  new SendVerificationEmail({
+  new SendEmailVerificationService({
     sendEmail: dummyEmailSender,
-    repositoryGateway: <any> (() => ({}))
+    repositoryGateway: new UserRepository()
   })
 )
 export const sendResetPasswordEmail = () => (
-  new SendResetPasswordEmail({
+  new SendResetPasswordService({
     sendEmail: dummyEmailSender,
-    repositoryGateway: <any> (() => ({}))
+    repositoryGateway: new UserRepository()
   })
 )
