@@ -1,0 +1,105 @@
+.signin-container {
+  overflow-y: hidden;
+}
+.signin-wrapper {
+  background-color: rgb(201, 201, 201);
+  position: relative;
+  // display: inline;
+  display: inline-block;
+  height:990px;
+  width:100%;
+  background-image: url('../../assets/images/sign-in-bg.jpg');
+
+
+  .sign-in-form-wrapper {
+    position: relative;
+    margin: auto;
+    margin-top:120px;
+    width: 460px;
+    height: 556px;
+    
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    color: #fff;
+
+    .sign-in-logo {
+      margin-top: 65px;
+      display: inline-block;
+      .company-logo {
+        width: 300px;
+        height: 40px;
+      }
+    }
+    .input-form-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-top:80px;
+      // font-family: Roboto;
+      font-weight: bold;
+      div {
+        text-align: left;
+        padding: 10px;
+
+        input {
+          border: 1px solid #FFFFFF;
+          box-sizing: border-box;
+          border-radius: 5px;
+          color: #fff;
+          padding: 5px;
+          background-color: rgba(39, 27, 27, 0.1);
+        }
+      }
+      .input-form-wrapper-button {
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 0px;
+        color: #FFFFFF;
+        background-color: Transparent;
+        // background-repeat:no-repeat;
+        border: none;
+        cursor:pointer;
+        // overflow: hidden;
+        outline:none;
+        text-decoration: none;
+      }
+// RESET PASSWORD
+      .reset-password-wrapper {
+        margin: auto;
+        margin-top:-50px;
+        width: 350px;
+        position: relative;
+        .reset-password-wrapper-header {
+          width: 90%;
+          margin: auto;
+          position: relative;
+          text-align: center;
+          // font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          .reset-password-wrapper-header-title {
+            font-size: 18px;
+          }
+          .reset-password-wrapper-header-description {
+            // line-height: 5px;
+            font-weight: bold;
+            font-size: 12px;
+          }
+        }
+        .reset-password-form-wrapper {
+          width: 90%;
+          margin: auto;
+          position: relative;
+          input {
+            width:100%;
+          }
+          .reset-password-form-wrapper-label {
+            line-height: 50px;
+          }
+          .reset-password-form-wrapper-button {
+            line-height: 50px;
+          }
+        }
+      }
+    }
+  }
+}
