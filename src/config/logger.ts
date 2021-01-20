@@ -1,4 +1,5 @@
-import winston from 'winston'
+const winston = require('winston');
+
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
@@ -23,10 +24,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 logger.stream = {
-  //@ts-expect-error
-  write: (message: string) => {
+  write: (message) => {
     logger.info(message.trim());
   },
 };
 
-export default logger;
+module.exports = logger;

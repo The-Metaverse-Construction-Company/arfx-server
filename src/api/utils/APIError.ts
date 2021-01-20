@@ -1,16 +1,12 @@
-import httpStatus from 'http-status'
+const httpStatus = require('http-status');
+
 /**
  * @extends Error
  */
 class ExtendableError extends Error {
-  public errors: any
-  public status: any
-  public stack: any
-  public isPublic: boolean
-  public isOperational: boolean
   constructor({
     message, errors, status, isPublic, stack,
-  }: any) {
+  }) {
     super(message);
     this.name = this.constructor.name;
     this.message = message;
@@ -40,11 +36,11 @@ class APIError extends ExtendableError {
     stack,
     status = httpStatus.INTERNAL_SERVER_ERROR,
     isPublic = false,
-  }: any) {
+  }) {
     super({
       message, errors, status, isPublic, stack,
     });
   }
 }
 
-export default APIError;
+module.exports = APIError;

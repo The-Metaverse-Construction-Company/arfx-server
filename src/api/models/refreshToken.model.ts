@@ -1,6 +1,7 @@
-import mongoose from 'mongoose'
-import crypto from 'crypto'
-import moment from 'moment-timezone'
+const mongoose = require('mongoose');
+const crypto = require('crypto');
+const moment = require('moment-timezone');
+
 /**
  * Refresh Token Schema
  * @private

@@ -1,26 +1,18 @@
-import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
-import {Strategy as BearerStrategy} from 'passport-http-bearer';
-import { jwtSecret } from './vars';
-import * as authProviders from '../api/domain/services/authProviders';
-import User from '../api/models/user.model';
-import {Request} from 'express'
-import {
-  verifyUserToken
-} from '../api/service-configurations/users'
-import { TOKEN_TYPE } from '../api/utils/constants';
-import RedisClient from './redis'
+const JwtStrategy = require('passport-jwt').Strategy;
+const BearerStrategy = require('passport-http-bearer');
+const { ExtractJwt } = require('passport-jwt');
+const { jwtSecret } = require('./vars');
+const authProviders = require('../api/services/authProviders');
+const User = require('../api/models/user.model');
+
 const jwtOptions = {
   secretOrKey: jwtSecret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
-  passReqToCallback: true
 };
 
-const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
+const jwt = async (payload, done) => {
   try {
-    const {authorization = ''} = req.headers
-    const accessToken = authorization.split(' ')[1]
-    const user = await verifyUserToken(RedisClient)
-      .verifyOne(accessToken, TOKEN_TYPE.SIGN_IN)
+    const user = await User.findById(payload.sub);
     if (user) return done(null, user);
     return done(null, false);
   } catch (error) {
@@ -28,17 +20,16 @@ const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null
   }
 };
 
-const oAuth = (service: string) => async (token: string, done: any = () => null) => {
+const oAuth = service => async (token, done) => {
   try {
-    //@ts-expect-error
     const userData = await authProviders[service](token);
-    //@ts-expect-error
     const user = await User.oAuthLogin(userData);
     return done(null, user);
   } catch (err) {
     return done(err);
   }
 };
-export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
-export const facebook = new BearerStrategy(oAuth('facebook'));
-export const google = new BearerStrategy(oAuth('google'));
+
+exports.jwt = new JwtStrategy(jwtOptions, jwt);
+exports.facebook = new BearerStrategy(oAuth('facebook'));
+exports.google = new BearerStrategy(oAuth('google'));
