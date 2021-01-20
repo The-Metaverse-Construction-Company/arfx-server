@@ -1,5 +1,5 @@
 {
-  "name": "@arwall/arfx-server",
+  "name": "@arwall-arfx/server",
   "version": "0.0.1",
   "main": "src/index.js",
   "private": false,
@@ -8,20 +8,16 @@
     "yarn": "*"
   },
   "scripts": {
-    "precommit": "yarn lint",
     "prestart": "yarn docs",
     "start": "cross-env NODE_ENV=production pm2 start ./src/index.js",
-    "dev": "nodemon ./src/index.js",
-    "lint": "eslint ./src/ --ignore-path .gitignore --ignore-pattern internals/scripts",
-    "lint:fix": "yarn lint --fix",
-    "lint:watch": "yarn lint --watch",
+    "dev": "nodemon -L ./dist/index.js",
+    "dev:watch": "tsc -w",
     "test": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 20000 --exit --recursive src/api/tests",
     "test:unit": "cross-env NODE_ENV=test mocha src/api/tests/unit",
     "test:integration": "cross-env NODE_ENV=test mocha --timeout 20000 --exit src/api/tests/integration",
     "test:watch": "cross-env NODE_ENV=test mocha --watch src/api/tests/unit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "postcoverage": "open-cli coverage/lcov-report/index.html",
-    "validate": "yarn lint && yarn test",
     "postpublish": "git push --tags",
     "deploy": "sh ./deploy.sh",
     "docs": "apidoc -i src -o docs",
@@ -32,7 +28,9 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
+    "@types/mocha": "^8.2.0",
     "axios": "^0.19.0",
+    "bcrypt": "^5.0.0",
     "bcryptjs": "2.4.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.0",
@@ -46,7 +44,8 @@
     "helmet": "^3.5.0",
     "http-status": "^1.0.1",
     "joi": "^10.4.1",
-    "jwt-simple": "0.5.6",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-simple": "^0.5.6",
     "lodash": "^4.17.4",
     "method-override": "^3.0.0",
     "moment-timezone": "^0.5.13",
@@ -58,10 +57,20 @@
     "passport-jwt": "4.0.0",
     "pm2": "^4.2.0",
     "pug": "^2.0.4",
+    "redis": "^3.0.2",
     "uuid": "^3.1.0",
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.9",
+    "@types/helmet": "^4.0.0",
+    "@types/jwt-simple": "^0.5.33",
+    "@types/method-override": "0.0.31",
+    "@types/passport-http-bearer": "^1.0.36",
+    "@types/passport-jwt": "^3.0.3",
+    "@types/redis": "^2.8.28",
+    "@types/uuid": "^8.3.0",
     "apidoc": "^0.17.5",
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
@@ -76,6 +85,7 @@
     "opn-cli": "^5.0.0",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.0.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "typescript": "^4.1.3"
   }
 }
