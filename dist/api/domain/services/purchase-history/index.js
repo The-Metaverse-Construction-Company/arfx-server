@@ -10,5 +10,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./Product.Gateway"), exports);
-__exportStar(require("./PurchaseHistory.Gateway"), exports);
+__exportStar(require("./create"), exports);
+__exportStar(require("./details"), exports);
+__exportStar(require("./lists"), exports);
