@@ -42,6 +42,7 @@ export interface IGeneralRepositoryGateway<T> {
   updateOne (query: IRespositoryGatewayQuery<T>, data: IRepositoryGatewayData<T>): Promise<T>
   updateMany (query: IRespositoryGatewayQuery<T>, data: IRepositoryGatewayData<T>): Promise<T[]>
   removeById (id: string): Promise<T>
+  removeOne (query: IRespositoryGatewayQuery<T>): Promise<T>
 }
 export interface IGeneralPaginationListGateway<T> {
   getListWithPagination (filterQuery: IPaginationQueryParams): Promise<IAggregatePagination<T>>
