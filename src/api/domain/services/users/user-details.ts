@@ -3,7 +3,7 @@ import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
-export class UserDetails {
+export class UserDetailsService {
   constructor (protected dependencies: IServiceDependencies) {
   }
   public findOne = async (userId: string, projection: Partial<Record<keyof IUserEntity, 1|0>> = {}) => {

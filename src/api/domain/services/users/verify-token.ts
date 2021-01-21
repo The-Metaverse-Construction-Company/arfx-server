@@ -1,10 +1,10 @@
 import { IVerifyToken } from '../../interfaces'
-import {UserDetails} from './index'
+import {UserDetailsService} from './index'
 interface Deps {
   verifyToken: IVerifyToken
-  userDetails: UserDetails
+  userDetails: UserDetailsService
 }
-export class UserVerifyToken {
+export class UserVerifyTokenService {
   constructor (protected deps: Deps) {
   }
   /**

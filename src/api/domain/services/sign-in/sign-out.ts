@@ -3,7 +3,7 @@ import { IRevokeToken } from '../../interfaces'
 interface Deps {
   revokeToken: IRevokeToken
 }
-export default class UserSignIn {
+export class UserSignOutService {
   constructor (protected deps: Deps) {
   }
   public signOut = async (userId: string) => {

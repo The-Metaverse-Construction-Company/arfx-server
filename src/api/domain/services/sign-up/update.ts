@@ -1,17 +1,17 @@
 import { IRevokeToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-import {UserDetails} from '../users'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 import { IUserRepositoryGateway } from '../../entities/users'
 import { UserEntity } from '../../entities'
+import {UserDetailsService} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   revokeToken: IRevokeToken
-  userDetails: UserDetails
+  userDetails: UserDetailsService
   createStripeCustomer(data: {name: string, email: string}): Promise<string>
 }
-export default class VerifiedUser {
+export class VerifiedUserService {
   constructor (protected deps: IServiceDependencies) {
   }
   public updateOne = async (userId: string) => {

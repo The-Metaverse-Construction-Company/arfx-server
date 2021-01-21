@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserSignUpService = void 0;
 const entities_1 = require("../../entities");
 const constants_1 = require("../../../utils/constants");
-class UserSignUp {
+class UserSignUpService {
     constructor(deps) {
         this.deps = deps;
         this.createOne = async ({ email = '', name = '', password = '', role = '' }) => {
@@ -41,4 +42,4 @@ class UserSignUp {
         };
     }
 }
-exports.default = UserSignUp;
+exports.UserSignUpService = UserSignUpService;

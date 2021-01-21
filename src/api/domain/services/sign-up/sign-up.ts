@@ -9,7 +9,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
   sendEmail(userId: string, token: string): Promise<any>
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
-export default class UserSignUp {
+export class UserSignUpService {
   constructor (protected deps: IServiceDependencies) {
   }
   public createOne = async ({

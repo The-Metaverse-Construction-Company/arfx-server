@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VerifyUserTokenService = void 0;
 const constants_1 = require("../../../utils/constants");
-class VerifyUser {
+class VerifyUserTokenService {
     constructor(deps) {
         this.deps = deps;
         this.verifyOne = async (token) => {
@@ -18,4 +19,4 @@ class VerifyUser {
         };
     }
 }
-exports.default = VerifyUser;
+exports.VerifyUserTokenService = VerifyUserTokenService;

@@ -13,7 +13,7 @@ const user_token_1 = __importDefault(require("../helper/user-token"));
 // initiate Stripe API
 const StripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripe = new stripe_1.default(StripeSecretKey, { typescript: true, apiVersion: "2020-08-27" });
-exports.userSignUp = (redis) => (new sign_up_1.UserSignUp({
+exports.userSignUp = (redis) => (new sign_up_1.UserSignUpService({
     repositoryGateway: new repository_1.UserRepository(),
     generateToken: (new user_token_1.default({ redisClient: redis })).generateAccessToken,
     sendEmail: email_1.sendVerificationEmail().sendOne,
@@ -21,7 +21,7 @@ exports.userSignUp = (redis) => (new sign_up_1.UserSignUp({
 }));
 exports.verifyUser = (redis) => {
     const authToken = new user_token_1.default({ redisClient: redis });
-    return new sign_up_1.VerifyUser({
+    return new sign_up_1.VerifiedUserService({
         revokeToken: authToken.removeAccessToken,
         repositoryGateway: new repository_1.UserRepository(),
         userDetails: users_1.userDetails(),
@@ -41,7 +41,7 @@ exports.verifyUser = (redis) => {
     });
 };
 exports.verifySignUpToken = (redis) => {
-    return new sign_up_1.VerifyToken({
+    return new sign_up_1.VerifyUserTokenService({
         verifyUserToken: users_1.userVerifyToken(redis)
     });
 };

@@ -9,7 +9,7 @@ import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
-export class ValidateDuplicateEmail {
+export class ValidateDuplicateEmailService {
   constructor (protected dependencies: IServiceDependencies) {
   }
 

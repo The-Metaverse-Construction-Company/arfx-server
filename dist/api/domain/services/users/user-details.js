@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserDetails = void 0;
-class UserDetails {
+exports.UserDetailsService = void 0;
+class UserDetailsService {
     constructor(dependencies) {
         this.dependencies = dependencies;
         this.findOne = async (userId, projection = {}) => {
@@ -21,4 +21,4 @@ class UserDetails {
         };
     }
 }
-exports.UserDetails = UserDetails;
+exports.UserDetailsService = UserDetailsService;

@@ -15,7 +15,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 //   email: string
 //   role: string
 // }
-export class UserList {
+export class UserListService {
   constructor (protected dependencies: IServiceDependencies) {
   }
   public getList = async ({pageNo = 1, limit = 10, searchText = ''}: Partial<IPaginationParameters>) => {

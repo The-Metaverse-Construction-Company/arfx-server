@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserList = void 0;
+exports.UserListService = void 0;
 // interface IPaginationListParams {
 //   page: number
 //   perPage: number,
@@ -8,7 +8,7 @@ exports.UserList = void 0;
 //   email: string
 //   role: string
 // }
-class UserList {
+class UserListService {
     constructor(dependencies) {
         this.dependencies = dependencies;
         this.getList = async ({ pageNo = 1, limit = 10, searchText = '' }) => {
@@ -29,4 +29,4 @@ class UserList {
         };
     }
 }
-exports.UserList = UserList;
+exports.UserListService = UserListService;

@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidateDuplicateEmail = void 0;
+exports.ValidateDuplicateEmailService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const APIError_1 = __importDefault(require("../../../utils/APIError"));
-class ValidateDuplicateEmail {
+class ValidateDuplicateEmailService {
     constructor(dependencies) {
         this.dependencies = dependencies;
         this.validateOne = async ({ email = '', userId = '' }) => {
@@ -45,4 +45,4 @@ class ValidateDuplicateEmail {
         };
     }
 }
-exports.ValidateDuplicateEmail = ValidateDuplicateEmail;
+exports.ValidateDuplicateEmailService = ValidateDuplicateEmailService;

@@ -3,16 +3,16 @@ import {
   UserEntity
 } from '../../entities'
 import { IRevokeToken } from '../../interfaces'
-import {UserDetails} from '../users'
+import {UserDetailsService} from '../users'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 import { IUserRepositoryGateway } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
-  userDetails: UserDetails
+  userDetails: UserDetailsService
   revokeToken: IRevokeToken
 }
-export default class UserVerifyResetPassword {
+export class UserVerifyResetPasswordService {
   constructor (protected deps: IServiceDependencies) {
   }
   public updateOne = async (userId: string, newPassword: string) => {

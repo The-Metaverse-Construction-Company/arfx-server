@@ -8,7 +8,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
   generateToken: IGenerateToken
   comparePassword(password: string, hashPassword: string): boolean
 }
-export default class UserSignIn {
+export class UserSignInService {
   constructor (protected deps: IServiceDependencies) {
   }
   public signIn = async ({

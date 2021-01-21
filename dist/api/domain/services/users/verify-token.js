@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserVerifyToken = void 0;
-class UserVerifyToken {
+exports.UserVerifyTokenService = void 0;
+class UserVerifyTokenService {
     constructor(deps) {
         this.deps = deps;
         /**
@@ -23,4 +23,4 @@ class UserVerifyToken {
         };
     }
 }
-exports.UserVerifyToken = UserVerifyToken;
+exports.UserVerifyTokenService = UserVerifyTokenService;

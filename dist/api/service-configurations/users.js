@@ -7,10 +7,10 @@ exports.userVerifyToken = exports.userDetails = exports.userListService = export
 const users_1 = require("../domain/services/users");
 const repository_1 = require("../../app-plugins/persistence/repository");
 const user_token_1 = __importDefault(require("../helper/user-token"));
-exports.validateUserEmail = () => (new users_1.ValidateDuplicateEmail({ repositoryGateway: new repository_1.UserRepository() }));
-exports.userListService = () => (new users_1.UserList({ repositoryGateway: new repository_1.UserRepository() }));
-exports.userDetails = () => (new users_1.UserDetails({ repositoryGateway: new repository_1.UserRepository() }));
-exports.userVerifyToken = (redis) => (new users_1.UserVerifyToken({
+exports.validateUserEmail = () => (new users_1.ValidateDuplicateEmailService({ repositoryGateway: new repository_1.UserRepository() }));
+exports.userListService = () => (new users_1.UserListService({ repositoryGateway: new repository_1.UserRepository() }));
+exports.userDetails = () => (new users_1.UserDetailsService({ repositoryGateway: new repository_1.UserRepository() }));
+exports.userVerifyToken = (redis) => (new users_1.UserVerifyTokenService({
     userDetails: exports.userDetails(),
     verifyToken: new user_token_1.default({ redisClient: redis }).verifyAccessToken
 }));

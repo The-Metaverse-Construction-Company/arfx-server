@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserVerifyResetPasswordService = void 0;
 const constants_1 = require("../../../utils/constants");
 const entities_1 = require("../../entities");
-class UserVerifyResetPassword {
+class UserVerifyResetPasswordService {
     constructor(deps) {
         this.deps = deps;
         this.updateOne = async (userId, newPassword) => {
@@ -34,4 +35,4 @@ class UserVerifyResetPassword {
         };
     }
 }
-exports.default = UserVerifyResetPassword;
+exports.UserVerifyResetPasswordService = UserVerifyResetPasswordService;

@@ -8,7 +8,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
   generateToken: IGenerateToken
   sendEmail(userId: string, token: string): Promise<any>
 }
-export default class UserResetPassword {
+export class UserResetPasswordService {
   constructor (protected deps: IServiceDependencies) {
   }
   public resetOne = async (email: string) => {

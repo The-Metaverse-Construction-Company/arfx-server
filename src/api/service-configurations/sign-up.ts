@@ -1,9 +1,9 @@
 import Stripe from 'stripe'
 import {RedisClient} from 'redis'
 import {
-  UserSignUp,
-  VerifyUser,
-  VerifyToken
+  UserSignUpService,
+  VerifyUserTokenService,
+  VerifiedUserService
 } from '../domain/services/sign-up'
 import {
   sendVerificationEmail
@@ -24,7 +24,7 @@ const StripeSecretKey = process.env.STRIPE_SECRET_KEY as string
 const stripe = new Stripe(StripeSecretKey, {typescript: true, apiVersion: "2020-08-27"})
 
 export const userSignUp = (redis: RedisClient) => (
-  new UserSignUp({
+  new UserSignUpService({
     repositoryGateway: new UserRepository(),
     generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     sendEmail: sendVerificationEmail().sendOne,
@@ -33,11 +33,11 @@ export const userSignUp = (redis: RedisClient) => (
 )
 export const verifyUser = (redis: RedisClient) => {
   const authToken = new AuthToken({redisClient: redis})
-  return new VerifyUser({
+  return new VerifiedUserService({
     revokeToken: authToken.removeAccessToken,
     repositoryGateway: new UserRepository(),
     userDetails: userDetails(),
-    createStripeCustomer: async ({email,name}) => {
+    createStripeCustomer: async ({email,name}: {email: string, name: string}) => {
       try {
         const newCustomer = await stripe.customers.create({
           email,
@@ -52,7 +52,7 @@ export const verifyUser = (redis: RedisClient) => {
   })
 }
 export const verifySignUpToken = (redis: RedisClient) => {
-  return new VerifyToken({
+  return new VerifyUserTokenService({
     verifyUserToken: userVerifyToken(redis)
   })
 }

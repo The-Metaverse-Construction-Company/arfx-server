@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserSignInService = void 0;
 const constants_1 = require("../../../utils/constants");
-class UserSignIn {
+class UserSignInService {
     constructor(deps) {
         this.deps = deps;
         this.signIn = async ({ username = '', password = '', }) => {
@@ -34,4 +35,4 @@ class UserSignIn {
         };
     }
 }
-exports.default = UserSignIn;
+exports.UserSignInService = UserSignInService;

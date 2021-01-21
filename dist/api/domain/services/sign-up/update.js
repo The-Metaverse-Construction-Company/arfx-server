@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VerifiedUserService = void 0;
 const constants_1 = require("../../../utils/constants");
 const entities_1 = require("../../entities");
-class VerifiedUser {
+class VerifiedUserService {
     constructor(deps) {
         this.deps = deps;
         this.updateOne = async (userId) => {
@@ -44,4 +45,4 @@ class VerifiedUser {
         };
     }
 }
-exports.default = VerifiedUser;
+exports.VerifiedUserService = VerifiedUserService;
