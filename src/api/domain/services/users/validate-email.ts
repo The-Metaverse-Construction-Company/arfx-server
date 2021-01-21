@@ -1,9 +1,16 @@
 import httpStatus from 'http-status'
-import UserModel from '../../../models/user.model'
 import APIError from '../../../utils/APIError'
 
-export default class ValidateDuplicateEmail {
-  constructor () {
+import {
+  IUserRepositoryGateway
+} from '../../entities/users'
+
+import {
+  IGeneralServiceDependencies
+} from '../../interfaces'
+interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
+export class ValidateDuplicateEmail {
+  constructor (protected dependencies: IServiceDependencies) {
   }
 
   validateOne = async ({
@@ -22,7 +29,7 @@ export default class ValidateDuplicateEmail {
         }
       }
       // initiate user entity
-      const user = await UserModel.findOne(query)
+      const user = await this.dependencies.repositoryGateway.findOne(query)
       if (user) {
         throw new APIError({
           message: 'Validation Error',

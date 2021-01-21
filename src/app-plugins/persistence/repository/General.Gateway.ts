@@ -19,11 +19,11 @@ export default abstract class GeneralDBCommands<T, K> {
    * find all data
    * @param queryParams 
    */
-  public findAll (query?: Record<keyof K, any>, queryParams: IPaginationParameters = {}) {
-    const {limitTo = 10, startAt = 0} = queryParams
-    return this.collectionModel.find(<any>query)
-      .skip(startAt)
-      .limit(limitTo)
+  public findAll (query?: Record<keyof K, any>, queryParams: IPaginationParameters = {}, projection = {}) {
+    const {limit = 10, pageNo = 1} = queryParams
+    return this.collectionModel.find(<any>query, projection)
+      .skip(limit * (pageNo - 1))
+      .limit(limit)
       .then((data) => {
         return data
       })

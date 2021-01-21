@@ -12,6 +12,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./interfaces"), exports);
 __exportStar(require("./constants"), exports);
+__exportStar(require("./RepositoryGatewayInterfaces"), exports);
 const { ALLOWED_USER_ROLE } = require("./constants");
 const allowed_roles = Object.values(ALLOWED_USER_ROLE);
 exports.default = ({ generateId, hash }) => (
@@ -25,12 +26,12 @@ exports.default = ({ generateId, hash }) => (
  * avatarUrl: profileUrl or avatar of the user
  */
 class UserEntity {
-    constructor({ _id = '', name = '', email = '', mobileNumber = '', role = '', password = '', avatarUrl = '' }) {
+    constructor({ _id = '', name = '', email = { value: '', verified: false, verifiedAt: 0 }, mobileNumber = { value: '', verified: false, verifiedAt: 0 }, password = '', role = '' }) {
         this._id = '';
         this.name = '';
         this.role = '';
+        this.stripeCustomerId = '';
         this.password = '';
-        this.avatarUrl = '';
         this.createdAt = 0;
         this.updatedAt = 0;
         if (!_id) {
@@ -40,23 +41,15 @@ class UserEntity {
             throw new Error(`Invalid user roles. Valid Roles: ${allowed_roles.join(', ')}.`);
         }
         this._id = _id;
-        this.email = {
-            value: email,
-            verified: false,
-            verifiedAt: 0
-        };
-        this.mobileNumber = {
-            value: mobileNumber,
-            verified: false,
-            verifiedAt: 0
-        };
+        this.email = email;
+        this.mobileNumber = mobileNumber;
         this.name = name;
         this.role = role;
         this.password = hash(password);
-        this.avatarUrl = avatarUrl;
+        // this.avatarUrl = avatarUrl
         this.createdAt = Date.now();
         this.updatedAt = Date.now();
-        this.services = {
+        this.service = {
             facebook: '',
             google: '',
         };

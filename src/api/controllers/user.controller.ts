@@ -6,7 +6,7 @@ import {
   userSignUp,
 } from '../service-configurations/sign-up'
 import {
-  userList
+  userListService
 } from '../service-configurations/users'
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
@@ -109,9 +109,10 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
  */
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await userList({
-      ...req.query,
-    })
+    const users = await userListService()
+      .getList({
+        ...req.query,
+      })
     res.json(users);
   } catch (error) {
     next(error);

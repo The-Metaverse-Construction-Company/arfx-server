@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
+// this will automatically error when it have a changes on the purchase history entity interface
 const RepositoryModel = {
     _id: {
         type: String,
@@ -8,11 +9,11 @@ const RepositoryModel = {
     },
     productId: {
         type: String,
-        default: 0
+        default: '',
     },
     paymentMethodId: {
         type: String,
-        default: 0
+        default: 0,
     },
     amount: {
         type: Number,

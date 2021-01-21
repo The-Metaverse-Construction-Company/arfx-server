@@ -13,11 +13,11 @@ class GeneralDBCommands {
      * find all data
      * @param queryParams
      */
-    findAll(query, queryParams = {}) {
-        const { limitTo = 10, startAt = 0 } = queryParams;
-        return this.collectionModel.find(query)
-            .skip(startAt)
-            .limit(limitTo)
+    findAll(query, queryParams = {}, projection = {}) {
+        const { limit = 10, pageNo = 1 } = queryParams;
+        return this.collectionModel.find(query, projection)
+            .skip(limit * (pageNo - 1))
+            .limit(limit)
             .then((data) => {
             return data;
         });

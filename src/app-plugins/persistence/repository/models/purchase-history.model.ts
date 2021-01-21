@@ -9,18 +9,19 @@ import {
 export interface IPurchaseHistoryRepository extends Document, IPurchaseHistoryEntity {
   _id: any
 }
-const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<any>>> {
+// this will automatically error when it have a changes on the purchase history entity interface
+const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Object>>> {
   _id: {
     type: String,
     default: '',
   },
   productId: {
     type: String,
-    default: 0
+    default: '',
   },
   paymentMethodId: {
     type: String,
-    default: 0
+    default: 0,
   },
   amount: {
     type: Number,
@@ -44,5 +45,5 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<any
   },
 }
 
-const RepositorySchema = new Schema(RepositoryModel)
+const RepositorySchema = new Schema<IPurchaseHistoryRepository>(RepositoryModel)
 export default model<IPurchaseHistoryRepository>('purchase_histories', RepositorySchema)

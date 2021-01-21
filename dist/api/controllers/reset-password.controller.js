@@ -13,7 +13,7 @@ exports.verifyResetPasswordMiddleWare = async (req, res, next) => {
     try {
         const { token = '', tokenType = '' } = req.query;
         const redisPublish = req.app.get('redisPublisher');
-        const response = await users_1.verifyUserToken(redisPublish)
+        const response = await users_1.userVerifyToken(redisPublish)
             .verifyOne(token, constants_1.TOKEN_TYPE.RESET_PASSWORD);
         res.locals.resetPasswordData = response;
         next();

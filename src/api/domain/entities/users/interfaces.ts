@@ -7,16 +7,17 @@ export interface IUserParams {
   email: string
   mobileNumber: string
   password: string
+  role: string
 }
-export type IUserEntityBody = IUserParams & {
+export type IUserEntityBody = Omit<IUserParams, 'email' | 'mobileNumber'> & {
   email: IGeneralVerificationEntityProperties
   mobileNumber: IGeneralVerificationEntityProperties
+  stripeCustomerId: string
 }
-
+export interface IUserAuthenticationServices {
+  facebook: string
+  google: string
+}
 export interface IUserEntity extends IUserEntityBody, IGeneralEntityProperties {
-  role: string
-  service: {
-    facebook: string
-    google: string
-  }
+  service: IUserAuthenticationServices
 }

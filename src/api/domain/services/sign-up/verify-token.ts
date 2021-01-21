@@ -1,9 +1,9 @@
 import { IVerifyToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-import {VerifyUserToken} from '../users'
+import {UserVerifyToken} from '../users'
 
 interface Deps {
-  verifyUserToken: VerifyUserToken
+  verifyUserToken: UserVerifyToken
 }
 export default class VerifyUser {
   constructor (protected deps: Deps) {

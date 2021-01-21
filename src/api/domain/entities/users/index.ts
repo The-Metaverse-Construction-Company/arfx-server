@@ -1,9 +1,14 @@
 import {
-  IGeneralEntityDependencies
+  IGeneralEntityDependencies, IGeneralVerificationEntityProperties,
 } from '../../interfaces'
-
+import {
+  IUserAuthenticationServices,
+  IUserEntity,
+  IUserParams
+} from './interfaces'
 export * from './interfaces'
 export * from './constants'
+export * from './RepositoryGatewayInterfaces'
 
 const { ALLOWED_USER_ROLE } = require("./constants")
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
@@ -23,37 +28,25 @@ export default ({
    * mobileNumber: mobileNumber
    * avatarUrl: profileUrl or avatar of the user
    */
-  class UserEntity {
-    public _id: string = '';
-    public email: {
-      value: string,
-      verified: boolean,
-      verifiedAt: number 
-    }
-    public mobileNumber: {
-      value: string,
-      verified: boolean,
-      verifiedAt: number 
-    };
-    public services: {
-      facebook: string,
-      google: string,
-    };
+  class UserEntity implements IUserEntity {
+    public readonly _id: string = '';
+    public email!: IGeneralVerificationEntityProperties
+    public mobileNumber!: IGeneralVerificationEntityProperties;
+    public service!: IUserAuthenticationServices;
     public name: string = '';
     public role: string = '';
+    public stripeCustomerId: string = '';
     public password: string = '';
-    public avatarUrl: string = '';
-    public createdAt: number = 0;
-    public updatedAt: number = 0;
+    public readonly createdAt: number = 0;
+    public readonly updatedAt: number = 0;
     constructor ({
       _id = '',
       name = '',
-      email = '',
-      mobileNumber = '',
-      role = '',
+      email = {value: '', verified: false, verifiedAt: 0},
+      mobileNumber = {value: '', verified: false, verifiedAt: 0},
       password = '',
-      avatarUrl = ''
-    }: any) {
+      role = ''
+    }: Partial<IUserEntity>) {
       if (!_id) {
         _id = generateId()
       }
@@ -61,23 +54,15 @@ export default ({
         throw new Error(`Invalid user roles. Valid Roles: ${allowed_roles.join(', ')}.`)
       }
       this._id = _id
-      this.email = {
-        value: email,
-        verified: false,
-        verifiedAt: 0
-      }
-      this.mobileNumber = {
-        value: mobileNumber,
-        verified: false,
-        verifiedAt: 0
-      }
+      this.email = email
+      this.mobileNumber = mobileNumber
       this.name = name
       this.role = role
       this.password = hash(password)
-      this.avatarUrl = avatarUrl
+      // this.avatarUrl = avatarUrl
       this.createdAt = Date.now()
       this.updatedAt = Date.now()
-      this.services = {
+      this.service = {
         facebook: '',
         google: '',
       }

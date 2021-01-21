@@ -6,11 +6,11 @@ const dummyEmailSender = async (emailData) => {
     console.log('emailData :>> ', emailData);
     return true;
 };
-exports.sendVerificationEmail = () => (new emails_1.SendVerificationEmail({
+exports.sendVerificationEmail = () => (new emails_1.SendEmailVerificationService({
     sendEmail: dummyEmailSender,
     repositoryGateway: (() => ({}))
 }));
-exports.sendResetPasswordEmail = () => (new emails_1.SendResetPasswordEmail({
+exports.sendResetPasswordEmail = () => (new emails_1.SendResetPasswordService({
     sendEmail: dummyEmailSender,
     repositoryGateway: (() => ({}))
 }));

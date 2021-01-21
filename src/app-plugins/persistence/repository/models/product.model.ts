@@ -9,8 +9,8 @@ import {
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
 }
-
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<any>>> {
+// this will automatically error when it have a changes on the product entity interface
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
   _id: {
     type: String,
     default: '',

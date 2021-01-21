@@ -6,8 +6,14 @@ import {
 import AuthToken from '../helper/user-token'
 import bcrypt from 'bcryptjs'
 
+import {
+  UserRepository
+} from '../../app-plugins/persistence/repository'
+
+
 export const userSignIn = (redis: RedisClient) => (
   new UserSignIn({
+    repositoryGateway: new UserRepository(),
     comparePassword: bcrypt.compareSync,
     generateToken: new AuthToken({redisClient: redis}).generateAccessToken
   })

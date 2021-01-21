@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const entities_1 = require("../../entities");
-const user_model_1 = __importDefault(require("../../../models/user.model"));
 const constants_1 = require("../../../utils/constants");
 class UserSignUp {
     constructor(deps) {
@@ -13,15 +9,19 @@ class UserSignUp {
             try {
                 // initiate user entity to run the validation for business rules.
                 const newUser = new entities_1.UserEntity({
-                    email,
+                    email: {
+                        value: email,
+                        verifiedAt: 0,
+                        verified: false
+                    },
                     name,
                     password,
                     role,
                 });
                 // check duplicate email.
-                await this.deps.validateEmail({ email });
+                await this.deps.validateEmail({ email: newUser.email.value });
                 // insert to repository.
-                await user_model_1.default.create(newUser);
+                await this.deps.repositoryGateway.insertOne(newUser);
                 const token = await this.deps.generateToken({
                     referenceId: newUser._id,
                     tokenType: constants_1.TOKEN_TYPE.SIGN_UP

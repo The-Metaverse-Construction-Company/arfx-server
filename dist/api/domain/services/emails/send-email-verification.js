@@ -1,18 +1,15 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_model_1 = __importDefault(require("../../../models/user.model"));
+exports.SendEmailVerificationService = void 0;
 const constants_1 = require("../../../utils/constants");
-class SendEmailVerification {
+class SendEmailVerificationService {
     constructor(deps) {
         this.deps = deps;
         this.sendOne = async (userId, token) => {
             try {
                 // initiate user entity to run the validation for business rules.
                 // insert to repository.
-                const user = await user_model_1.default.findOne({ _id: userId });
+                const user = await this.deps.repositoryGateway.findOne({ _id: userId });
                 // if the email is already verified, then skip sending email.
                 if (user && !user.email.verified) {
                     this.deps.sendEmail({
@@ -32,4 +29,4 @@ class SendEmailVerification {
         };
     }
 }
-exports.default = SendEmailVerification;
+exports.SendEmailVerificationService = SendEmailVerificationService;

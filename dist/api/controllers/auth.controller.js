@@ -8,7 +8,6 @@ const http_status_1 = __importDefault(require("http-status"));
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const sign_in_1 = require("../service-configurations/sign-in");
 const users_1 = require("../service-configurations/users");
-const user_model_1 = __importDefault(require("../models/user.model"));
 const http_response_1 = require("../helper/http-response");
 const constants_1 = require("../utils/constants");
 const RefreshToken = require('../models/refreshToken.model');
@@ -59,7 +58,7 @@ exports.userSignOutRoute = async (req, res, next) => {
         const { authorization = '' } = req.headers;
         const accessToken = authorization.split(' ')[1];
         let redisPublisher = req.app.get('redisPublisher');
-        const user = await users_1.verifyUserToken(redisPublisher)
+        const user = await users_1.userVerifyToken(redisPublisher)
             .verifyOne(accessToken, constants_1.TOKEN_TYPE.SIGN_IN)
             .catch(() => null);
         if (!user) {
@@ -105,7 +104,7 @@ exports.refresh = async (req, res, next) => {
             token: refreshToken,
         });
         //@ts-expect-error
-        const { user, accessToken } = await user_model_1.default.findAndGenerateToken({ email, refreshObject });
+        const { user, accessToken } = await User.findAndGenerateToken({ email, refreshObject });
         const response = generateTokenResponse(user, accessToken);
         return res.json(response);
     }

@@ -1,20 +1,26 @@
 import {RedisClient} from 'redis'
 import {
-  ValidateUserEmail,
-  FindOneById,
+  UserDetails,
+  UserVerifyToken,
   UserList,
-  VerifyUserToken
+  ValidateDuplicateEmail
 } from '../domain/services/users'
-
+import {
+  UserRepository
+} from '../../app-plugins/persistence/repository'
 import AuthToken from '../helper/user-token'
 export const validateUserEmail = () => (
-  new ValidateUserEmail()
+  new ValidateDuplicateEmail({repositoryGateway: new UserRepository()})
 )
-export const userList = UserList()
-export const findOneById = FindOneById()
-export const verifyUserToken = (redis: RedisClient) => (
-  new VerifyUserToken({
-    findUserById: findOneById,
+export const userListService = () => (
+  new UserList({repositoryGateway: new UserRepository()})
+)
+export const userDetails = () => (
+  new UserDetails({repositoryGateway: new UserRepository()})
+)
+export const userVerifyToken = (redis: RedisClient) => (
+  new UserVerifyToken({
+    userDetails: userDetails(),
     verifyToken: new AuthToken({redisClient: redis}).verifyAccessToken
   })
 )

@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ValidateDuplicateEmail = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const user_model_1 = __importDefault(require("../../../models/user.model"));
 const APIError_1 = __importDefault(require("../../../utils/APIError"));
 class ValidateDuplicateEmail {
-    constructor() {
+    constructor(dependencies) {
+        this.dependencies = dependencies;
         this.validateOne = async ({ email = '', userId = '' }) => {
             try {
                 const query = {
@@ -21,7 +22,7 @@ class ValidateDuplicateEmail {
                     };
                 }
                 // initiate user entity
-                const user = await user_model_1.default.findOne(query);
+                const user = await this.dependencies.repositoryGateway.findOne(query);
                 if (user) {
                     throw new APIError_1.default({
                         message: 'Validation Error',
@@ -44,4 +45,4 @@ class ValidateDuplicateEmail {
         };
     }
 }
-exports.default = ValidateDuplicateEmail;
+exports.ValidateDuplicateEmail = ValidateDuplicateEmail;

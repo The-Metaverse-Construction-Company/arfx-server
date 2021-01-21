@@ -1,26 +1,32 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_model_1 = __importDefault(require("../../../models/user.model"));
-exports.default = () => (async ({ page = 1, perPage = 30, name = '', email = '', role }) => {
-    try {
-        const query = {
-            name: new RegExp(name, 'i'),
-            "email.value": new RegExp(email, 'i')
+exports.UserList = void 0;
+// interface IPaginationListParams {
+//   page: number
+//   perPage: number,
+//   name: string
+//   email: string
+//   role: string
+// }
+class UserList {
+    constructor(dependencies) {
+        this.dependencies = dependencies;
+        this.getList = async ({ pageNo = 1, limit = 10, searchText = '' }) => {
+            try {
+                const query = {
+                    name: new RegExp(searchText, 'i'),
+                    "email.value": new RegExp(searchText, 'i')
+                };
+                const list = await this.dependencies.repositoryGateway.findAll(query, { pageNo, limit }, {
+                    password: 0
+                });
+                return list;
+            }
+            catch (error) {
+                console.log('error :>> ', error);
+                throw error;
+            }
         };
-        const list = await user_model_1.default.find(query, {
-            password: 0
-        })
-            .sort({ createdAt: -1 })
-            .skip(perPage * (page - 1))
-            .limit(perPage)
-            .exec();
-        return list;
     }
-    catch (error) {
-        console.log('error :>> ', error);
-        throw error;
-    }
-});
+}
+exports.UserList = UserList;

@@ -7,22 +7,26 @@ import {
 import AuthToken from '../helper/user-token'
 
 import {
-  findOneById
+  userDetails
 } from './users'
 import {
   sendResetPasswordEmail
 } from './email'
+import {
+  UserRepository
+} from '../../app-plugins/persistence/repository'
 
 export const sendResetPassword = (redis: RedisClient) => (
   new SendResetPassword({
-    findUserDetailsById: findOneById,
+    repositoryGateway: new UserRepository(),
     generateToken: new AuthToken({redisClient: redis}).generateAccessToken,
     sendEmail: sendResetPasswordEmail().sendOne
   })
 )
 export const updateResetPassword = (redis: RedisClient) => (
   new UpdateResetPassword({
-    findUserDetailsById: findOneById,
+    repositoryGateway: new UserRepository(),
+    userDetails: userDetails(),
     revokeToken: new AuthToken({redisClient: redis}).removeAccessToken
   })
 )

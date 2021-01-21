@@ -100,7 +100,8 @@ exports.update = (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
     try {
-        const users = await users_1.userList({
+        const users = await users_1.userListService()
+            .getList({
             ...req.query,
         });
         res.json(users);

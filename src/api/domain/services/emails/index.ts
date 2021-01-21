@@ -1,2 +1,2 @@
-export {default as SendVerificationEmail} from './send-email-verification'
-export {default as SendResetPasswordEmail} from './send-reset-password'
+export * from './send-email-verification'
+export * from './send-reset-password'

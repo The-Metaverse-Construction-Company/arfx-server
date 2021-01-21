@@ -1,33 +1,36 @@
 import {
-  UserEntity
-} from '../../entities'
-import UserModel from '../../../models/user.model'
-interface IPaginationListParams {
-  page: number
-  perPage: number,
-  name: string
-  email: string
-  role: string
-}
-export default () => (
-  async ({page = 1, perPage = 30, name = '', email = '', role}: Partial<IPaginationListParams>) => {
+  IUserRepositoryGateway
+} from '../../entities/users'
+
+import { IPaginationParameters } from '../../interfaces/general-repository-gateway'
+
+import {
+  IGeneralServiceDependencies
+} from '../../interfaces'
+interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
+// interface IPaginationListParams {
+//   page: number
+//   perPage: number,
+//   name: string
+//   email: string
+//   role: string
+// }
+export class UserList {
+  constructor (protected dependencies: IServiceDependencies) {
+  }
+  public getList = async ({pageNo = 1, limit = 10, searchText = ''}: Partial<IPaginationParameters>) => {
     try {
       const query = {
-        name: new RegExp(name, 'i'),
-        "email.value": new RegExp(email, 'i')
+        name: new RegExp(searchText, 'i'),
+        "email.value": new RegExp(searchText, 'i')
       }
-      const list = await UserModel.find(query, {
+      const list = await this.dependencies.repositoryGateway.findAll(query, {pageNo, limit}, {
         password: 0
       })
-      .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
-      .exec();
-
       return list
     } catch (error) {
       console.log('error :>> ', error);
       throw error
     }
   }
-)
+}

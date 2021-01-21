@@ -60,8 +60,8 @@ app.use(cors());
 // enable authentication
 app.use(passport_1.default.initialize());
 passport_1.default.use('jwt', strategies.jwt);
-passport_1.default.use('facebook', strategies.facebook);
-passport_1.default.use('google', strategies.google);
+// passport.use('facebook', strategies.facebook);
+// passport.use('google', strategies.google);
 // mount api v1 routes
 app.use('/v1', v1_1.default);
 // if error is not an instanceOf APIError, convert it.

@@ -1,18 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const constants_1 = require("../../../utils/constants");
-class VerifiedUu {
+const entities_1 = require("../../entities");
+class VerifiedUser {
     constructor(deps) {
         this.deps = deps;
         this.updateOne = async (userId) => {
             try {
-                const user = await this.deps.findOneById(userId, { password: 0 });
-                user.email.verified = true;
-                user.email.verifiedAt = Date.now();
+                //fetch user details
+                const user = await this.deps.userDetails.findOne(userId, { password: 0 });
+                // create account on stripe. 
+                // reference: https://stripe.com/docs/api/customers
+                const customerId = await this.deps.createStripeCustomer({
+                    email: user.email.value,
+                    name: user.name
+                });
+                // initiate user entity to validate the updated if allowed on the business rules.
+                const validatedUser = new entities_1.UserEntity({
+                    ...user,
+                    email: {
+                        value: user.email.value,
+                        verified: true,
+                        verifiedAt: Date.now()
+                    },
+                    stripeCustomerId: customerId
+                });
+                const updatedUser = await this.deps.repositoryGateway.updateOne({
+                    _id: userId
+                }, {
+                    //@ts-expect-error
+                    "email.verified": validatedUser.email.verified,
+                    "email.verifiedAt": validatedUser.email.verifiedAt,
+                    stripeCustomerId: validatedUser.stripeCustomerId
+                });
                 await this.deps.revokeToken(userId, constants_1.TOKEN_TYPE.SIGN_UP);
-                await user.save();
+                // create stripe users
                 //add some logs
-                return user;
+                return updatedUser;
             }
             catch (error) {
                 throw error;
@@ -20,4 +44,4 @@ class VerifiedUu {
         };
     }
 }
-exports.default = VerifiedUu;
+exports.default = VerifiedUser;
