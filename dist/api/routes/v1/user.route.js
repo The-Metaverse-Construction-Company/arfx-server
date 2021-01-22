@@ -22,13 +22,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @libraries
+ */
 const express_1 = __importDefault(require("express"));
 const express_validation_1 = __importDefault(require("express-validation"));
+/**
+ * @controllers
+ */
 const controller = __importStar(require("../../controllers/user.controller"));
+/**
+ * @entities
+ */
 const users_1 = require("../../domain/entities/users");
+/**
+ * @middlewares
+ */
 const auth_1 = require("../../middlewares/auth");
 const user_validation_1 = require("../../validations/user.validation");
-const router = express_1.default.Router();
+/**
+ * @routes
+ */
+const settings_1 = __importDefault(require("./settings"));
+const router = express_1.default.Router({ mergeParams: true });
+/**
+ * expose settings route here
+ */
+router
+    .get('/:userId/settings', settings_1.default);
 /**
  * Load user when API with userId route parameter is hit
  */

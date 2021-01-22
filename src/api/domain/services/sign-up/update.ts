@@ -9,7 +9,7 @@ import {UserDetailsService} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   revokeToken: IRevokeToken
   userDetails: UserDetailsService
-  createStripeCustomer(data: {name: string, email: string}): Promise<string>
+  createPaymentGatewayAccount(data: {name: string, email: string}): Promise<string>
 }
 export class VerifiedUserService {
   constructor (protected deps: IServiceDependencies) {
@@ -20,10 +20,11 @@ export class VerifiedUserService {
       const user = await this.deps.userDetails.findOne(userId, {password: 0})
       // create account on stripe. 
       // reference: https://stripe.com/docs/api/customers
-      const customerId = await this.deps.createStripeCustomer({
+      const customerId = await this.deps.createPaymentGatewayAccount({
         email: user.email.value,
         name: user.name
       })
+      console.log('customerId :>> ', customerId);
       // initiate user entity to validate the updated if allowed on the business rules.
       const validatedUser = new UserEntity({
         ...user,

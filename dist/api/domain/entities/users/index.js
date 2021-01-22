@@ -26,9 +26,10 @@ exports.default = ({ generateId, hash }) => (
  * avatarUrl: profileUrl or avatar of the user
  */
 class UserEntity {
-    constructor({ _id = '', name = '', email = { value: '', verified: false, verifiedAt: 0 }, mobileNumber = { value: '', verified: false, verifiedAt: 0 }, password = '', role = '' }) {
+    constructor({ _id = '', name = '', email = { value: '', verified: false, verifiedAt: 0 }, mobileNumber = { value: '', verified: false, verifiedAt: 0 }, password = '', role = '', stripeCustomerId = '' }) {
         this._id = '';
         this.name = '';
+        this.userId = '';
         this.role = '';
         this.stripeCustomerId = '';
         this.password = '';
@@ -45,6 +46,7 @@ class UserEntity {
         this.mobileNumber = mobileNumber;
         this.name = name;
         this.role = role;
+        this.stripeCustomerId = stripeCustomerId;
         this.password = hash(password);
         // this.avatarUrl = avatarUrl
         this.createdAt = Date.now();

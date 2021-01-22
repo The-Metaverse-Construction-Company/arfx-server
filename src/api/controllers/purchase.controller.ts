@@ -3,10 +3,11 @@ import {
   Response, Request, NextFunction
 } from 'express'
 import {
-  createPurchaseHistory
+  purchaseProductService
 } from '../service-configurations/PurchaseHistory'
 
 import { successReponse } from '../helper/http-response'
+import { IUserEntity } from '../domain/entities/users';
 /**
  * @public
  * create a product
@@ -16,10 +17,11 @@ import { successReponse } from '../helper/http-response'
  *  @field: price: float
  *  @field: name: string
  */
-export const createPurchaseHistoryRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const purchaseProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newPurchaseHistory = await createPurchaseHistory()
-      .createOne(req.body)
+    const {_id = ''} = <IUserEntity>req.user
+    const newPurchaseHistory = await purchaseProductService()
+      .purchaseOne(_id, req.body)
     res.status(httpStatus.CREATED)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {

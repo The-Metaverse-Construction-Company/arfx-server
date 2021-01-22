@@ -22,6 +22,7 @@ export default ({
     public readonly published: boolean = false
     // public readonly stripeCustomerId!: string
     public readonly price!: number
+    public readonly discountPercentage!: number
     public readonly sceneURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
@@ -30,6 +31,7 @@ export default ({
       name = '',
       description = '',
       price = 0,
+      discountPercentage = 0,
       sceneURL = '',
       title = '',
       published = false,
@@ -38,14 +40,31 @@ export default ({
       createdAt  = Date.now()
     }: Partial<IProductEntity>) {
       
+      price = parseFloat(<any>price)
+      price = parseFloat(<any>discountPercentage)
       if (!_id) {
         _id = generateId()
+      }
+      if (price <= 0) {
+        throw new Error('Price must be larger than 0.')
+      }
+      if (discountPercentage < 0) {
+        throw new Error('discountPercentage must be larger than 0.')
+      }
+      if (!title) {
+        throw new Error('title must not be null, undefined or empty string.')
+      } else if (title.length >= 3) {
+        throw new Error('title must atleast 3 characters.')
+      }
+      if (!description) {
+        throw new Error('description must not be null, undefined or empty string.')
       }
       // add additional business rules here if needed.
       this._id = _id
       this.name = name
       this.description = description
       this.price = price
+      this.discountPercentage = discountPercentage
       this.sceneURL = sceneURL
       this.title = title
       this.published = published

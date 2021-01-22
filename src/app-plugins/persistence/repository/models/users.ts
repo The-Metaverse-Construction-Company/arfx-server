@@ -18,7 +18,6 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
   name: {
     type: String,
     default: '',
-    required: true
   },
   email: {
     value: {
@@ -39,7 +38,6 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
     value: {
       type: String,
       default: '',
-      required: true
     },
     verified: {
       type: Boolean,
@@ -53,7 +51,6 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
   stripeCustomerId: {
     type: String,
     default: '',
-    required: true
   },
   password: {
     type: String,
@@ -69,12 +66,10 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
     facebook: {
       type: String,
       default: '',
-      required: true
     },
     google: {
       type: String,
       default: '',
-      required: true
     },
   },
   createdAt: {
@@ -88,4 +83,4 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IUserRepository>('purchase_histories', RepositorySchema)
+export default model<IUserRepository>('users', RepositorySchema)

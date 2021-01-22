@@ -18,18 +18,32 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
   productId: {
     type: String,
     default: '',
+    required: true,
+  },
+  userId: {
+    type: String,
+    default: '',
+    required: true,
   },
   paymentMethodId: {
     type: String,
-    default: 0,
+    default: '',
+    required: true,
+
+  },
+  paymentIntentId: {
+    type: String,
+    default: '',
+    required: true,
   },
   amount: {
     type: Number,
-    default: 0
+    default: 0,
+    required: true
   },
   discountPercentage: {
     type: String,
-    default: 0
+    default: 0,
   },
   purchasedAt: {
     type: Number,

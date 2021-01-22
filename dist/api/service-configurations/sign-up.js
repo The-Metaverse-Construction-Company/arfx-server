@@ -4,15 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifySignUpToken = exports.verifyUser = exports.userSignUp = void 0;
-const stripe_1 = __importDefault(require("stripe"));
+const payment_gateway_1 = __importDefault(require("../../config/payment-gateway"));
 const sign_up_1 = require("../domain/services/sign-up");
 const email_1 = require("./email");
 const users_1 = require("./users");
 const repository_1 = require("../../app-plugins/persistence/repository");
 const user_token_1 = __importDefault(require("../helper/user-token"));
-// initiate Stripe API
-const StripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = new stripe_1.default(StripeSecretKey, { typescript: true, apiVersion: "2020-08-27" });
 exports.userSignUp = (redis) => (new sign_up_1.UserSignUpService({
     repositoryGateway: new repository_1.UserRepository(),
     generateToken: (new user_token_1.default({ redisClient: redis })).generateAccessToken,
@@ -25,19 +22,7 @@ exports.verifyUser = (redis) => {
         revokeToken: authToken.removeAccessToken,
         repositoryGateway: new repository_1.UserRepository(),
         userDetails: users_1.userDetails(),
-        createStripeCustomer: async ({ email, name }) => {
-            try {
-                const newCustomer = await stripe.customers.create({
-                    email,
-                    name
-                });
-                return newCustomer.id;
-            }
-            catch (error) {
-                console.log('Failed to create stripe customer. Error: ', error.message);
-                throw error;
-            }
-        }
+        createPaymentGatewayAccount: payment_gateway_1.default.customer.create,
     });
 };
 exports.verifySignUpToken = (redis) => {

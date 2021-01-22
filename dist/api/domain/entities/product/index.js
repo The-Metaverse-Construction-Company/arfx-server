@@ -13,18 +13,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./interfaces"), exports);
 __exportStar(require("./RepositoryGatewayInterfaces"), exports);
 exports.default = ({ generateId }) => (class ProductEntity {
-    constructor({ _id = '', name = '', description = '', price = 0, sceneURL = '', title = '', published = false, 
+    constructor({ _id = '', name = '', description = '', price = 0, discountPercentage = 0, sceneURL = '', title = '', published = false, 
     // stripeCustomerId = '',
     updatedAt = Date.now(), createdAt = Date.now() }) {
         this.published = false;
+        price = parseFloat(price);
+        price = parseFloat(discountPercentage);
         if (!_id) {
             _id = generateId();
+        }
+        if (price <= 0) {
+            throw new Error('Price must be larger than 0.');
+        }
+        if (discountPercentage < 0) {
+            throw new Error('discountPercentage must be larger than 0.');
+        }
+        if (!title) {
+            throw new Error('title must not be null, undefined or empty string.');
+        }
+        else if (title.length >= 3) {
+            throw new Error('title must atleast 3 characters.');
+        }
+        if (!description) {
+            throw new Error('description must not be null, undefined or empty string.');
         }
         // add additional business rules here if needed.
         this._id = _id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.discountPercentage = discountPercentage;
         this.sceneURL = sceneURL;
         this.title = title;
         this.published = published;

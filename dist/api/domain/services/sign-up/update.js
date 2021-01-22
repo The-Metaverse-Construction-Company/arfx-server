@@ -12,10 +12,11 @@ class VerifiedUserService {
                 const user = await this.deps.userDetails.findOne(userId, { password: 0 });
                 // create account on stripe. 
                 // reference: https://stripe.com/docs/api/customers
-                const customerId = await this.deps.createStripeCustomer({
+                const customerId = await this.deps.createPaymentGatewayAccount({
                     email: user.email.value,
                     name: user.name
                 });
+                console.log('customerId :>> ', customerId);
                 // initiate user entity to validate the updated if allowed on the business rules.
                 const validatedUser = new entities_1.UserEntity({
                     ...user,

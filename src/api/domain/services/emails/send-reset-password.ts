@@ -16,7 +16,7 @@ export class SendResetPasswordService {
     try {
       // initiate user entity to run the validation for business rules.
       // insert to repository.
-      const user = await this.deps.repositoryGateway.findOne({_id: userId})
+      const user = await this.deps.repositoryGateway.findOne({_id: userId}).catch(() => null)
       // if the email is already verified, then skip sending email.
       if (user) {
         this.deps.sendEmail({

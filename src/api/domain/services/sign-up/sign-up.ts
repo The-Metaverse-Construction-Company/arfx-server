@@ -32,6 +32,7 @@ export class UserSignUpService {
       })
       // check duplicate email.
       await this.deps.validateEmail({email: newUser.email.value})
+      console.log('object :>> ', JSON.stringify(newUser, null, 2));
       // insert to repository.
       await this.deps.repositoryGateway.insertOne(newUser)
       const token = await this.deps.generateToken({

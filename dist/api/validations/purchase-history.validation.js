@@ -3,22 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateProductValidation = void 0;
+exports.PurchaseValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 // POST /v1/auth/register
-exports.CreateProductValidation = {
+exports.PurchaseValidation = {
     body: {
-        amount: joi_1.default
-            .number()
-            .required(),
-        discountPercentage: joi_1.default
-            .number()
-            .required(),
         paymentMethodId: joi_1.default
             .string()
             .required(),
         productId: joi_1.default
             .string()
+            .required(),
+        keepCardDetails: joi_1.default
+            .boolean()
             .required(),
     },
 };

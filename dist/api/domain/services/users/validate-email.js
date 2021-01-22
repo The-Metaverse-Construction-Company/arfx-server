@@ -22,7 +22,8 @@ class ValidateDuplicateEmailService {
                     };
                 }
                 // initiate user entity
-                const user = await this.dependencies.repositoryGateway.findOne(query);
+                // add catch to handle the built in error on the findOne when no details found.
+                const user = await this.dependencies.repositoryGateway.findOne(query).catch(() => null);
                 if (user) {
                     throw new APIError_1.default({
                         message: 'Validation Error',

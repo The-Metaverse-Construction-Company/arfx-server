@@ -1,21 +1,18 @@
 import Joi, {ValidationOptions} from 'joi'
 import {
-  IPurchaseHistoryBody
+  IPurchaseHistoryParams
 } from '../domain/entities/purchase-history'
   // POST /v1/auth/register
-export const CreateProductValidation = <{body: Record<keyof IPurchaseHistoryBody, ValidationOptions>}>{
+export const PurchaseValidation = <{body: Record<keyof IPurchaseHistoryParams, ValidationOptions>}>{
   body: {
-    amount: Joi
-      .number()
-      .required(),
-    discountPercentage: Joi
-      .number()
-      .required(),
     paymentMethodId: Joi
       .string()
       .required(),
     productId: Joi
       .string()
+      .required(),
+    keepCardDetails: Joi
+      .boolean()
       .required(),
   },
 }

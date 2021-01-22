@@ -24,18 +24,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validation_1 = __importDefault(require("express-validation"));
-const controller = __importStar(require("../../controllers/product.controller"));
-const validations = __importStar(require("../../validations/product.validation"));
-const purchase_route_1 = __importDefault(require("./purchase.route"));
-const router = express_1.default.Router();
-router.use('/purchase', purchase_route_1.default);
-router.route('/')
-    .post(express_validation_1.default(validations.CreateProductValidation), controller.createProductRoute)
-    .get(controller.productListRoute);
-router.route('/:productId')
-    .get(controller.productDetailsRoute)
-    .patch(express_validation_1.default(validations.UpdateProductValidation), controller.updateProductRoute)
-    .delete(express_validation_1.default(validations.RemoveProductValidation), controller.removeProductRoute);
-router.route('/:productId/published')
-    .patch(express_validation_1.default(validations.UpdateProductPublishValidation), controller.updateProductPublishStatusRoute);
+const controller = __importStar(require("../../controllers/payment.controller"));
+const purchase_controller_1 = require("../../controllers/purchase.controller");
+const purchase_history_validation_1 = require("../../validations/purchase-history.validation");
+const auth_1 = require("../../middlewares/auth");
+const router = express_1.default.Router({ mergeParams: true });
+router.route('/set-up')
+    .post(auth_1.authorize(auth_1.LOGGED_USER), controller.createCustomerIntent);
+router.route('/purchase')
+    .post(auth_1.authorize(auth_1.LOGGED_USER), purchase_controller_1.createPurchaseHistoryRoute);
+router.route('/payment-methods')
+    .get(auth_1.authorize(auth_1.LOGGED_USER), express_validation_1.default(purchase_history_validation_1.PurchaseValidation), controller.getCustomerPaymentMethods);
 exports.default = router;

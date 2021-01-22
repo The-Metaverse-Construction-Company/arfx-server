@@ -4,19 +4,20 @@ import authRoutes from './auth.route'
 import ResetPasswordRoute from './reset-password.route'
 import SignUpRoute from './sign-up.route'
 import ProductsRoute from './products.route'
-
 const router = express.Router();
 
 /**
  * GET v1/status
  */
 router.get('/status', (req: Request, res: Response) => res.send('OK'));
-
+     
 /**
  * GET v1/docs
  */
 router.use('/docs', express.static('docs'));
-
+/**
+ * 
+ */
 router.use('/users', userRoutes);
 router.use('/products', ProductsRoute);
 router.use('/auth', authRoutes);

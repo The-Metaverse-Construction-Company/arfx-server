@@ -2,8 +2,10 @@ import express from 'express'
 import validate from 'express-validation'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
-
+import PurchaseRoute from './purchase.route'
 const router = express.Router();
+
+router.use('/purchase', PurchaseRoute)
 
 router.route('/')
   .post(validate(validations.CreateProductValidation), controller.createProductRoute)

@@ -2,11 +2,15 @@ import {
   IGeneralEntityProperties
 } from '../../interfaces/index'
 
-export type IPurchaseHistoryBody = {
+export interface IPurchaseHistoryParams {
   productId: string // product id
-  amount: number // total amount of the purchase.
   paymentMethodId: string // payment method used for the purchase. at customer profile on stripe UI.
-  discountPercentage: number // discount of the product when it purchase.
+  keepCardDetails: boolean
+}
+export interface IPurchaseHistoryBody extends Omit<IPurchaseHistoryParams, 'keepCardDetails'> {
+  amount: number // total amount of the purchase.
+  userId: string // user who do the action purchase.
+  paymentIntentId: string // paymentId/transactionId from stripe.
 }
 
 export type IPurchaseHistoryEntity = IPurchaseHistoryBody & IGeneralEntityProperties & {

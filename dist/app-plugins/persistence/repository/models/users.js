@@ -10,7 +10,6 @@ const RepositoryModel = {
     name: {
         type: String,
         default: '',
-        required: true
     },
     email: {
         value: {
@@ -31,7 +30,6 @@ const RepositoryModel = {
         value: {
             type: String,
             default: '',
-            required: true
         },
         verified: {
             type: Boolean,
@@ -45,7 +43,6 @@ const RepositoryModel = {
     stripeCustomerId: {
         type: String,
         default: '',
-        required: true
     },
     password: {
         type: String,
@@ -61,12 +58,10 @@ const RepositoryModel = {
         facebook: {
             type: String,
             default: '',
-            required: true
         },
         google: {
             type: String,
             default: '',
-            required: true
         },
     },
     createdAt: {
@@ -79,4 +74,4 @@ const RepositoryModel = {
     },
 };
 const RepositorySchema = new mongoose_1.Schema(RepositoryModel);
-exports.default = mongoose_1.model('purchase_histories', RepositorySchema);
+exports.default = mongoose_1.model('users', RepositorySchema);

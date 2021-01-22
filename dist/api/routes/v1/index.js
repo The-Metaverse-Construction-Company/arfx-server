@@ -18,6 +18,9 @@ router.get('/status', (req, res) => res.send('OK'));
  * GET v1/docs
  */
 router.use('/docs', express_1.default.static('docs'));
+/**
+ *
+ */
 router.use('/users', user_route_1.default);
 router.use('/products', products_route_1.default);
 router.use('/auth', auth_route_1.default);

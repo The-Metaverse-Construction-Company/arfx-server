@@ -1,16 +1,27 @@
+import PaymentGateway from '../../config/payment-gateway'
 import {
-  CreatePurchaseHistory,
+  PurchaseProductService,
   PurchaseHistoryDetails,
-  PurchaseHistoryList
+  PurchaseHistoryList,
 } from '../domain/services/purchase-history'
+import {
+  productDetails
+} from './Products'
+import {
+  userDetails
+} from './users'
 
 import {
   PurchaseHistoryRepository
 } from '../../app-plugins/persistence/repository'
 
-export const createPurchaseHistory = () => (
-  new CreatePurchaseHistory({
-    repositoryGateway: new PurchaseHistoryRepository()
+export const purchaseProductService = () => (
+  new PurchaseProductService({
+    repositoryGateway: new PurchaseHistoryRepository(),
+    productDetailsService: productDetails(),
+    userDetailsService: userDetails(),
+    chargeCustomer: PaymentGateway.customer.charge,
+    setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents
   })
 )
 export const purchaseHistoryDetails = () => (
