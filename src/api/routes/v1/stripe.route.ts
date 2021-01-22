@@ -1,4 +1,5 @@
 import {Router} from 'express'
+import { PURCHASE_HISTORY_STATE } from '../../domain/entities/purchase-history';
 import {updatePurchaseStateService} from '../../service-configurations/purchase-history'
 const app = Router({mergeParams: true})
 
@@ -29,6 +30,9 @@ app.post('/webhook', (request, response) => {
       break;
     case 'payment_intent.payment_failed':
       console.log('Payment intent failed. ');
+      updatePurchaseStateService()
+        .updateOne(payment_method.id, PURCHASE_HISTORY_STATE.FAILED)
+        .catch((err) => null)
       // Then define and call a method to handle the successful attachment of a PaymentMethod.
       // handlePaymentMethodAttached(paymentMethod);
       break;

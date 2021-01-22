@@ -8,22 +8,23 @@ export class UpdatePurchaseStateService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create purchase history
-   * @param productBody 
+   * update the state of the puchase.
+   * @param pmId // paymentMethodId from the payment gateway.
+   * @param state PURCHASE_HISTORY_STATE
    */
-  public updateOne = async (purchaseId: string, state: PURCHASE_HISTORY_STATE) => {
+  public updateOne = async (pmId: string, state: PURCHASE_HISTORY_STATE) => {
     try {
       if (state === PURCHASE_HISTORY_STATE.PENDING) {
         throw new Error('Pending state is not allowed when the purchase already created.')
       }
       const updatedPurchase = await this.dependencies.repositoryGateway.updateOne({
-        _id: purchaseId
+        paymentMethodId: pmId
       }, {
         state
       })
       return updatedPurchase
     } catch (error) {
-      console.log('failed to update purchase status:>> ', error);
+      console.log('failed to update purchase status:>> ', error.message);
       throw error
     }
   }
