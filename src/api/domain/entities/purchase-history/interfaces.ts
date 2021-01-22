@@ -1,6 +1,7 @@
 import {
   IGeneralEntityProperties
 } from '../../interfaces/index'
+import { PURCHASE_HISTORY_STATE } from './enum'
 
 export interface IPurchaseHistoryParams {
   productId: string // product id
@@ -11,6 +12,7 @@ export interface IPurchaseHistoryBody extends Omit<IPurchaseHistoryParams, 'keep
   amount: number // total amount of the purchase.
   userId: string // user who do the action purchase.
   paymentIntentId: string // paymentId/transactionId from stripe.
+  state: PURCHASE_HISTORY_STATE // state of the purchase.
 }
 
 export type IPurchaseHistoryEntity = IPurchaseHistoryBody & IGeneralEntityProperties & {

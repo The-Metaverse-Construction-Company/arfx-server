@@ -3,7 +3,7 @@ import {
 } from 'mongoose'
 
 import {
-  IPurchaseHistoryEntity
+  IPurchaseHistoryEntity, PURCHASE_HISTORY_STATE
 } from '../../../../api/domain/entities/purchase-history'
 
 export interface IPurchaseHistoryRepository extends Document, IPurchaseHistoryEntity {
@@ -29,7 +29,6 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     type: String,
     default: '',
     required: true,
-
   },
   paymentIntentId: {
     type: String,
@@ -42,8 +41,12 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     required: true
   },
   discountPercentage: {
-    type: String,
+    type: Number,
     default: 0,
+  },
+  state: {
+    type: Number,
+    default: PURCHASE_HISTORY_STATE.PENDING,
   },
   purchasedAt: {
     type: Number,

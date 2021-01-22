@@ -4,7 +4,7 @@ import {
 } from 'express'
 import {
   purchaseProductService
-} from '../service-configurations/PurchaseHistory'
+} from '../service-configurations/purchase-history'
 
 import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';

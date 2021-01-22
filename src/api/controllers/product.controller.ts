@@ -9,7 +9,7 @@ import {
   productDetails,
   removeProduct,
   updateProductPublishStatus
-} from '../service-configurations/Products'
+} from '../service-configurations/products'
 
 import { successReponse } from '../helper/http-response'
 /**

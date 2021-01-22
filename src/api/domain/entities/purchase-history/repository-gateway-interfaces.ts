@@ -3,7 +3,7 @@ import {
 } from '../../interfaces/general-repository-gateway'
 import {
   IPurchaseHistoryEntity
-} from './Interfaces'
+} from './interfaces'
 
 export interface IPurchaseHistorryRepositoryGateway extends IGeneralRepositoryGateway<IPurchaseHistoryEntity> {
 }

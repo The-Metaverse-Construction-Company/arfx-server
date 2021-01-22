@@ -6,7 +6,7 @@ import {
 } from '../domain/services/purchase-history'
 import {
   productDetails
-} from './Products'
+} from './products'
 import {
   userDetails
 } from './users'

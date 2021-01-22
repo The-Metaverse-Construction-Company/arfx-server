@@ -1,13 +1,15 @@
 import {
   IPurchaseHistoryBody,
   IPurchaseHistoryEntity
-} from './Interfaces'
+} from './interfaces'
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
+import { PURCHASE_HISTORY_STATE } from './enum'
 
-export * from './Interfaces'
-export * from './RepositoryGatewayInterfaces'
+export * from './enum'
+export * from './interfaces'
+export * from './repository-gateway-interfaces'
 
 interface Dependencies extends IGeneralEntityDependencies {
 }
@@ -20,6 +22,7 @@ export default ({
     public readonly amount!: number
     public readonly paymentMethodId!: string
     public paymentIntentId!: string
+    public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
     public readonly discountPercentage!: number
     public readonly purchasedAt!: number

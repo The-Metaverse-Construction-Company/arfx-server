@@ -1,4 +1,5 @@
 # Use yarn.lock instead
+dist
 package-lock.json
 
 # Environment variables
