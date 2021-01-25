@@ -19,7 +19,7 @@ export class CreateProduct {
     try {
       const newProductEntity = new ProductEntity(productBody)
       // insert it thru the repo.
-      this.dependencies.repositoryGateway.insertOne(newProductEntity)
+      // this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
       return newProductEntity
     } catch (error) {

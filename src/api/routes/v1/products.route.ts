@@ -3,12 +3,14 @@ import validate from 'express-validation'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
 import PurchaseRoute from './purchase.route'
+import uploder from '../../../config/uploader'
 const router = express.Router();
 
 router.use('/purchase', PurchaseRoute)
 
 router.route('/')
-  .post(validate(validations.CreateProductValidation), controller.createProductRoute)
+  .post(uploder.single('scene'), controller.createProductRoute)
+  // .post(validate(validations.CreateProductValidation), controller.createProductRoute)
   .get(controller.productListRoute)
 router.route('/:productId')
   .get(controller.productDetailsRoute)

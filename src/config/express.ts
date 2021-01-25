@@ -1,9 +1,10 @@
-import express, { NextFunction } from 'express'
+import express, { NextFunction, Request } from 'express'
 import routes from '../api/routes/v1'
 import bodyParser from 'body-parser'
 import methodOverride from 'method-override'
 
 import passport from 'passport'
+import Busboy from 'busboy'
 import { logs } from './vars'
 import * as strategies from './passport'
 import * as error from '../api/middlewares/error'
@@ -14,6 +15,7 @@ const helmet = require('helmet')
 const compress = require('compression')
 const morgan = require('morgan')
 const cors = require('cors')
+
 /**
 * Express instance
 * @public
@@ -24,6 +26,17 @@ app.use(morgan(logs));
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// initialize busboy middleware
+app.use((req: Request, _: any, next: NextFunction) => {
+  if (req.method === 'POST') {
+    req.busboy = new Busboy({ headers: req.headers });
+    // req.busboy.on('field', (fieldname, value) => {
+    //   req.body[fieldname] = value
+    // });
+  }
+  next()
+})
+
 
 // // console.log('RedisClient :>> ', RedisClient);
 // load redis

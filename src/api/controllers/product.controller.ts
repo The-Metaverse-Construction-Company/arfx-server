@@ -1,4 +1,7 @@
 import httpStatus from 'http-status'
+import path from 'path'
+import fs from 'fs'
+import busboy from 'busboy'
 import {
   Response, Request, NextFunction
 } from 'express'
@@ -10,8 +13,9 @@ import {
   removeProduct,
   updateProductPublishStatus
 } from '../service-configurations/products'
-
 import { successReponse } from '../helper/http-response'
+
+const uploadPath = path.join(__dirname, '../../../uploaded');
 /**
  * @public
  * create a product
@@ -23,17 +27,36 @@ import { successReponse } from '../helper/http-response'
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newProduct = await createProduct()
-      .createOne(req.body)
+    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body);
+    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.name);
+    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.title);
+    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.description);
+    // req.pipe(req.busboy); // Pipe it trough busboy
+ 
+    req.busboy.on('file', (fieldname, file, filename) => {
+        console.log(`fieldname '${fieldname}' started`);
+        console.log(`Upload of '${filename}' started`);
+        // Create a write stream of the new file
+        const fstream = fs.createWriteStream(path.join(uploadPath, filename));
+        // Pipe it trough
+        file.pipe(fstream);
+        // On finish of the upload
+        fstream.on('close', () => {
+            console.log(`Upload of '${filename}' finished`);
+            // res.redirect('back');
+        });
+    });
+    // const newProduct = await createProduct()
+    //   .createOne(req.body)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newProduct))
+      .json(successReponse({}))
   } catch (error) {
     next(error)
   }
 };
 /**
  * @public
- * create a product
+ * update a product by id
  * @requestParams
  *  @field -> productId: string
  * @requestBody
