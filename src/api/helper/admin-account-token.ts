@@ -10,6 +10,6 @@ export default class UserToken extends AuthToken {
    * @param authTokenType access
    */
   protected generateSourceId(data: IUserTokenData): string {
-    return `ur:${data.referenceId}:${data.tokenType}`
+    return `ad:${data.referenceId}:${data.tokenType}`
   }
 }
