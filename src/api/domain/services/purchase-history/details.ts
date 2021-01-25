@@ -10,11 +10,12 @@ export class PurchaseHistoryDetails {
    * find purchase history details
    * @param productBody 
    */
-  public findOne = async (purchaseHistoryId: string) => {
+  public getOne = async (userId: string, purchaseHistoryId: string) => {
     try {
       // get list in the repo
       const purchaseHistory = await this.dependencies.repositoryGateway.findOne({
-        _id: purchaseHistoryId
+        _id: purchaseHistoryId,
+        userId: userId
       })
       return purchaseHistory
     } catch (error) {

@@ -1,6 +1,6 @@
 import {
   IPurchaseHistoryBody,
-  IPurchaseHistorryRepositoryGateway, IPurchaseHistoryParams
+  IPurchaseHistorryRepositoryGateway, IPurchaseHistoryParams, PURCHASE_HISTORY_STATE
 } from '../../entities/purchase-history'
 import {
   PurchaseHistoryEntity
@@ -48,6 +48,11 @@ export class PurchaseProductService {
         amount: product.price,
         paymentMethodId: purchaseBody.paymentMethodId,
         userId: user._id,
+        title: product.title,
+        name: product.name,
+        description: product.description,
+        productURL: product.productURL,
+        state: PURCHASE_HISTORY_STATE.PENDING,
       })
       
       let intentSecret = <any>null

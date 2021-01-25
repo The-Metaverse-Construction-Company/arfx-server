@@ -43,7 +43,6 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
   productURL: {
     type: String,
     default: '',
-    required: true,
   },
   paymentMethodId: {
     type: String,

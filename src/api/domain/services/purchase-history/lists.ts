@@ -10,10 +10,12 @@ export class PurchaseHistoryList {
    * get purchase history lists
    * @param queryParams 
    */
-  public getList = async (queryParams?: any) => {
+  public getList = async (userId: string, queryParams?: any) => {
     try {
       // get list in the repo
-      const purchaseHistoryList = await this.dependencies.repositoryGateway.findAll()
+      const purchaseHistoryList = await this.dependencies.repositoryGateway.findAll({
+        userId
+      })
       return purchaseHistoryList
     } catch (error) {
       console.log('failed to create product. \nError :>> ', error);
