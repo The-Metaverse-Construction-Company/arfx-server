@@ -1,28 +1,25 @@
 import {
-  IProductEntity
+  IUserProductsEntity
 } from './interfaces'
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
 
 export * from './interfaces'
-export * from './RepositoryGatewayInterfaces'
+export * from './repository-gateway-interfaces'
 
 interface Dependencies extends IGeneralEntityDependencies {
-  
 }
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IProductEntity {
+  class ProductEntity implements IUserProductsEntity {
     public readonly _id!: string
     public readonly name!: string
     public readonly title!: string
     public readonly description!: string
-    public readonly published: boolean = false
-    // public readonly stripeCustomerId!: string
-    public readonly price!: number
-    public readonly discountPercentage!: number
+    public readonly userId!: string
+    public readonly productId!: string
     public readonly productURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
@@ -30,26 +27,16 @@ export default ({
       _id = '',
       name = '',
       description = '',
-      price = 0,
-      discountPercentage = 0,
       productURL = '',
+      productId = '',
+      userId = '',
       title = '',
-      published = false,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
-    }: Partial<IProductEntity>) {
-      
-      price = parseFloat(<any>price)
-      discountPercentage = parseFloat(<any>discountPercentage)
+    }: Partial<IUserProductsEntity>) {
       if (!_id) {
         _id = generateId()
-      }
-      if (price <= 0) {
-        throw new Error('Price must be larger than 0.')
-      }
-      if (discountPercentage < 0) {
-        throw new Error('discountPercentage must be larger than 0.')
       }
       if (!title) {
         throw new Error('title must not be null, undefined or empty string.')
@@ -59,16 +46,20 @@ export default ({
       if (!description) {
         throw new Error('description must not be null, undefined or empty string.')
       }
+      if (!productId) {
+        throw new Error('productId must not be null, undefined or empty string.')
+      }
+      if (!userId) {
+        throw new Error('userId must not be null, undefined or empty string.')
+      }
       // add additional business rules here if needed.
       this._id = _id
       this.name = name
       this.description = description
-      this.price = price
-      this.discountPercentage = discountPercentage
       this.productURL = productURL
+      this.productId = productId
+      this.userId = userId
       this.title = title
-      this.published = published
-      // this.stripeCustomerId = stripeCustomerId
       this.updatedAt = updatedAt
       this.createdAt = createdAt
     }

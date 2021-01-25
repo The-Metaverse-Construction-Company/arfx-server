@@ -11,7 +11,7 @@ import {
 } from '../../app-plugins/persistence/repository'
 
 
-export const userSignIn = (redis: RedisClient) => (
+export const userSignInService = (redis: RedisClient) => (
   new UserSignInService({
     repositoryGateway: new UserRepository(),
     comparePassword: bcrypt.compareSync,
@@ -19,7 +19,7 @@ export const userSignIn = (redis: RedisClient) => (
   })
 )
 
-export const userSignOut = (redis: RedisClient) => (
+export const userSignOutService = (redis: RedisClient) => (
   new UserSignOutService({
     revokeToken: new AuthToken({redisClient: redis}).removeAccessToken
   })

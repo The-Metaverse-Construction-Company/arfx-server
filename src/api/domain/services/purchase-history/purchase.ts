@@ -11,16 +11,22 @@ import {
 import {
   UserDetailsService
 } from '../users'
+import {
+  CreateUserProductsService
+} from '../user-products'
 import { IGeneralServiceDependencies } from '../../interfaces';
 import { IUserEntity } from '../../entities/users';
 export interface IChargeCustomerPaymentParams {
   customerId: string, paymentMethodId: string, amount: number
 }
 interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
-  chargeCustomer(paymentData: IChargeCustomerPaymentParams): Promise<{authenticated: boolean, paymentIntent: any}>
-  setupCustomerPaymentIntent(customerId: string): Promise<any>
+  payment: {
+    chargeCustomer(paymentData: IChargeCustomerPaymentParams): Promise<{authenticated: boolean, paymentIntent: any}>
+    setupCustomerPaymentIntent(customerId: string): Promise<any>
+  }
   productDetailsService: ProductDetails
   userDetailsService: UserDetailsService
+  createUserProductsService: CreateUserProductsService
 }
 export class PurchaseProductService {
   constructor(protected dependencies: IDependencies) {
@@ -43,14 +49,15 @@ export class PurchaseProductService {
         paymentMethodId: purchaseBody.paymentMethodId,
         userId: user._id,
       })
+      
       let intentSecret = <any>null
       // if keepCardDetails is true, then create a card setup intent
       if (purchaseBody.keepCardDetails) {
-        intentSecret = await this.dependencies.setupCustomerPaymentIntent(user.stripeCustomerId)
+        intentSecret = await this.dependencies.payment.setupCustomerPaymentIntent(user.stripeCustomerId)
       }
       console.log('newPurchaseHistory :>> ', newPurchaseHistory);
       // charge customer,
-      const {authenticated, paymentIntent} = await this.dependencies.chargeCustomer({
+      const {authenticated, paymentIntent} = await this.dependencies.payment.chargeCustomer({
         amount: newPurchaseHistory.amount,
         customerId: user.stripeCustomerId,
         paymentMethodId: newPurchaseHistory.paymentMethodId
@@ -59,6 +66,15 @@ export class PurchaseProductService {
       // newPurchaseHistory
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
+      // insert the product details on the user products
+      await this.dependencies.createUserProductsService.createOne({
+        description: product.description,
+        name: product.name,
+        productId: product._id,
+        productURL: product.productURL,
+        title: product.title,
+        userId: user._id
+      })
       // add logs
       return {
         authenticated: authenticated,

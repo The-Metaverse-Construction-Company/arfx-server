@@ -6,7 +6,8 @@ import {
   userSignUp,
 } from '../service-configurations/sign-up'
 import {
-  userListService
+  userListService,
+  userDetails
 } from '../service-configurations/users'
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
@@ -19,7 +20,7 @@ const User = require('../models/user.model');
  */
 export const load = async (req: Request, res: Response, next: NextFunction, id: any) => {
   try {
-    const user = await User.get(id);
+    const user = await userDetails().findOne(id);
   //@ts-expect-error
     req.locals = { user };
     return next();

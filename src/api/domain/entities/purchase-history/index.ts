@@ -21,6 +21,10 @@ export default ({
     public readonly productId!: string
     public readonly amount!: number
     public readonly paymentMethodId!: string
+    public readonly name!: string
+    public readonly title!: string
+    public readonly description!: string
+    public readonly productURL!: string
     public paymentIntentId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
@@ -33,7 +37,12 @@ export default ({
       amount = 0,
       paymentMethodId = '',
       userId = '',
-      paymentIntentId = ''
+      paymentIntentId = '',
+      description = '',
+      name = '',
+      productURL = '',
+      state = PURCHASE_HISTORY_STATE.PENDING,
+      title = ''
     }: Partial<IPurchaseHistoryBody>) {
       amount = parseFloat(<any>amount)
       if (isNaN(amount)) {
@@ -60,6 +69,11 @@ export default ({
       this.paymentIntentId = paymentIntentId
       this.userId = userId
       this.amount = amount
+      this.state = state
+      this.title = title
+      this.name = name
+      this.description = description
+      this.productURL = productURL
       // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()

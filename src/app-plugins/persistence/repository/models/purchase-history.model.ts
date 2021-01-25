@@ -25,6 +25,26 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
+  title: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  name: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  description: {
+    type: String,
+    default: '',
+    required: true,
+  },
+  productURL: {
+    type: String,
+    default: '',
+    required: true,
+  },
   paymentMethodId: {
     type: String,
     default: '',

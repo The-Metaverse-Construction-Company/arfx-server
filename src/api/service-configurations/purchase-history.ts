@@ -11,6 +11,9 @@ import {
 import {
   userDetails
 } from './users'
+import {
+  createUserProductsService
+} from './user-products'
 
 import {
   PurchaseHistoryRepository
@@ -21,8 +24,11 @@ export const purchaseProductService = () => (
     repositoryGateway: new PurchaseHistoryRepository(),
     productDetailsService: productDetails(),
     userDetailsService: userDetails(),
-    chargeCustomer: PaymentGateway.customer.charge,
-    setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents
+    createUserProductsService: createUserProductsService(),
+    payment: {
+      chargeCustomer: PaymentGateway.customer.charge,
+      setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents
+    }
   })
 )
 export const updatePurchaseStateService = () => (

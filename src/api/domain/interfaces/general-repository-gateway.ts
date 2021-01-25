@@ -33,10 +33,10 @@ type IRepositoryGatewayData<T>  = Omit<Partial<T>, '_id' | 'id' | 'createdAt'>
 export type IRespositoryGatewayEntityFields<T> = Partial<Record<keyof T, any>>
 export interface IGeneralRepositoryGateway<T> {
   findAll (queryParams?: IRespositoryGatewayEntityFields<T>, paginationQuery?: IPaginationParameters, project?: Partial<Record<keyof T, 1|0>>): Promise<T[]>
-  insertOne (data: T): Promise<T>
-  insertMany (data: T[]): Promise<T[]>
   findById (id: string): Promise<T>
   findOne (query: Partial<T>, projection?: Partial<Record<keyof T, 1|0>>): Promise<T>
+  insertOne (data: T): Promise<T>
+  insertMany (data: T[]): Promise<T[]>
   updateById (id: string, data: IRepositoryGatewayData<T>): Promise<T>
   updateOne (query: IRespositoryGatewayEntityFields<T>, data: IRepositoryGatewayData<T>): Promise<T>
   updateMany (query: IRespositoryGatewayEntityFields<T>, data: IRepositoryGatewayData<T>): Promise<T[]>

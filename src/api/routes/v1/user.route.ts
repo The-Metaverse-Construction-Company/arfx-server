@@ -28,6 +28,7 @@ import {
  * @routes
  */
 import SettingsRoute from './settings'
+import UserProductsRoute from './user-products.route'
 
 const router = express.Router({mergeParams: true});
 
@@ -35,7 +36,8 @@ const router = express.Router({mergeParams: true});
  * expose settings route here
  */
 router
-  .get('/:userId/settings', SettingsRoute)
+  .use('/:userId/settings', authorize(LOGGED_USER), SettingsRoute)
+  .use('/:userId/products', authorize(LOGGED_USER), UserProductsRoute)
 /**
  * Load user when API with userId route parameter is hit
  */
