@@ -4,12 +4,15 @@ import User from './users'
 import Product from './product'
 import PurchaseHistory from './purchase-history'
 import UserProducts from './user-products'
+import AdminAccounts from './admin-accounts'
 
-
-export const UserEntity = User({generateId: uuidV4, hash: (pwd: string) => {
+const hash = (pwd: string) => {
   const hashPassword = bcrypt.hashSync(pwd, 10)
   return hashPassword
-}})
+}
+
+export const UserEntity = User({generateId: uuidV4, hash: hash})
 export const ProductEntity = Product({generateId: uuidV4})
 export const PurchaseHistoryEntity = PurchaseHistory({generateId: uuidV4})
 export const UserProductsEntity = UserProducts({generateId: uuidV4})
+export const AdminAccountsEntity = AdminAccounts({generateId: uuidV4, hash})
