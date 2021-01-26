@@ -11,12 +11,13 @@ import {
   updateProduct,
   productDetails,
   removeProduct,
-  updateProductPublishStatus
+  updateProductPublishStatus, updateProductURLService
 } from '../service-configurations/products'
 import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 
 const uploadPath = path.join(__dirname, '../../../uploaded');
+const getFilePath = (filename: string) => path.join(uploadPath, filename)
 /**
  * @public
  * create a product
@@ -49,6 +50,10 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
 export const uploadProductImageRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // const busboy = req.app.get('busboy')
+    console.log('req.body :>> ', req.body);
+    const productId = req.headers['x-product-id'] as string
+
+    console.log('productId :>> ', productId);
     const busboy = new Busboy({ headers: req.headers })
     // req.pipe(req.busboy); // Pipe it trough busboy
     busboy.on('file', (fieldname: string, file: any, filename: string) => {
@@ -62,12 +67,14 @@ export const uploadProductImageRoute = async (req: Request, res: Response, next:
         });
         // file.pipe(fstream);
         // Create a write stream of the new file
-        const fstream = fs.createWriteStream(path.join(uploadPath, filename));
+        const fstream = fs.createWriteStream(getFilePath(filename));
         // // Pipe it trough
         file.pipe(fstream);
         // // On finish of the upload
-        fstream.on('close', () => {
+        fstream.on('close', async () => {
             console.log(`Upload of '${filename}' finished`);
+            await updateProductURLService()
+              .updateOne(productId, getFilePath(filename))
             // res.redirect('back');
         });
     });

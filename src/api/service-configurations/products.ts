@@ -4,7 +4,8 @@ import {
   UpdateProduct,
   ProductDetails,
   RemoveProduct,
-  UpdateProductPublishStatus
+  UpdateProductPublishStatus,
+  UpdateProductURLService
 } from '../domain/services/products'
 
 import {
@@ -38,6 +39,11 @@ export const removeProduct = () => (
 )
 export const updateProductPublishStatus = () => (
   new UpdateProductPublishStatus({
+    repositoryGateway: new ProductRepository()
+  })
+)
+export const updateProductURLService = () => (
+  new UpdateProductURLService({
     repositoryGateway: new ProductRepository()
   })
 )

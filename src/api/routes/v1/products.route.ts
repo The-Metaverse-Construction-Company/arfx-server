@@ -15,6 +15,8 @@ router.use('/purchase', PurchaseRoute)
 
 router.route('/')
   .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
+router.route('/')
+  .get(controller.productListRoute)
 router.route('/upload')
   .post(controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)

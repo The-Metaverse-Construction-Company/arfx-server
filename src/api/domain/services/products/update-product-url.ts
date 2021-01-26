@@ -9,28 +9,19 @@ import {
 import { IGeneralServiceDependencies } from '../../interfaces';
 
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class UpdateProduct {
+export class UpdateProductURLService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
    * create new product.
    * @param productBody 
    */
-  public updateOne = async (productId: string, productBody: IProdutBody) => {
+  public updateOne = async (productId: string, productURL: string) => {
     try {
-      const newProductEntity = new ProductEntity({
-        ...productBody,
-        _id: productId
-      })
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
-        _id: newProductEntity._id
+        _id: productId
       }, {
-        name: newProductEntity.name,
-        description: newProductEntity.description,
-        title: newProductEntity.title,
-        price: newProductEntity.price,
-        published: newProductEntity.published,
-        updatedAt: newProductEntity.updatedAt,
+        productURL: productURL,
       })
       // add logs
       return updatedProduct
