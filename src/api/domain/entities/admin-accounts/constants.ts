@@ -3,3 +3,6 @@ export enum ADMIN_ROLE_LEVEL {
   ADMIN = 2,
   USER = 5,
 }
+export enum ADMIN_ACCOUNT_TOKEN_TYPES {
+  SIGN_IN = 'SIGN-IN'
+}

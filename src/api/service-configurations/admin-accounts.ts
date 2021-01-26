@@ -10,7 +10,9 @@ import {
   AdminAccountDetailsService,
   AdminAccountListService,
   CreateAdminAccountService,
-  UpdateAdminAccountService
+  UpdateAdminAccountService,
+  AdminAccountSignInService,
+  AdminAccountVerifyAuthTokenService
 } from '../domain/services/admin-accounts'
 /**
  * @repository
@@ -22,7 +24,9 @@ import {
 // import {
 //   sendVerificationEmail
 // } from './email'
-// import AuthToken from '../helper/user-token'
+
+import AuthToken from '../helper/admin-account-token'
+import {compare} from '../helper/encryptor'
 
 export const createAdminAccountService = (redis: RedisClient) => (
   new CreateAdminAccountService({
@@ -48,5 +52,20 @@ export const adminAccountDetailsService = () => (
 export const adminAccountListService = () => (
   new AdminAccountListService({
     repositoryGateway: new AdminAccountRepository()
+  })
+)
+
+export const adminAccountSignInService = (redis: RedisClient) => (
+  new AdminAccountSignInService({
+    repositoryGateway: new AdminAccountRepository(),
+    comparePassword: compare,
+    generateToken: new AuthToken(redis).generateAccessToken
+  })
+)
+
+export const adminAccountVerifyAuthTokenService = (redis: RedisClient) => (
+  new AdminAccountVerifyAuthTokenService({
+    verifyToken: new AuthToken(redis).verifyAccessToken,
+    adminAccountDetails: adminAccountDetailsService()
   })
 )

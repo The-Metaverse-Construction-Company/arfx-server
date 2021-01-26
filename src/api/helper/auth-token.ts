@@ -10,10 +10,8 @@ import Token from '../helper/token'
 // import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
 // import Redis from '../../../../config/redis'
 interface deps {
-  // token: {
-  //   generate(data: any, duration: number): Promise<string>
-  //   verify(token: string): Promise<string>
-  // }
+  accessTokenSecret?: string
+  refreshTokenSecret?: string
   redisClient: RedisClient
 }
 export default abstract class AuthToken {
@@ -22,11 +20,8 @@ export default abstract class AuthToken {
 
   protected abstract generateSourceId(data:any): string;
   constructor (protected deps: deps) {
-  // constructor (client: RedisClient) {
-    // super(AccountModel)
-    // this.deps.redisClient = redisClient()
-    this.setAccessTokenSecretKey(JWT_ACCESS_TOKEN_SECRET)
-    this.setRefreshTokenSecretKey(JWT_REFRESH_TOKEN_SECRET)
+    this.setAccessTokenSecretKey(this.deps.accessTokenSecret || JWT_ACCESS_TOKEN_SECRET)
+    this.setRefreshTokenSecretKey(this.deps.refreshTokenSecret || JWT_REFRESH_TOKEN_SECRET)
   }
   private setAccessTokenSecretKey (secretKey: string) {
     return this.AccessToken = new Token(secretKey)
@@ -43,7 +38,7 @@ export default abstract class AuthToken {
    * @param fingerprint 
    * @param duration expiration of the refresh token, default value is 30 days
    */
-  public generateRefreshToken (tokenData: any, fingerprint: string, duration: number = (60 * 24) * 30):Promise<string> {
+  public generateRefreshToken (tokenData: any, fingerprint: string, duration: number = JWT_REFRESH_TOKEN_DURATION_MINUTES):Promise<string> {
     return new Promise((resolve, reject) => {
       // get the refresh token,
       this.deps.redisClient.get(`${tokenData.sourceId}:${tokenData.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`, (err: any, data: any) => {
@@ -97,7 +92,7 @@ export default abstract class AuthToken {
    * @param tokenData 
    * @param duration // accessToken expiration, default is 2 hrs, 
    */
-  public generateAccessToken = (tokenData: any, duration: number = (60 * 2)):Promise<string> => {
+  public generateAccessToken = (tokenData: any, duration: number = JWT_ACCESS_TOKEN_DURATION_MINUTES):Promise<string> => {
   // public generateAccessToken (tokenData: any, fingerprint: string, _expiration: number = (60 * 2)):Promise<string> {
     return new Promise((resolve, reject) => {
       const authKey = `${this.generateSourceId(tokenData)}:${TOKEN_LABEL.ACCESS}`

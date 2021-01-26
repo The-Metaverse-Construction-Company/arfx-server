@@ -45,6 +45,7 @@ app.use(cors());
 // enable authentication
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
+passport.use('admin-auth', strategies.adminAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
 

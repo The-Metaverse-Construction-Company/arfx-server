@@ -6,7 +6,7 @@ import {
   Request,
   Response,
   httpStatus
-} from './index.controller'
+} from '../index.controller'
 /**
  * @services
  */
@@ -14,12 +14,12 @@ import {
   adminAccountDetailsService,
   adminAccountListService,
   createAdminAccountService,
-  updateAdminAccountService
-} from '../service-configurations/admin-accounts'
+  updateAdminAccountService,
+} from '../../service-configurations/admin-accounts'
 /**
  * @helpers
  */
-import { successReponse } from '../helper/http-response'
+import { successReponse } from '../../helper/http-response'
 /**
  * @public
  * create admin account
