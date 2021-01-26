@@ -5,6 +5,7 @@ import ResetPasswordRoute from './reset-password.route'
 import SignUpRoute from './sign-up.route'
 import ProductsRoute from './products.route'
 import StripeRoute from './stripe.route'
+import AdminAccountsRoute from './admin-accounts.route'
 const router = express.Router();
 
 
@@ -21,6 +22,7 @@ router.use('/docs', express.static('docs'));
  * @expose_routes
  */
 router.use(StripeRoute)
+router.use('/admin-accounts', AdminAccountsRoute);
 router.use('/users', userRoutes);
 router.use('/products', ProductsRoute);
 router.use('/auth', authRoutes);

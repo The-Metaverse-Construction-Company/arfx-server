@@ -29,6 +29,12 @@ export const purchaseProductRoute = async (req: Request, res: Response, next: Ne
     next(error)
   }
 };
+/**
+ * @public
+ * get purchase history.
+ * @requestQuery
+ *  @fields: 
+ */
 export const purchaseHistoryListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = ''} = <IUserEntity>req.user
@@ -40,6 +46,12 @@ export const purchaseHistoryListRoute = async (req: Request, res: Response, next
     next(error)
   }
 };
+/**
+ * @public
+ * get purchase history details
+ * @requestParams
+ *  @field: purchasedProductId: string
+ */
 export const purchaseHistoryDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = ''} = <IUserEntity>req.user

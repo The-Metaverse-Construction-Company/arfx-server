@@ -1,5 +1,5 @@
 import {
-  CreateProduct,
+  CreateProductService,
   ProductList,
   UpdateProduct,
   ProductDetails,
@@ -12,7 +12,7 @@ import {
 } from '../../app-plugins/persistence/repository'
 
 export const createProduct = () => (
-  new CreateProduct({
+  new CreateProductService({
     repositoryGateway: new ProductRepository()
   })
 )

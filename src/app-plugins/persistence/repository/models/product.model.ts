@@ -43,6 +43,15 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  adminAccountId: {
+    type: String,
+    default: '',
+    required: true
+  },
+  purchaseCount: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Number,
     default: 0,
