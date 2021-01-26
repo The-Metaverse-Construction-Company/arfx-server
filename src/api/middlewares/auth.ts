@@ -77,6 +77,12 @@ export const authorize = (roles: string|string[] = ALLOWED_USER_ROLES) => (req: 
     ['admin-auth', 'jwt'], { session: false },
     handleJWT(req, res, next, roles),
   )(req, res, next);
+export const authorizeAdminAccount = () => (req: Request, res: Response, next: NextFunction) =>
+  passport.authenticate(
+    // ['admin-auth'], { session: false },
+    ['admin-auth'], { session: false },
+    handleJWT(req, res, next, ALLOWED_USER_ROLE.ADMIN),
+  )(req, res, next);
 
 export const oAuth = (service: string) =>
   passport.authenticate(service, { session: false });

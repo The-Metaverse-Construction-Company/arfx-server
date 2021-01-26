@@ -24,7 +24,7 @@ export class UserSignInService {
       if (!user || !(this.deps.comparePassword(password, user.password))) {
         throw new Error('Invalid credentials.')
       } else if (!user.email.verified) {
-        throw new Error('Account not yet verified, Please verified your account first.')
+        throw new Error('Account not yet verified, Please verify your account first.')
       }
       const token = await this.deps.generateToken({
         referenceId: user._id,

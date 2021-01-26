@@ -27,15 +27,15 @@ app.use(morgan(logs));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // initialize busboy middleware
-app.use((req: Request, _: any, next: NextFunction) => {
-  if (req.method === 'POST') {
-    req.busboy = new Busboy({ headers: req.headers });
-    // req.busboy.on('field', (fieldname, value) => {
-    //   req.body[fieldname] = value
-    // });
-  }
-  next()
-})
+// app.use((req: Request, _: any, next: NextFunction) => {
+//   if (req.method === 'POST') {
+//     req.app.set('busboy', new Busboy({ headers: req.headers }))
+//     // req.busboy.on('field', (fieldname, value) => {
+//     //   req.body[fieldname] = value
+//     // });
+//   }
+//   next()
+// })
 
 
 // // console.log('RedisClient :>> ', RedisClient);

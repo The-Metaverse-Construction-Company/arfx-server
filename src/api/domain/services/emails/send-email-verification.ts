@@ -15,18 +15,19 @@ export class SendEmailVerificationService {
   }
   public sendOne = async (userId: string, token: string) => {
     try {
-      // initiate user entity to run the validation for business rules.
+      console.log('Sending email verification....');
       // insert to repository.
       const user = await this.deps.repositoryGateway.findOne({_id: userId})
       // if the email is already verified, then skip sending email.
       if (user && !user.email.verified) {
-        this.deps.sendEmail({
+        await this.deps.sendEmail({
           name: user.name,
           token,
           email: user.email.value,
-          url: `${CLIENT_HOST}/ui/verification?token${token}&tokenType=${TOKEN_TYPE.SIGN_UP}`
+          url: `${CLIENT_HOST}/ui/verification?token=${token}&tokenType=${TOKEN_TYPE.SIGN_UP}`
         })
       }
+      console.log('Successfully send email verification!');
       //add some logs
       return true
     } catch (error) {

@@ -35,7 +35,7 @@ export const load = async (req: Request, res: Response, next: NextFunction, id: 
  */
 export const get = (req: Request, res: Response) => {
   //@ts-expect-error
-  res.json(req.locals.user.transform());
+  res.json(req.locals.user);
 }
 
 /**

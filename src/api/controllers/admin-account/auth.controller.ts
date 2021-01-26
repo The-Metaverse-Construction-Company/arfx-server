@@ -39,3 +39,11 @@ export const signInAdminAccountRoute = async (req: Request, res: Response, next:
     next(error)
   }
 };
+export const validateAuthTokenRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.status(httpStatus.OK)
+      .json(successReponse({admin: req.user, token: ''}))
+  } catch (error) {
+    next(error)
+  }
+};

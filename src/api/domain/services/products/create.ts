@@ -15,15 +15,14 @@ export class CreateProductService {
    * create new product.
    * @param productBody 
    */
-  public createOne = async (productBody: IProdutBody) => {
+  public createOne = async (productBody: IProdutBody, adminAccountId: string) => {
     try {
-      const newProductEntity = new ProductEntity(productBody)
+      const newProductEntity = new ProductEntity({
+        ...productBody,
+        adminAccountId: adminAccountId
+      })
       // insert it thru the repo.
-<<<<<<< HEAD
-      // this.dependencies.repositoryGateway.insertOne(newProductEntity)
-=======
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
->>>>>>> product
       // add logs
       return newProductEntity
     } catch (error) {

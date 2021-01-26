@@ -32,7 +32,6 @@ export default class AdminAuthToken extends AuthToken {
    * @param authTokenType access
    */
   protected generateSourceId(data: IUserTokenData): string {
-    console.log('`ad:${data.referenceId}:${data.tokenType}` :>> ', `ad:${data.referenceId}:${data.tokenType}`);
     return `ad:${data.referenceId}:${data.tokenType}`
   }
 }

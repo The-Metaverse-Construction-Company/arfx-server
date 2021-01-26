@@ -73,3 +73,10 @@ export interface IVerifyToken {
 export interface IRevokeToken {
   (referenceId: string, tokenType: string): Promise<Boolean>
 }
+
+export interface IEmailBody {
+  name: string
+  token: string
+  email: string
+  url: string
+}

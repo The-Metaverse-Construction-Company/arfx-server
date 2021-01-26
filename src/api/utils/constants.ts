@@ -23,3 +23,5 @@ export const CLIENT_HOST= process.env.CLIENT_HOST || `http://localhost:3001`
 /// STRIPE KEYS ////
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''
+/// SENDGRID
+export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''

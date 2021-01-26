@@ -3,7 +3,9 @@ import validate from 'express-validation'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
 import PurchaseRoute from './purchase.route'
-import uploder from '../../../config/uploader'
+// import uploder from '../../../config/uploader'
+
+const multipart = require('connect-multiparty')()
 const router = express.Router();
 import {
   authorize
@@ -12,13 +14,10 @@ import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
 
 router.route('/')
-<<<<<<< HEAD
-  .post(uploder.single('scene'), controller.createProductRoute)
-  // .post(validate(validations.CreateProductValidation), controller.createProductRoute)
-=======
   .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
->>>>>>> product
-  .get(controller.productListRoute)
+router.route('/upload')
+  .post(controller.uploadProductImageRoute)
+  // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
 router.route('/:productId')
   .get(controller.productDetailsRoute)
 // router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))

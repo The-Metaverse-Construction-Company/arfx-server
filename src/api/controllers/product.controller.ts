@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
 import path from 'path'
 import fs from 'fs'
-import busboy from 'busboy'
+import Busboy from 'busboy'
 import {
   Response, Request, NextFunction
 } from 'express'
@@ -14,6 +14,7 @@ import {
   updateProductPublishStatus
 } from '../service-configurations/products'
 import { successReponse } from '../helper/http-response'
+import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 
 const uploadPath = path.join(__dirname, '../../../uploaded');
 /**
@@ -27,32 +28,66 @@ const uploadPath = path.join(__dirname, '../../../uploaded');
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body);
-    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.name);
-    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.title);
-    // console.log('object :>xxxxxxxxxxxxxxxxxxxx> ', req.body.description);
+    const {_id} = <IAdminAccountsEntity>req.user
+    const newProduct = await createProduct()
+      .createOne(req.body, _id)
+    res.status(httpStatus.CREATED)
+      .json(successReponse(newProduct))
+  } catch (error) {
+    next(error)
+  }
+};
+/**
+ * @public
+ * create a product
+ * @requestBody
+ *  @field: title: string
+ *  @field: description: string
+ *  @field: price: float
+ *  @field: name: string
+ */
+export const uploadProductImageRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const busboy = req.app.get('busboy')
+    const busboy = new Busboy({ headers: req.headers })
     // req.pipe(req.busboy); // Pipe it trough busboy
- 
-    req.busboy.on('file', (fieldname, file, filename) => {
+    busboy.on('file', (fieldname: string, file: any, filename: string) => {
         console.log(`fieldname '${fieldname}' started`);
         console.log(`Upload of '${filename}' started`);
+        file.on('data', function(data) {
+          console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
+        });
+        file.on('end', function() {
+          console.log('File [' + fieldname + '] Finished');
+        });
+        // file.pipe(fstream);
         // Create a write stream of the new file
         const fstream = fs.createWriteStream(path.join(uploadPath, filename));
-        // Pipe it trough
+        // // Pipe it trough
         file.pipe(fstream);
-        // On finish of the upload
+        // // On finish of the upload
         fstream.on('close', () => {
             console.log(`Upload of '${filename}' finished`);
             // res.redirect('back');
         });
     });
+    req.pipe(busboy);
     // const newProduct = await createProduct()
     //   .createOne(req.body)
     res.status(httpStatus.CREATED)
-      .json(successReponse({}))
+      .json(successReponse(req.body))
   } catch (error) {
     next(error)
   }
+};
+/**
+ * @public
+ */
+export const upload = async (req: Request, res: Response, next: NextFunction) => {
+  // try {
+  // } catch (error) {
+  //   next(error)
+  // }
 };
 /**
  * @public
