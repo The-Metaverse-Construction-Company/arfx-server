@@ -8,18 +8,18 @@ import {
 import { IGeneralServiceDependencies } from '../../interfaces';
 
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class CreateProduct {
+export class CreateProductService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
    * create new product.
    * @param productBody 
    */
-  public createOne (productBody: IProdutBody) {
+  public createOne = async (productBody: IProdutBody) => {
     try {
       const newProductEntity = new ProductEntity(productBody)
       // insert it thru the repo.
-      this.dependencies.repositoryGateway.insertOne(newProductEntity)
+      await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
       return newProductEntity
     } catch (error) {

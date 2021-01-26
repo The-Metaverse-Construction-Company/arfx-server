@@ -22,6 +22,8 @@ export default ({
     public readonly published: boolean = false
     // public readonly stripeCustomerId!: string
     public readonly price!: number
+    public readonly adminAccountId!: string
+    public readonly purchaseCount!: number
     public readonly discountPercentage!: number
     public readonly productURL!: string
     public readonly createdAt!: number
@@ -32,6 +34,8 @@ export default ({
       description = '',
       price = 0,
       discountPercentage = 0,
+      adminAccountId = '',
+      purchaseCount = 0,
       productURL = '',
       title = '',
       published = false,
@@ -66,6 +70,8 @@ export default ({
       this.price = price
       this.discountPercentage = discountPercentage
       this.productURL = productURL
+      this.adminAccountId = adminAccountId
+      this.purchaseCount = purchaseCount
       this.title = title
       this.published = published
       // this.stripeCustomerId = stripeCustomerId

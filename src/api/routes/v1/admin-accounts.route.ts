@@ -17,6 +17,6 @@ router.route('/')
   .get(controller.adminAccountListRoute)
 router.route('/:adminAccountId')
   .patch(controller.updateAdminAccountRoute)
-  .get(controller.updateAdminAccountRoute)
+  .get(controller.adminAccountDetailsRoute)
 
 export default router;
