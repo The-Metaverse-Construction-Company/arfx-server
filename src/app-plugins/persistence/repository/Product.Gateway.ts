@@ -16,7 +16,11 @@ export class ProductRepository extends GeneralRepository<IProductEntity, IProduc
   constructor () {
     super(ProductRepositoryModel)
   }
-
+  /**
+   * get the list of products/scene
+   * @param userId to display if the user already owned the product.
+   * @param filterQuery 
+   */
   public getPaginationList = async (userId: string, filterQuery: IPaginationParameters) => {
     try {
       const response = await this.aggregateWithPagination([
