@@ -1,0 +1,9 @@
+tags:
+  - name: "Sign-In"
+    description: "Everything about your Pets"
+  - name: "Sign-Out"
+    description: "Everything about your Pets"
+  - name: "Sign-Up"
+    description: "Everything about your Pets"
+  - name: "Reset Password"
+    description: "Reset User/Account password."

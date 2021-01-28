@@ -11,6 +11,9 @@ import * as error from '../api/middlewares/error'
 
 import RedisClient from './redis'
 
+import swaggerUI from 'swagger-ui-express'
+import SwaggerOptions from './swagger/index'
+
 const helmet = require('helmet')
 const compress = require('compression')
 const morgan = require('morgan')
@@ -62,9 +65,18 @@ passport.use('admin-auth', strategies.adminAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
 
-// mount api v1 routes
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(SwaggerOptions))
+/**
+ * @swagger
+ * /v1/auth/login:
+ *   post:
+ *    description: Hello this is a simple Sign-in
+ *    responses:
+ *      200:
+ *        Successfully get something sytsem
+ */
 app.use('/v1', routes);
-
+// mount api v1 routes
 // if error is not an instanceOf APIError, convert it.
 app.use(error.converter);
 

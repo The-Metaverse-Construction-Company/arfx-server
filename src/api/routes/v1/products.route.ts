@@ -5,7 +5,7 @@ import * as validations from '../../validations/product.validation'
 import PurchaseRoute from './purchase.route'
 // import uploder from '../../../config/uploader'
 
-const multipart = require('connect-multiparty')()
+// const multipart = require('connect-multiparty')()
 const router = express.Router();
 import {
   authorize

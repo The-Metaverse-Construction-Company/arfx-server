@@ -28,6 +28,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.4.0",
     "@sendgrid/mail": "^7.4.2",
     "@types/mocha": "^8.2.0",
     "axios": "^0.19.0",
@@ -65,6 +66,8 @@
     "pug": "^2.0.4",
     "redis": "^3.0.2",
     "stripe": "^8.131.1",
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.6",
     "uuid": "^3.1.0",
     "winston": "^3.1.0"
   },
@@ -80,6 +83,8 @@
     "@types/passport-http-bearer": "^1.0.36",
     "@types/passport-jwt": "^3.0.3",
     "@types/redis": "^2.8.28",
+    "@types/swagger-jsdoc": "^6.0.0",
+    "@types/swagger-ui-express": "^4.1.2",
     "@types/uuid": "^8.3.0",
     "apidoc": "^0.17.5",
     "chai": "^4.1.0",

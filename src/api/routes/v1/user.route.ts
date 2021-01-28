@@ -15,7 +15,7 @@ import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
  * @middlewares
  */
 import {
-  authorize, ADMIN, LOGGED_USER
+  authorize, ADMIN, LOGGED_USER, authorizeAdminAccount
 } from '../../middlewares/auth'
 import {
   listUsers,
@@ -68,9 +68,9 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   // .get(validate(listUsers), controller.list)
-  .get(authorize(LOGGED_USER), validate(listUsers), controller.list)
+  .get(authorizeAdminAccount(), validate(listUsers), controller.list)
   // .get(authorize(ALLOWED_USER_ROLE.ADMIN), validate(listUsers), controller.list)
-  /**
+  /**x
    * @api {post} v1/users Create User
    * @apiDescription Create a new user
    * @apiVersion 1.0.0

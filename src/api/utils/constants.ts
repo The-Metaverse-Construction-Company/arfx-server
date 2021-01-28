@@ -7,6 +7,8 @@ export const TOKEN_TYPE = {
   SIGN_IN: 'SIGN_IN',
   RESET_PASSWORD: 'RESET_PASSWORD',
 }
+
+export const BACKEND_HOST = `http://localhost:3000`
 // ENV VARIABLES
 export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || ''
 export const JWT_ACCESS_TOKEN_DURATION_MINUTES = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES ? parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES) : 60
