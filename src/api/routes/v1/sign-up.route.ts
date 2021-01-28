@@ -31,7 +31,7 @@ router.route('/')
  *      tags: 
  *        - "Sign-Up"
  *      parameters:
- *        - $ref: '#/components/requestHeaders/authorizationParam'
+ *        - $ref: '#/components/requestQuery/authTokenParam'
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/signUp'

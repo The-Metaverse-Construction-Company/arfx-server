@@ -1,3 +1,5 @@
+host: "http://localhost:3000"
+basePath: "/v1"
 tags:
   - name: "Sign-In"
     description: "Everything about your Pets"

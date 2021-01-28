@@ -1,8 +1,8 @@
 components:
-  requestHeaders:
-    authorizationParam:
+  requestQuery:
+    authTokenParam:
       in: query
-      name: "query"
+      name: "token"
       required: true
       example: "JWT Token"
     startAtQueryParam:
