@@ -15,6 +15,7 @@ import {
 } from '../service-configurations/products'
 import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
+import { IUserEntity } from '../domain/entities/users'
 
 const uploadPath = path.join(__dirname, '../../../uploaded');
 /**
@@ -54,7 +55,7 @@ export const uploadProductImageRoute = async (req: Request, res: Response, next:
     busboy.on('file', (fieldname: string, file: any, filename: string) => {
         console.log(`fieldname '${fieldname}' started`);
         console.log(`Upload of '${filename}' started`);
-        file.on('data', function(data) {
+        file.on('data', function(data: any) {
           console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
         });
         file.on('end', function() {
@@ -121,6 +122,7 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
  */
 export const productListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const {_id = ''} = <IUserEntity>req.user
     const {
       searchText = '',
       startAt = 0,
@@ -128,6 +130,7 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
     } = req.query
     const newProduct = await productList()
       .getList({
+        userId: _id,
         searchText,
         startAt,
         limitTo

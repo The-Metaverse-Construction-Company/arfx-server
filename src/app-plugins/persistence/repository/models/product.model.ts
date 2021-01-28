@@ -5,6 +5,7 @@ import {
 import {
   IProductEntity
 } from '../../../../api/domain/entities/product'
+import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
@@ -63,4 +64,4 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IProductRepository>('products', RepositorySchema)
+export default model<IProductRepository>(COLLECTION_NAMES.PRODUCT, RepositorySchema)
