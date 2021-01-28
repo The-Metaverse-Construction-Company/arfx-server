@@ -7,14 +7,26 @@
 
 components:
   responses:
-    Users:
-      description: OK
-      content:
-        application/json:
-          schema: 
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
+    User:
+      Detail:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/responses/http/success'
+                - type: object
+                  properties:
+                    result:
+                      $ref: '#/components/schemas/Users'
+      List:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/responses/http/success'
+                - type: object
+                  properties:
+                    result:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Users'

@@ -14,7 +14,15 @@ components:
             type: object
             properties:
               username:
-                required: true
-                type: string
+                $ref: '#/components/models/User/email/value'
               password:
-                type: string
+                $ref: '#/components/models/User/password'
+  requestParams:
+    User:
+      id:
+        in: path
+        name: userId
+        schema:
+          type: string
+          required: true
+          description: id of the user/customer.

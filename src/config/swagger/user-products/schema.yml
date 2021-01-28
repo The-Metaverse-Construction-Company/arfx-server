@@ -12,7 +12,7 @@ components:
       - type: object
         properties:
           _id:
-            $ref: '#/components/models/Product/_id'
+            $ref: '#/components/schemas/FieldId'
           name:
             $ref: '#/components/models/Product/name'
           title:
@@ -21,6 +21,10 @@ components:
             $ref: '#/components/models/Product/description'
           productURL:
             $ref: '#/components/models/Product/productURL'
+          userId:
+            $ref: '#/components/models/User/_id'
+          productId:
+            $ref: '#/components/models/Product/_id'
           createdAt:
             $ref: '#/components/schemas/FieldCreatedAt'
           updatedAt:
