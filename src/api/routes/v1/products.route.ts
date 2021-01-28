@@ -12,7 +12,6 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
-
 /**
  * @swagger
  * /v1/products:
@@ -105,7 +104,7 @@ router.route('/:productId')
  *        $ref: '#/components/schemas/Product'
  */
   .delete(validate(validations.RemoveProductValidation), controller.removeProductRoute)
-/**xx
+/**
  * @swagger
  * /v1/products/{productId}/published:
  *  patch:
