@@ -11,48 +11,28 @@ components:
       type: object
       properties:
         name:
-          type: string
-          default: ''
-          description: Name of the product/scene.
-          example: 'Product-One'
+          $ref: '#/components/models/Product/name'
         title:
-          type: string
-          default: ''
-          description: title of the product/scene.
-          example: 'Product-One'
+          $ref: '#/components/models/Product/title'
         description:
-          type: string
-          default: ''
-          description: description of the product/scene.
-          example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam convallis augue eu purus mattis porttitor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras rutrum purus sagittis felis tristique, at eleifend ipsum aliquet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus'
+          $ref: '#/components/models/Product/description'
         price:
-          type: number
-          default: 0
-          description: price of the product/scene.
-          example: 5
+          $ref: '#/components/models/Product/price'
     Product:
       allOf:
       - $ref: '#/components/schemas/ProductParam'
       - type: object
         properties:
           _id:
-            $ref: '#/components/schemas/FieldId'
+            $ref: '#/components/models/Product/_id'
           discountPercentage:
-            type: number
-            default: 0
-            description: discount percentage of the product/scene.
+            $ref: '#/components/models/Product/discountPercentage'
           published:
-            type: boolean
-            default: true
-            description: published toggle of the product/scene to display on the user portal.
+            $ref: '#/components/models/Product/published'
           adminAccountId:
-            type: string
-            default: ''
-            description: admin account who created the product/scene.
+            $ref: '#/components/models/Product/adminAccountId'
           purchaseCount:
-            type: number
-            default: 0
-            description: number of times that product/scene purchased.
+            $ref: '#/components/models/Product/purchaseCount'
           createdAt:
             $ref: '#/components/schemas/FieldCreatedAt'
           updatedAt:

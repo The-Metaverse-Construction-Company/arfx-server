@@ -11,19 +11,17 @@ components:
       type: object
       properties:
         _id:
-          $ref: '#/components/schemas/FieldId'
+          $ref: '#/components/models/User/_id'
         name:
-          type: string
+          $ref: '#/components/models/User/name'
         role:
-          type: string
-        # password:
-        #   type: string
+          $ref: '#/components/models/User/role'
         stripeCustomerId:
-          type: string
+          $ref: '#/components/models/User/stripeCustomerId'
         email:
-          $ref: '#/components/schemas/FieldVerificationEntity'
+          $ref: '#/components/models/User/email'
         mobileNumber:
-          $ref: '#/components/schemas/FieldVerificationEntity'
+          $ref: '#/components/models/User/mobileNumber'
         createdAt:
           $ref: '#/components/schemas/FieldCreatedAt'
         updatedAt:

@@ -1,0 +1,28 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    UserProduct:
+      allOf:
+      - type: object
+        properties:
+          _id:
+            $ref: '#/components/models/Product/_id'
+          name:
+            $ref: '#/components/models/Product/name'
+          title:
+            $ref: '#/components/models/Product/title'
+          description:
+            $ref: '#/components/models/Product/description'
+          productURL:
+            $ref: '#/components/models/Product/productURL'
+          createdAt:
+            $ref: '#/components/schemas/FieldCreatedAt'
+          updatedAt:
+            $ref: '#/components/schemas/FieldUpdatedAt'
+  

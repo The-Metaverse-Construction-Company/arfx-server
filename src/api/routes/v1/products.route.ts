@@ -105,7 +105,7 @@ router.route('/:productId')
  *        $ref: '#/components/schemas/Product'
  */
   .delete(validate(validations.RemoveProductValidation), controller.removeProductRoute)
-/**
+/**xx
  * @swagger
  * /v1/products/{productId}/published:
  *  patch:
