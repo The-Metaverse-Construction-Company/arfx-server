@@ -1,0 +1,60 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    ProductParam:
+      type: object
+      properties:
+        name:
+          type: string
+          default: ''
+          description: Name of the product/scene.
+          example: 'Product-One'
+        title:
+          type: string
+          default: ''
+          description: title of the product/scene.
+          example: 'Product-One'
+        description:
+          type: string
+          default: ''
+          description: description of the product/scene.
+          example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam convallis augue eu purus mattis porttitor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras rutrum purus sagittis felis tristique, at eleifend ipsum aliquet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus'
+        price:
+          type: number
+          default: 0
+          description: price of the product/scene.
+          example: 5
+    Product:
+      allOf:
+      - $ref: '#/components/schemas/ProductParam'
+      - type: object
+        properties:
+          _id:
+            $ref: '#/components/schemas/FieldId'
+          discountPercentage:
+            type: number
+            default: 0
+            description: discount percentage of the product/scene.
+          published:
+            type: boolean
+            default: true
+            description: published toggle of the product/scene to display on the user portal.
+          adminAccountId:
+            type: string
+            default: ''
+            description: admin account who created the product/scene.
+          purchaseCount:
+            type: number
+            default: 0
+            description: number of times that product/scene purchased.
+          createdAt:
+            $ref: '#/components/schemas/FieldCreatedAt'
+          updatedAt:
+            $ref: '#/components/schemas/FieldUpdatedAt'
+  

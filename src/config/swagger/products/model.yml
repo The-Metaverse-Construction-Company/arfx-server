@@ -1,0 +1,56 @@
+# # 
+# # References:
+# # https://swagger.io/docs/specification/components/
+# # https://swagger.io/docs/specification/data-models/
+# # https://swagger.io/docs/specification/using-ref/
+# # 
+
+# components:
+#   models:
+#     ProductParam:
+#       type: object
+#       properties:
+#         name:
+#           type: string
+#           default: ''
+#           description: Name of the product/scene.
+#         title:
+#           type: string
+#           default: ''
+#           description: title of the product/scene.
+#         description:
+#           type: string
+#           default: ''
+#           description: description of the product/scene.
+#     Product:
+#       allOf:
+#       - $ref: '#/components/models/ProductParam'
+#       - type: object
+#         properties:
+#           _id:
+#             $ref: '#/components/schemas/FieldId'
+#           price:
+#             type: number
+#             default: 0
+#             description: price of the product/scene.
+#           discountPercentage:
+#             type: number
+#             default: 0
+#             description: discount percentage of the product/scene.
+#           published:
+#             type: boolean
+#             default: true
+#             description: published toggle of the product/scene to display on the user portal.
+#           adminAccountId:
+#             type: string
+#             default: ''
+#             description: admin account who created the product/scene.
+#           purchaseCount:
+#             type: number
+#             default: 0
+#             description: number of times that product/scene purchased.
+#           createdAt:
+#             $ref: '#/components/schemas/FieldCreatedAt'
+#           updatedAt:
+#             $ref: '#/components/schemas/FieldUpdatedAt'
+    

@@ -15,8 +15,7 @@ const router = express.Router();
 //Routesx
 /**
  * @swagger
- * paths:
- *  /auth/login:
+ *  /v1/auth/login:
  *    post:
  *      tags: 
  *      - "Sign-In"
@@ -31,8 +30,7 @@ router.route('/login')
   .post(validate(login), controller.login)
 /**
  * @swagger
- * paths:
- *  /auth/sign-out:
+ *  /v1/auth/sign-out:
  *    post:
  *      summary: Sign-out/logout the current logged-in user based on the access token used.
  *      tags: 

@@ -13,9 +13,41 @@ import {
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
 
+/**
+ * @swagger
+ * /v1/products:
+ *  post:
+ *    summary: "Add new Product/Scene."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/form'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responseBody/Product'
+ */
 router.route('/')
   .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
 router.route('/')
+/**xxx
+ * @swagger
+ * /v1/products:
+ *  get:
+ *    summary: "List Of the Products/Scenes"
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestQuery/pageNo'
+ *      - $ref: '#/components/requestQuery/limit'
+ *      - $ref: '#/components/requestQuery/searchText'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responseBody/Products'
+ */
   .get(controller.productListRoute)
 router.route('/upload')
   .post(controller.uploadProductImageRoute)
@@ -24,7 +56,47 @@ router.route('/:productId')
   .get(controller.productDetailsRoute)
 // router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))
 router.route('/:productId')
+/**
+ * @swagger
+ * /v1/products/{productId}:
+ *  patch:
+ *    summary: "Update the selected product/screen."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - in: path
+ *        name: productId
+ *        schema:
+ *          type: string
+ *          required: true
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/form'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/schemas/Product'
+ */
   .patch(validate(validations.UpdateProductValidation), controller.updateProductRoute)
+  /**
+ * @swagger
+ * /v1/products/{productId}:
+ *  delete:
+ *    summary: "Remove selected Product/Scene."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - in: path
+ *        name: productId
+ *        schema:
+ *          type: string
+ *          required: true
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/schemas/Product'
+ */
   .delete(validate(validations.RemoveProductValidation), controller.removeProductRoute)
 router.route('/:productId/published')
   .patch(validate(validations.UpdateProductPublishValidation), controller.updateProductPublishStatusRoute)

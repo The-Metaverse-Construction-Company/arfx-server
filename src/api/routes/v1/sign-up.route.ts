@@ -8,8 +8,7 @@ import {
 const router = express.Router();
 /**
  * @swagger
- * paths:
- *  /auth/sign-up:
+ *  /v1/auth/sign-up:
  *    post:
  *      summary: Sign-up/Register an account.
  *      tags: 
@@ -24,8 +23,7 @@ router.route('/')
   .post(validate(register), controller.signUpRoute);
 /**
  * @swagger
- * paths:
- *  /auth/sign-up:
+ *  /v1/auth/sign-up:
  *    get:
  *      summary: Verify the newly created user/account.
  *      tags: 
