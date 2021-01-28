@@ -18,7 +18,7 @@ const router = express.Router();
  *  /v1/auth/login:
  *    post:
  *      tags: 
- *      - "Sign-In"
+ *      - "Authentication"
  *      summary: Authenticate the registered users.
  *      requestBody:
  *        $ref: '#/components/requestBody/SignIn'
@@ -28,13 +28,13 @@ const router = express.Router();
  */
 router.route('/login')
   .post(validate(login), controller.login)
-/**
+/**x
  * @swagger
  *  /v1/auth/sign-out:
  *    post:
  *      summary: Sign-out/logout the current logged-in user based on the access token used.
  *      tags: 
- *        - "Sign-Out"
+ *        - "Authentication"
  *      parameters:
  *        - $ref: "#/components/requestHeaders/authorizationParam"
  *      responses:

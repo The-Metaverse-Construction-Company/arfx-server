@@ -31,7 +31,7 @@ router.use('/purchase', PurchaseRoute)
 router.route('/')
   .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
 router.route('/')
-/**xxx
+/**
  * @swagger
  * /v1/products:
  *  get:
@@ -52,11 +52,26 @@ router.route('/')
 router.route('/upload')
   .post(controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
+/**
+ * @swagger
+ * /v1/products/{productId}:
+ *  get:
+ *    summary: "Product/Scene Details"
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/Product/id'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responseBody/Product'
+ */
 router.route('/:productId')
   .get(controller.productDetailsRoute)
 // router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))
 router.route('/:productId')
-/**
+/**x
  * @swagger
  * /v1/products/{productId}:
  *  patch:
@@ -66,11 +81,7 @@ router.route('/:productId')
  *    security:
  *      - bearerAuth: []
  *    parameters:
- *      - in: path
- *        name: productId
- *        schema:
- *          type: string
- *          required: true
+ *      - $ref: '#/components/requestParams/Product/id'
  *    requestBody:
  *       $ref: '#/components/requestBody/Product/form'
  *    responses:
@@ -88,16 +99,29 @@ router.route('/:productId')
  *    security:
  *      - bearerAuth: []
  *    parameters:
- *      - in: path
- *        name: productId
- *        schema:
- *          type: string
- *          required: true
+ *      - $ref: '#/components/requestParams/Product/id'
  *    responses:
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
   .delete(validate(validations.RemoveProductValidation), controller.removeProductRoute)
+/**
+ * @swagger
+ * /v1/products/{productId}/published:
+ *  patch:
+ *    summary: "Update publish status of selected product/scene."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/Product/id'
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/published'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/schemas/Product'
+ */
 router.route('/:productId/published')
   .patch(validate(validations.UpdateProductPublishValidation), controller.updateProductPublishStatusRoute)
 
