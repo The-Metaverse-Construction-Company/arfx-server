@@ -33,7 +33,7 @@ export const userSignUp = (redis: RedisClient) => (
 export const verifyUser = (redis: RedisClient) => {
   const authToken = new OTPToken({redisClient: redis})
   return new VerifiedUserService({
-    revokeToken: authToken.remoteOTPToken,
+    revokeToken: authToken.removeOTPToken,
     repositoryGateway: new UserRepository(),
     userDetails: userDetails(),
     createPaymentGatewayAccount: PaymentGateway.customer.create,

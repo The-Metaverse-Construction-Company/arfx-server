@@ -43,7 +43,8 @@ export default abstract class AuthOTPToken {
           return reject(`Failed to generate access token, Error: ${err.message}`)
         }
         if (data) {
-          return resolve(data)
+          // if the 
+          return this.generateOTPToken(tokenData, duration)
         }
         try {
           // if no token found on redis, generate new token with 15 minutes expiration
@@ -93,9 +94,10 @@ export default abstract class AuthOTPToken {
    * @param platform 
    * @param fingerprint 
    */
-  public remoteOTPToken = async (otpCode: string, tokenType: string) => {
+  public removeOTPToken = async (otpCode: string, tokenType: string) => {
     try {
-      this.deps.redisClient.DEL(this.generateSourceId({otpCode: otpCode, tokenType}))
+      console.log('@@@@@@@@@@@@@@@22revoke shit', this.generateSourceId({code: otpCode, tokenType}));
+      this.deps.redisClient.DEL(this.generateSourceId({code: otpCode, tokenType}))
       return true
     } catch (error) {
       throw error

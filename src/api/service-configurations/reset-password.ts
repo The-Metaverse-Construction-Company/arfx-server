@@ -4,7 +4,7 @@ import {
   UserVerifyResetPasswordService,
 } from '../domain/services/reset-password'
 
-import AuthToken from '../helper/user-token'
+import UserOTP from '../helper/user-otp-token'
 
 import {
   userDetails
@@ -19,7 +19,7 @@ import {
 export const sendResetPassword = (redis: RedisClient) => (
   new UserResetPasswordService({
     repositoryGateway: new UserRepository(),
-    generateToken: new AuthToken({redisClient: redis}).generateAccessToken,
+    generateToken: new UserOTP({redisClient: redis}).generateOTPToken,
     sendEmail: sendResetPasswordEmail().sendOne
   })
 )
@@ -27,6 +27,6 @@ export const updateResetPassword = (redis: RedisClient) => (
   new UserVerifyResetPasswordService({
     repositoryGateway: new UserRepository(),
     userDetails: userDetails(),
-    revokeToken: new AuthToken({redisClient: redis}).removeAccessToken
+    revokeToken: new UserOTP({redisClient: redis}).removeOTPToken
   })
 )

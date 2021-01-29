@@ -9,7 +9,7 @@ import {
   updateResetPassword,
 } from '../service-configurations/reset-password'
 import {
-  userVerifyToken,
+  userVerifyOTPToken,
 } from '../service-configurations/users'
 
 import {
@@ -22,7 +22,7 @@ export const verifyResetPasswordMiddleWare = async (req: Request, res: Response,
   try {
     const { token = '', tokenType = '' } = <any>req.query;
     const redisPublish = req.app.get('redisPublisher')
-    const response = await userVerifyToken(redisPublish)
+    const response = await userVerifyOTPToken(redisPublish)
       .verifyOne(token, TOKEN_TYPE.RESET_PASSWORD)
     res.locals.resetPasswordData = response
     next()
@@ -51,10 +51,11 @@ export const verifyResetPasswordRoute = async (req: Request, res: Response, next
 export const updateResetPasswordRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
+    const {token = ''} = <any>req.query
     const {_id: userId} = res.locals.resetPasswordData
     const redisPublish = req.app.get('redisPublisher')
     const response = await updateResetPassword(redisPublish)
-      .updateOne(userId, password)
+      .updateOne(userId, password, token)
     res.status(httpStatus.OK).json(successReponse(response));
   } catch (error) {
     return next(error);

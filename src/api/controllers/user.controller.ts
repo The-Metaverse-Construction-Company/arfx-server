@@ -13,6 +13,7 @@ import {
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
+import { successReponse } from '../helper/http-response'
 const { omit } = require('lodash');
 const User = require('../models/user.model');
 
@@ -143,6 +144,8 @@ export const resendAccountVerificationOTPRoute = (req: Request, res: Response, n
   const redis = req.app.get('redisPublisher')
   sendUserOTPService(redis)
     .sendOne(userId, TOKEN_TYPE.SIGN_UP)
-    .then(() => res.status(httpStatus.NO_CONTENT).end())
+    .then((otp) => {
+      res.status(httpStatus.OK).send(successReponse({code: otp}))
+    })
     .catch((e: Error) => next(e));
 };

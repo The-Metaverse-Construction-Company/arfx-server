@@ -116,8 +116,8 @@ router
   // .put(authorize(LOGGED_USER), validate(replaceUser), controller.replace)
   // .patch(authorize(LOGGED_USER), validate(updateUser), controller.update)
   // .delete(authorize(LOGGED_USER), controller.remove);
-
   router
-    .route('/:userId/resend-verification')
-    .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
+    .route('/:userId/resend-otp')
+    .post(controller.resendAccountVerificationOTPRoute)
+    // .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
 export default router;

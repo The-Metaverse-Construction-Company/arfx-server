@@ -15,7 +15,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserVerifyResetPasswordService {
   constructor (protected deps: IServiceDependencies) {
   }
-  public updateOne = async (userId: string, newPassword: string) => {
+  public updateOne = async (userId: string, newPassword: string, otp: string) => {
     try {
       // fetch user by email.
       const user = await this.deps.userDetails.findOne(userId, {password: 0})
@@ -32,8 +32,9 @@ export class UserVerifyResetPasswordService {
         password: newUser.password,
         updatedAt: newUser.updatedAt
       })
+      console.log('user@@@Id :>> ', userId);
       // revoke the token to make it invalid or expired.
-      await this.deps.revokeToken(userId, TOKEN_TYPE.RESET_PASSWORD)
+      await this.deps.revokeToken(otp, TOKEN_TYPE.RESET_PASSWORD)
       // add some logs or notifications
       return user
     } catch (error) {

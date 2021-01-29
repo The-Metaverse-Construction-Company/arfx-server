@@ -37,7 +37,10 @@ router.route('/')
 router.route('/verify')
   /// ***DEVNOTE***
   /// will implement this if need a UI on frontend to do another actions.
-  .get(controller.verifyTokenMiddleware, controller.verifyUserRoute);
+  .get(controller.verifyTokenMiddleware, controller.verifyUserRoute)
+  // ** implement this if the account verifiction link have a UI to insert/create pwd.
+  // .get(controller.verifyTokenMiddleware, controller.verifyTokenRoute)
+  // .patch(controller.verifyTokenMiddleware, controller.verifyUserRoute);
 
 
 export default router
