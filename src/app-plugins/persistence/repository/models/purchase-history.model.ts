@@ -41,7 +41,7 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
-  productURL: {
+  contentURL: {
     type: String,
     default: '',
   },

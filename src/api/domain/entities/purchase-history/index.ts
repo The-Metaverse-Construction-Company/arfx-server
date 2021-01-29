@@ -24,7 +24,7 @@ export default ({
     public readonly name!: string
     public readonly title!: string
     public readonly description!: string
-    public readonly productURL!: string
+    public readonly contentURL!: string
     public paymentIntentId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
@@ -40,7 +40,7 @@ export default ({
       paymentIntentId = '',
       description = '',
       name = '',
-      productURL = '',
+      contentURL = '',
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -73,7 +73,7 @@ export default ({
       this.title = title
       this.name = name
       this.description = description
-      this.productURL = productURL
+      this.contentURL = contentURL
       // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()

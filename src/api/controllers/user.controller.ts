@@ -135,7 +135,7 @@ export const remove = (req: Request, res: Response, next: NextFunction) => {
     .catch((e: Error) => next(e));
 };
 /**
- * Delete user
+ * resend a otp
  * @public
  */
 export const resendAccountVerificationOTPRoute = (req: Request, res: Response, next: NextFunction) => {

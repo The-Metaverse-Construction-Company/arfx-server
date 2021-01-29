@@ -28,7 +28,7 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  productURL: {
+  contentURL: {
     type: String,
     default: '',
   },

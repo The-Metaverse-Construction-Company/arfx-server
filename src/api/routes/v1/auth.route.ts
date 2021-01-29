@@ -12,39 +12,35 @@ import {
 } from '../../validations/auth.validation'
 
 const router = express.Router();
+//Routesx
 /**
- * @api {post} v1/auth/login Login
- * @apiDescription Get an accessToken
- * @apiVersion 1.0.0
- * @apiName Login
- * @apiGroup Auth
- * @apiPermission public
- *
- * @apiParam  {String}         email     User's email
- * @apiParam  {String{..128}}  password  User's password
- *
- * @apiSuccess  {String}  token.tokenType     Access Token's type
- * @apiSuccess  {String}  token.accessToken   Authorization Token
- * @apiSuccess  {String}  token.refreshToken  Token to get a new accessToken
- *                                                   after expiration time
- * @apiSuccess  {Number}  token.expiresIn     Access Token's expiration time
- *                                                   in miliseconds
- *
- * @apiSuccess  {String}  user.id             User's id
- * @apiSuccess  {String}  user.name           User's name
- * @apiSuccess  {String}  user.email          User's email
- * @apiSuccess  {String}  user.role           User's role
- * @apiSuccess  {Date}    user.createdAt      Timestamp
- *
- * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
- * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
+ * @swagger
+ *  /v1/auth/login:
+ *    post:
+ *      tags: 
+ *      - "Authentication"
+ *      summary: Authenticate the registered users.
+ *      requestBody:
+ *        $ref: '#/components/requestBody/SignIn'
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/SignIn'
  */
-router.route('/')
-  .get(controller.login);
 router.route('/login')
   .post(validate(login), controller.login)
-  .post(validate(login), controller.login);
-
+/**x
+ * @swagger
+ *  /v1/auth/sign-out:
+ *    post:
+ *      summary: Sign-out/logout the current logged-in user based on the access token used.
+ *      tags: 
+ *        - "Authentication"
+ *      parameters:
+ *        - $ref: "#/components/requestHeaders/authorizationParam"
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/SignOut'
+ */
 router.route('/sign-out')
   .post(controller.userSignOutRoute)
 

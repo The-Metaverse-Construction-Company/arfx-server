@@ -4,16 +4,19 @@ import {
   UpdateProduct,
   ProductDetails,
   RemoveProduct,
-  UpdateProductPublishStatus
+  UpdateProductPublishStatus,
+  UpdateProductURLService
 } from '../domain/services/products'
 
 import {
   ProductRepository
 } from '../../app-plugins/persistence/repository'
+import BlobStorage from '../helper/blob-storage'
 
 export const createProduct = () => (
   new CreateProductService({
-    repositoryGateway: new ProductRepository()
+    repositoryGateway: new ProductRepository(),
+    fileUploader: BlobStorage
   })
 )
 export const updateProduct = () => (
@@ -38,6 +41,11 @@ export const removeProduct = () => (
 )
 export const updateProductPublishStatus = () => (
   new UpdateProductPublishStatus({
+    repositoryGateway: new ProductRepository()
+  })
+)
+export const updateProductURLService = () => (
+  new UpdateProductURLService({
     repositoryGateway: new ProductRepository()
   })
 )

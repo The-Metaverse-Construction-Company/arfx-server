@@ -1,0 +1,16 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    SignIn:
+      type: object
+      properties:
+        token:
+          $ref: "#/components/schemas/FieldAuthToken"
+        user:
+          $ref: '#/components/schemas/Users'
