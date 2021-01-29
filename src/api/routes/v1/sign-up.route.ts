@@ -29,7 +29,7 @@ router.route('/')
  *      tags: 
  *        - "Sign-Up"
  *      parameters:
- *        - $ref: '#/components/requestQuery/authTokenParam'
+ *        - $ref: '#/components/requestQuery/AuthOTPParam'
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/signUp'

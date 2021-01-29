@@ -5,6 +5,11 @@ components:
       name: "token"
       required: true
       example: "JWT Token"
+    AuthOTPParam:
+      in: query
+      name: "token"
+      required: true
+      example: "OTP Token"
     startAtQueryParam:
       in: query
       name: startAt

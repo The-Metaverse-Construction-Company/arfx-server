@@ -118,6 +118,21 @@ router
   // .delete(authorize(LOGGED_USER), controller.remove);
   router
     .route('/:userId/resend-otp')
+/**
+ * @swagger
+ * /v1/users/{userId}/resend-otp:
+ *  patch:
+ *    summary: "resend user sign-up OTP."
+ *    tags:
+ *      - "Users"
+ *    security:
+ *      - bearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/User/id'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responses/User/resendOTP'
+ */
     .post(controller.resendAccountVerificationOTPRoute)
     // .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
 export default router;

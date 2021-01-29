@@ -34,7 +34,7 @@ router.route('/')
  *      tags: 
  *        - "Reset Password"
  *      parameters:
- *        - $ref: '#/components/requestQuery/authTokenParam'
+ *        - $ref: '#/components/requestQuery/AuthOTPParam'
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/resetPassword/verifyToken'
@@ -49,7 +49,7 @@ router.route('/')
  *      tags: 
  *        - "Reset Password"
  *      parameters:
- *        - $ref: '#/components/requestQuery/authTokenParam'
+ *        - $ref: '#/components/requestQuery/AuthOTPParam'
  *      requestBody:
  *         $ref: '#/components/requestBody/resetPassword/verified'
  *      responses:
