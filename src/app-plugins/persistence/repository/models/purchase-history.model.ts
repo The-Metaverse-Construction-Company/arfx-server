@@ -5,6 +5,7 @@ import {
 import {
   IPurchaseHistoryEntity, PURCHASE_HISTORY_STATE
 } from '../../../../api/domain/entities/purchase-history'
+import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export interface IPurchaseHistoryRepository extends Document, IPurchaseHistoryEntity {
   _id: any
@@ -40,7 +41,7 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
-  productURL: {
+  contentURL: {
     type: String,
     default: '',
   },
@@ -82,4 +83,4 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
 }
 
 const RepositorySchema = new Schema<IPurchaseHistoryRepository>(RepositoryModel)
-export default model<IPurchaseHistoryRepository>('purchase_histories', RepositorySchema)
+export default model<IPurchaseHistoryRepository>(COLLECTION_NAMES.PURCHASE_HISTORY, RepositorySchema)

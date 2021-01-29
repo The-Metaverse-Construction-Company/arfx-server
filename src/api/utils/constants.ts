@@ -25,3 +25,8 @@ export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''
 /// SENDGRID
 export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
+
+// AZURE CONFIGS ///
+export const AZURE_CONNSTRING = process.env.AZURE_CONNSTRING || ''
+export const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || ''
+export const AZURE_BLOB_SAS_URL = process.env.AZURE_BLOB_SAS_URL || ''

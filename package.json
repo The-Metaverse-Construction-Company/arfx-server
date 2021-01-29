@@ -28,6 +28,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.4.0",
     "@sendgrid/mail": "^7.4.2",
     "@types/mocha": "^8.2.0",
     "axios": "^0.19.0",
@@ -48,6 +49,7 @@
     "hbs": "^4.1.1",
     "helmet": "^3.5.0",
     "http-status": "^1.0.1",
+    "into-stream": "^6.0.0",
     "joi": "^10.4.1",
     "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.6",
@@ -74,6 +76,7 @@
     "@types/connect-busboy": "0.0.2",
     "@types/cors": "^2.8.9",
     "@types/helmet": "^4.0.0",
+    "@types/into-stream": "^3.1.1",
     "@types/jwt-simple": "^0.5.33",
     "@types/method-override": "0.0.31",
     "@types/multer": "^1.4.5",

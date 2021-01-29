@@ -51,7 +51,7 @@ export class PurchaseProductService {
         title: product.title,
         name: product.name,
         description: product.description,
-        productURL: product.productURL,
+        contentURL: product.contentURL,
         state: PURCHASE_HISTORY_STATE.PENDING,
       })
       
@@ -60,7 +60,6 @@ export class PurchaseProductService {
       if (purchaseBody.keepCardDetails) {
         intentSecret = await this.dependencies.payment.setupCustomerPaymentIntent(user.stripeCustomerId)
       }
-      console.log('newPurchaseHistory :>> ', newPurchaseHistory);
       // charge customer,
       const {authenticated, paymentIntent} = await this.dependencies.payment.chargeCustomer({
         amount: newPurchaseHistory.amount,
@@ -76,7 +75,7 @@ export class PurchaseProductService {
         description: product.description,
         name: product.name,
         productId: product._id,
-        productURL: product.productURL,
+        contentURL: product.contentURL,
         title: product.title,
         userId: user._id
       })

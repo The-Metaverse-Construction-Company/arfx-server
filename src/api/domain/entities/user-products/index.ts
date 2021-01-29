@@ -20,14 +20,14 @@ export default ({
     public readonly description!: string
     public readonly userId!: string
     public readonly productId!: string
-    public readonly productURL!: string
+    public readonly contentURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
       _id = '',
       name = '',
       description = '',
-      productURL = '',
+      contentURL = '',
       productId = '',
       userId = '',
       title = '',
@@ -56,7 +56,7 @@ export default ({
       this._id = _id
       this.name = name
       this.description = description
-      this.productURL = productURL
+      this.contentURL = contentURL
       this.productId = productId
       this.userId = userId
       this.title = title
