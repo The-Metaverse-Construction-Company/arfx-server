@@ -12,26 +12,28 @@ import {
 import {
   validateUserEmail,
   userDetails,
-  userVerifyToken
+  userVerifyOTPToken,
+  sendUserOTPService
 } from './users'
 
 import {
   UserRepository
 } from '../../app-plugins/persistence/repository'
 
-import AuthToken from '../helper/user-token'
+import OTPToken from '../helper/user-otp-token'
+
+
 export const userSignUp = (redis: RedisClient) => (
   new UserSignUpService({
     repositoryGateway: new UserRepository(),
-    generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
-    sendEmail: sendVerificationEmail().sendOne,
+    sendUserOTPService: sendUserOTPService(redis),
     validateEmail: validateUserEmail().validateOne
   })
 )
 export const verifyUser = (redis: RedisClient) => {
-  const authToken = new AuthToken({redisClient: redis})
+  const authToken = new OTPToken({redisClient: redis})
   return new VerifiedUserService({
-    revokeToken: authToken.removeAccessToken,
+    revokeToken: authToken.remoteOTPToken,
     repositoryGateway: new UserRepository(),
     userDetails: userDetails(),
     createPaymentGatewayAccount: PaymentGateway.customer.create,
@@ -39,6 +41,6 @@ export const verifyUser = (redis: RedisClient) => {
 }
 export const verifySignUpToken = (redis: RedisClient) => {
   return new VerifyUserTokenService({
-    verifyUserToken: userVerifyToken(redis)
+    verifyUserToken: userVerifyOTPToken(redis)
   })
 }

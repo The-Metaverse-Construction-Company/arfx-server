@@ -11,6 +11,7 @@ import * as error from '../api/middlewares/error'
 
 import RedisClient from './redis'
 
+const Fingerprint = require('express-fingerprint')
 const helmet = require('helmet')
 const compress = require('compression')
 const morgan = require('morgan')
@@ -36,8 +37,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   }
 //   next()
 // })
-
-
+// setup request fingerprint
+app.use(Fingerprint({
+  parameters: [
+    Fingerprint.useragent,
+    Fingerprint.acceptHeaders,
+    Fingerprint.geoip
+  ]
+}))
+// add middleware to map the fingerprint to res.locals.fingerprint
+app.use((req, res, next) => {
+  //@ts-expect-error
+  const fingerprint = req.fingerprint
+  res.locals.fingerprint = fingerprint?.hash
+  next()
+})
 // // console.log('RedisClient :>> ', RedisClient);
 // load redis
 app.set('redisPublisher', RedisClient)

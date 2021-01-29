@@ -3,10 +3,12 @@ import {
 } from '../../entities'
 import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
 import { TOKEN_TYPE } from '../../../utils/constants'
-import { IUserRepositoryGateway } from '../../entities/users'
+import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
+import {
+  SendUserOTPService
+} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
-  generateToken: IGenerateToken
-  sendEmail(userId: string, token: string): Promise<any>
+  sendUserOTPService: SendUserOTPService
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
 export class UserSignUpService {
@@ -16,13 +18,19 @@ export class UserSignUpService {
     email = '',
     name = '',
     password = '',
-    role = ''
-  }) => {
+    role = '',
+    mobileNumber = ''
+  }: IUserParams) => {
     try {
       // initiate user entity to run the validation for business rules.
       const newUser = new UserEntity({
         email: {
           value: email,
+          verifiedAt: 0,
+          verified: false
+        },
+        mobileNumber: {
+          value: mobileNumber,
           verifiedAt: 0,
           verified: false
         },
@@ -34,13 +42,9 @@ export class UserSignUpService {
       await this.deps.validateEmail({email: newUser.email.value})
       // insert user to the repository.
       await this.deps.repositoryGateway.insertOne(newUser)
+      // generate OTP and send it thru email or text.
+      const token = await this.deps.sendUserOTPService.sendOne(newUser._id, TOKEN_TYPE.SIGN_UP)
       // generate token for sign up
-      const token = await this.deps.generateToken({
-        referenceId: newUser._id,
-        tokenType: TOKEN_TYPE.SIGN_UP
-      })
-      // send email for account verification
-      await this.deps.sendEmail(newUser._id, token)
       //add some logs
       return {
         user: newUser,

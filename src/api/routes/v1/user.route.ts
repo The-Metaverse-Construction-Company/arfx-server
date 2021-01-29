@@ -15,7 +15,7 @@ import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
  * @middlewares
  */
 import {
-  authorize, ADMIN, LOGGED_USER
+  authorize, ADMIN, LOGGED_USER, authorizeAdminAccount
 } from '../../middlewares/auth'
 import {
   listUsers,
@@ -219,5 +219,7 @@ router
    */
   .delete(authorize(LOGGED_USER), controller.remove);
 
-
+  router
+    .route('/:userId/resend-verification')
+    .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
 export default router;

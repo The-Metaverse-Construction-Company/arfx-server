@@ -7,10 +7,12 @@ import {
 } from '../service-configurations/sign-up'
 import {
   userListService,
-  userDetails
+  userDetails,
+  sendUserOTPService
 } from '../service-configurations/users'
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
+import { TOKEN_TYPE } from '../utils/constants'
 const { omit } = require('lodash');
 const User = require('../models/user.model');
 
@@ -129,6 +131,18 @@ export const remove = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req.locals;
 
   user.remove()
+    .then(() => res.status(httpStatus.NO_CONTENT).end())
+    .catch((e: Error) => next(e));
+};
+/**
+ * Delete user
+ * @public
+ */
+export const resendAccountVerificationOTPRoute = (req: Request, res: Response, next: NextFunction) => {
+  const {userId} = req.params
+  const redis = req.app.get('redisPublisher')
+  sendUserOTPService(redis)
+    .sendOne(userId, TOKEN_TYPE.SIGN_UP)
     .then(() => res.status(httpStatus.NO_CONTENT).end())
     .catch((e: Error) => next(e));
 };

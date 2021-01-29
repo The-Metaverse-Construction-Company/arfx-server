@@ -1,101 +1,40 @@
 
 import {RedisClient} from 'redis'
+import RandomNumber from 'random-number'
 import { TOKEN_LABEL,
   JWT_ACCESS_TOKEN_DURATION_MINUTES,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_DURATION_MINUTES,
   JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
-import Token from '../helper/token'
+import Token from './token'
+const RNOptions = {
+  min: 10000,
+  max: 99999,
+  integer: true
+}
+const generateOTP = RandomNumber.generator(RNOptions)
 // import Token from '../../../helper/token'
 // import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
 // import Redis from '../../../../config/redis'
 interface deps {
-  accessTokenSecret?: string
-  refreshTokenSecret?: string
   redisClient: RedisClient
 }
 export default abstract class AuthOTPToken {
-  public AccessToken!: Token
-  private RefreshToken!: Token
-
   protected abstract generateSourceId(data:any): string;
   constructor (protected deps: deps) {
-    this.setAccessTokenSecretKey(this.deps.accessTokenSecret || JWT_ACCESS_TOKEN_SECRET)
-    this.setRefreshTokenSecretKey(this.deps.refreshTokenSecret || JWT_REFRESH_TOKEN_SECRET)
-  }
-  private setAccessTokenSecretKey (secretKey: string) {
-    return this.AccessToken = new Token(secretKey)
-  }
-  private setRefreshTokenSecretKey = (secretKey: string) => {
-    return this.RefreshToken = new Token(secretKey)
-  }
-  // private getKey (data: {referenceId: string, tokenType: string}, tokenLabel: string) {
-  //   return `${data.referenceId}:${tokenLabel}:${data.tokenType}`
-  // }
-  /**
-   * generate the refresh token with fingerprint as a primary id
-   * @param tokenData 
-   * @param fingerprint 
-   * @param duration expiration of the refresh token, default value is 30 days
-   */
-  public generateRefreshToken (tokenData: any, fingerprint: string, duration: number = JWT_REFRESH_TOKEN_DURATION_MINUTES):Promise<string> {
-    return new Promise((resolve, reject) => {
-      // get the refresh token,
-      this.deps.redisClient.get(`${tokenData.sourceId}:${tokenData.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`, (err: any, data: any) => {
-        if (err) {
-          console.log('Failed to generate refresh token, Error: ', err)
-          return reject(`Failed to generate refresh token, Error: ${err.message}`)
-        }
-        if (data) {
-          // return existing refresh token data.
-          return resolve(data)
-        }
-        const {expiration, token} = this.RefreshToken.generate({...tokenData, fingerprint}, duration)
-        // expiration return the current date plus the value on the token(by minute)
-        this.deps.redisClient.SET(`${tokenData.sourceId}:${tokenData.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`, token, 'EX', (expiration - Date.now()) / 1000)
-        return resolve(token)
-      })
-    })
-  }
-  /**
-   * verifying the refresh token with fingerprint
-   * @param token 
-   * @param fingerprint 
-   */
-  public verifyRefreshToken (token: string, fingerprint: string):Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.RefreshToken
-        .verify(token)
-        .then((data: any) => {
-          // check if the refresh token is exist
-          this.deps.redisClient.EXISTS(`${data.sourceId}:${data.platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`, (err, isExist) => {
-            if (err) {
-              reject(new Error('Failed to verify refresh token. Error: ' + err.message))
-              return
-            }
-            console.log('refresh token: ', isExist)
-            console.log('refresh token: ', data)
-            if (!isExist) {
-              reject(new Error('Invalid refresh token.'))
-              return
-            }
-            return resolve(data)
-          })
-        })
-        .catch((err: Error) => {
-          reject(err)
-        })
-      })
   }
   /**
    * generate the access token with fingerprint as a primary id
    * @param tokenData 
    * @param duration // accessToken expiration, default is 2 hrs, 
    */
-  public generateAccessToken = (tokenData: any, duration: number = JWT_ACCESS_TOKEN_DURATION_MINUTES):Promise<string> => {
-  // public generateAccessToken (tokenData: any, fingerprint: string, _expiration: number = (60 * 2)):Promise<string> {
+  public generateOTPToken = (tokenData: any, duration: number = 60 * 15):Promise<string> => {
     return new Promise((resolve, reject) => {
-      const authKey = `${this.generateSourceId(tokenData)}:${TOKEN_LABEL.ACCESS}`
+      const otpCode = generateOTP().toString()
+      const authKey = `${this.generateSourceId({
+        ...tokenData,
+        code: otpCode
+      })}`
       // get the access token
       this.deps.redisClient.get(authKey, (err, data) => {
       // this.deps.redisClient.get(`${tokenData.referenceId}:${tokenData.platform}:${TOKEN_LABEL.ACCESS}:${fingerprint}`, (err, data) => {
@@ -108,11 +47,10 @@ export default abstract class AuthOTPToken {
         }
         try {
           // if no token found on redis, generate new token with 15 minutes expiration
-          const {expiration, token} = this.AccessToken.generate({...tokenData}, duration)
+          // const {expiration, token} = this.AccessToken.generate({...tokenData}, duration)
           // expiration return the current date plus the value on the token(by minute)
-          this.deps.redisClient.SET(authKey, token, 'EX', (expiration - Date.now()) / 1000)
-          // this.deps.redisClient.SET(`${tokenData.sourceId}:${tokenData.platform}:${TOKEN_LABEL.ACCESS}:${fingerprint}`, token, 'EX', (expiration - Date.now()) / 1000)
-          return resolve(token)
+          this.deps.redisClient.SET(authKey, JSON.stringify(tokenData), 'EX', duration)
+          return resolve(otpCode)
         }
         catch (error) {
           return reject(error)
@@ -126,32 +64,28 @@ export default abstract class AuthOTPToken {
    * @param token 
    * @param fingerprint 
    */
-  public verifyAccessToken = (token: string, tokenType: string):Promise<any> => {
+  public verifyOTPToken = (otpCode: string, tokenType: string):Promise<any> => {
     return new Promise((resolve, reject) => {
-        // check if the access token name with fingerprint within
-        // console.log(' >> this.deps.redisClient', this.deps.redisClient)
-        this.deps.redisClient.EXISTS(`${this.generateSourceId(data)}:${TOKEN_LABEL.ACCESS}`, (err, isExist) => {
-        // this.deps.redisClient.EXISTS(`${data.sourceId}:${data.platform}:${TOKEN_LABEL.ACCESS}:${fingerprint}`, (err, isExist) => {
+      console.log('object :>> ', this.generateSourceId({
+        code: otpCode,
+        tokenType
+      }));
+        this.deps.redisClient.GET(this.generateSourceId({
+          code: otpCode,
+          tokenType
+        }), (err, data) => {
+          console.log('data :>> ', data);
           if (err) {
-            reject(new Error('Failed to verify access token. Error: ' + err.message))
+            reject(new Error('Failed to verify otp token. Error: ' + err.message))
             return
           }
-          if (!isExist) {
-            reject(new Error('Invalid access token.'))
+          if (!data) {
+            reject(new Error('Invalid otp token.'))
             return
           }
-          return resolve(data)
+          return resolve(JSON.parse(data))
         })
       })
-  }
-  /**
-   * Remove all token to specific fingerprint
-   * @param fingerprint 
-   */
-  public removeTokens = async (accountId: string, platform: string, fingerprint: string) => {
-    await this.removeAccessToken(accountId, platform)
-    // await this.removeRefreshToken(accountId, platform)
-    return true
   }
   /**
    * remove access token
@@ -159,21 +93,12 @@ export default abstract class AuthOTPToken {
    * @param platform 
    * @param fingerprint 
    */
-  public removeAccessToken = async (referenceId: string, tokenType: string) => {
+  public remoteOTPToken = async (otpCode: string, tokenType: string) => {
     try {
-      this.deps.redisClient.DEL(`${this.generateSourceId({referenceId: referenceId, tokenType})}:${TOKEN_LABEL.ACCESS}`)
+      this.deps.redisClient.DEL(this.generateSourceId({otpCode: otpCode, tokenType}))
       return true
     } catch (error) {
       throw error
     }
-  }
-  /**
-   * remove refresh token
-   * @param fingerprint 
-   * @param accountId 
-   * @param platform 
-   */
-  public removeRefreshToken = (accountId: string, platform: string, fingerprint: string) => {
-    this.deps.redisClient.DEL(`${accountId}:${platform}:${TOKEN_LABEL.REFRESH}:${fingerprint}`)
   }
 }
