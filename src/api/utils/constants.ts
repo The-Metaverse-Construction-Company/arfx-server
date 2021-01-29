@@ -7,6 +7,7 @@ export const TOKEN_TYPE = {
   SIGN_IN: 'SIGN_IN',
   RESET_PASSWORD: 'RESET_PASSWORD',
 }
+export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
 export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || ''
 export const JWT_ACCESS_TOKEN_DURATION_MINUTES = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES ? parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES) : 60

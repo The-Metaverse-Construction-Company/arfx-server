@@ -23,7 +23,8 @@ export class CreateProductService {
       const {filepath} = productBody
       const newProductEntity = new ProductEntity({
         ...productBody,
-        adminAccountId: adminAccountId
+        adminAccountId: adminAccountId,
+        contentURL: filepath
       })
       // upload to cloud storage provider
       await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)

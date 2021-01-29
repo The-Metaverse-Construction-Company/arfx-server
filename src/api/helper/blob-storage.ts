@@ -1,6 +1,6 @@
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import fs from 'fs'
-import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING } from '../utils/constants';
+import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, NODE_ENV } from '../utils/constants';
 const containerName = "simple-blob-storage";
 // const blobName = "<blob name>";
 const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
@@ -15,9 +15,13 @@ const blobStorage = {
           }, 500)
           return
         }
-        // uploading the file thru cloud
-        const uploadBlobResponse = await bbc.uploadFile(file)
-        return uploadBlobResponse
+        // check env first, if env is only development, then save it only on the static folder.
+        // if the env production is production, upload it thru cloud storage provider.
+        if (NODE_ENV === 'production') {
+          // uploading the file thru cloud
+          const uploadBlobResponse = await bbc.uploadFile(file)
+        }
+        return true
       } catch (error) {
         reject(error)
       }
