@@ -5,6 +5,7 @@ import {
 import {
   IUserProductsEntity
 } from '../../../../api/domain/entities/user-products'
+import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export interface IUserProductsRepositoryModel extends Document, IUserProductsEntity {
   _id: any
@@ -25,7 +26,7 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
     default: '',
     required: true,
   },
-  productURL: {
+  contentURL: {
     type: String,
     default: ''
   },
@@ -55,4 +56,4 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IUserProductsRepositoryModel>('user_products', RepositorySchema)
+export default model<IUserProductsRepositoryModel>(COLLECTION_NAMES.USER_PRODUCT, RepositorySchema)

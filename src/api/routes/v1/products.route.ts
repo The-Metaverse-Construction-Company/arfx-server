@@ -3,9 +3,12 @@ import validate from 'express-validation'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
 import PurchaseRoute from './purchase.route'
+import path from 'path'
 // import uploder from '../../../config/uploader'
-
-// const multipart = require('connect-multiparty')()
+import multer from 'multer'
+const uploadPath = path.join(__dirname, '../../../../uploaded');
+const getFilePath = (filename: string) => path.join(uploadPath, filename)
+const upload = multer({dest: uploadPath})
 const router = express.Router();
 import {
   authorize
@@ -47,9 +50,9 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Products'
  */
-  .get(controller.productListRoute)
+  .get(authorize(), controller.productListRoute)
 router.route('/upload')
-  .post(controller.uploadProductImageRoute)
+  .post(upload.single('scene'), controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
 /**
  * @swagger
@@ -68,7 +71,7 @@ router.route('/upload')
  */
 router.route('/:productId')
   .get(controller.productDetailsRoute)
-// router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))
+  // router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))
 router.route('/:productId')
 /**x
  * @swagger

@@ -41,11 +41,7 @@ export const getCustomerPaymentMethods = async (req: Request, res: Response, nex
   try {
     const {userId} = req.params
     const {stripeCustomerId = ''} = <IUserEntity>req.user
-    const intentSecret = await PaymentGateway.customer.getPaymentMethods(stripeCustomerId)
-    const paymentMethodList = await stripe.paymentMethods.list({
-      customer: stripeCustomerId,
-      type: "card"
-    })
+    const paymentMethodList = await PaymentGateway.customer.getPaymentMethods(stripeCustomerId)
     res.status(httpStatus.OK).send(successReponse(paymentMethodList))
     return
   } catch (error) {

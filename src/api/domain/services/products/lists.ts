@@ -13,7 +13,7 @@ export class ProductList {
   public getList = async (queryParams?: any) => {
     try {
       // get list in the repo
-      const productList = await this.dependencies.repositoryGateway.findAll()
+      const productList = await this.dependencies.repositoryGateway.getPaginationList(queryParams.userId, queryParams)
       return productList
     } catch (error) {
       console.log('failed to create product. \nError :>> ', error);

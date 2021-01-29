@@ -16,12 +16,12 @@ export class UpdateProductURLService {
    * create new product.
    * @param productBody 
    */
-  public updateOne = async (productId: string, productURL: string) => {
+  public updateOne = async (productId: string, contentURL: string) => {
     try {
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId
       }, {
-        productURL: productURL,
+        contentURL: contentURL,
       })
       // add logs
       return updatedProduct

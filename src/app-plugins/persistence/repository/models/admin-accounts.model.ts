@@ -6,6 +6,7 @@ import {
   ADMIN_ROLE_LEVEL,
   IAdminAccountsEntity
 } from '../../../../api/domain/entities/admin-accounts'
+import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export interface IAdminAccountsRepositoryModel extends Document, IAdminAccountsEntity {
   _id: any
@@ -61,4 +62,4 @@ const RepositoryModel = <Record<keyof IAdminAccountsEntity, SchemaTypeOpts<Objec
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IAdminAccountsRepositoryModel>('admin_accounts', RepositorySchema)
+export default model<IAdminAccountsRepositoryModel>(COLLECTION_NAMES.ADMIN_ACCOUNT, RepositorySchema)

@@ -6,7 +6,7 @@ export interface IProductParams {
   name: string // some internal name
   title: string // title of the scene
   description: string // description of the scene
-  productURL: string // url of the product or the scene,
+  contentURL: string // url of the product or the scene,
 }
 export interface IProdutBody extends IProductParams {
   discountPercentage: number // discount of the scene/product

@@ -9,6 +9,7 @@ export const TOKEN_TYPE = {
 }
 
 export const BACKEND_HOST = `http://localhost:3000`
+export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
 export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || ''
 export const JWT_ACCESS_TOKEN_DURATION_MINUTES = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES ? parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES) : 60
@@ -27,3 +28,8 @@ export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''
 /// SENDGRID
 export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
+
+// AZURE CONFIGS ///
+export const AZURE_CONNSTRING = process.env.AZURE_CONNSTRING || ''
+export const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || ''
+export const AZURE_BLOB_SAS_URL = process.env.AZURE_BLOB_SAS_URL || ''

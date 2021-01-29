@@ -5,6 +5,7 @@ import {
 import {
   IUserEntity
 } from '../../../../api/domain/entities/users'
+import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export interface IUserRepository extends Document, IUserEntity {
   _id: any
@@ -83,4 +84,4 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IUserRepository>('users', RepositorySchema)
+export default model<IUserRepository>(COLLECTION_NAMES.USER, RepositorySchema)

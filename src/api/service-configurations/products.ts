@@ -11,10 +11,12 @@ import {
 import {
   ProductRepository
 } from '../../app-plugins/persistence/repository'
+import BlobStorage from '../helper/blob-storage'
 
 export const createProduct = () => (
   new CreateProductService({
-    repositoryGateway: new ProductRepository()
+    repositoryGateway: new ProductRepository(),
+    fileUploader: BlobStorage
   })
 )
 export const updateProduct = () => (
