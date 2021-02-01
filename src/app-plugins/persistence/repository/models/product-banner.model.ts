@@ -3,15 +3,15 @@ import {
 } from 'mongoose'
 
 import {
-  IProductBannerEntity
-} from '../../../../api/domain/entities/product-banner'
+  IFeaturedProductEntity
+} from '../../../../api/domain/entities/featured-product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
-export interface IProductBannerRepositoryModel extends Document, IProductBannerEntity {
+export interface IFeaturedProductRepositoryModel extends Document, IFeaturedProductEntity {
   _id: any
 }
 // this will automatically error when it have a changes on the purchase history entity interface
-const RepositoryModel = <Record<keyof IProductBannerEntity, SchemaTypeOpts<Object>>> {
+const RepositoryModel = <Record<keyof IFeaturedProductEntity, SchemaTypeOpts<Object>>> {
   _id: {
     type: String,
     default: '',
@@ -45,4 +45,4 @@ const RepositoryModel = <Record<keyof IProductBannerEntity, SchemaTypeOpts<Objec
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
-export default model<IProductBannerRepositoryModel>(COLLECTION_NAMES.PRODUCT_BANNER, RepositorySchema)
+export default model<IFeaturedProductRepositoryModel>(COLLECTION_NAMES.FEATURED_PRODUCT, RepositorySchema)

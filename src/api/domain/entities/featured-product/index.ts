@@ -1,5 +1,5 @@
 import {
-  IProductBannerEntity
+  IFeaturedProductEntity
 } from './interfaces'
 import {
   IGeneralEntityDependencies
@@ -13,7 +13,7 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductBannerEntity implements IProductBannerEntity {
+  class FeaturedProductEntity implements IFeaturedProductEntity {
     public readonly _id!: string
     public readonly adminAccountId!: string
     public readonly active: boolean = false
@@ -29,7 +29,7 @@ export default ({
       indexNo = 0,
       updatedAt = Date.now(),
       createdAt  = Date.now()
-    }: Partial<IProductBannerEntity>) {
+    }: Partial<IFeaturedProductEntity>) {
       if (!_id) {
         _id = generateId()
       }

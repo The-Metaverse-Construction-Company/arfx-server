@@ -1,34 +1,34 @@
 import {
-  IProductBannerParams,
-  IProductBannerRepositoryGateway
-} from '../../entities/product-banner'
+  IFeaturedProductParams,
+  IFeaturedProductRepositoryGateway
+} from '../../entities/featured-product'
 import {
-  ProductBannerEntity
+  FeaturedProductEntity
 } from '../../entities'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
-interface IServiceDependencies extends IGeneralServiceDependencies<IProductBannerRepositoryGateway>{
+interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProductRepositoryGateway>{
 }
-export class CreateProductBannerService {
+export class CreateFeaturedProductService {
   constructor (protected deps: IServiceDependencies) {
   }
-  public createOne = async (data: IProductBannerParams) => {
+  public createOne = async (data: IFeaturedProductParams) => {
     try {
       const {
         active = true,
         adminAccountId = '',
         productId = ''
       } = data
-      const newProductBanner = new ProductBannerEntity({
+      const newFeaturedProduct = new FeaturedProductEntity({
         active,
         adminAccountId,
         productId
       })
       // insert product banner on the repository
-      const productBanner = await this.deps.repositoryGateway.insertOne(newProductBanner)
+      const featuredProduct = await this.deps.repositoryGateway.insertOne(newFeaturedProduct)
       //add some logs
-      return newProductBanner
+      return newFeaturedProduct
     } catch (error) {
       console.log('failed to create product banner. \nError:>> ', error);
       throw error

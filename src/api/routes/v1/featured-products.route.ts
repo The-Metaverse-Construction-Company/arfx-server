@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express'
 import validate from 'express-validation'
-import * as controller from '../../controllers/product-banner.controller'
+import * as controller from '../../controllers/featured-product.controller'
 import {
   sendPasswordReset,
   updateResetPasswordValidation,
@@ -17,14 +17,14 @@ router.route('/')
  *    post:
  *      summary: List of the banners.
  *      tags: 
- *        - "Featured Banner"
+ *        - "Featured Product"
  *      requestBody:
- *         $ref: '#/components/requestBody/ProductBanner/form'
+ *         $ref: '#/components/requestBody/featuredProduct/form'
  *      responses:
  *        '200':
  *          description: "OK"
  */
-  .post(validate(sendPasswordReset), controller.createProductBannerRoute)
+  .post(validate(sendPasswordReset), controller.createFeaturedProductRoute)
 /**
  * @swagger
  * paths:
@@ -32,7 +32,7 @@ router.route('/')
  *    get:
  *      summary: List of the banners.
  *      tags: 
- *        - "Featured Banner"
+ *        - "Featured Product"
  *      parameters:
  *        - $ref: '#/components/requestQuery/pageNo'
  *        - $ref: '#/components/requestQuery/limit'
@@ -41,40 +41,40 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(controller.productBannerListRoute)
+  .get(controller.featuredProductListRoute)
 
-router.route('/:productBannerId')
+router.route('/:featuredProductId')
 /**
  * @swagger
  * paths:
- *  /v1/product-banners/{productBannerId}:
+ *  /v1/product-banners/{featuredProductId}:
  *    patch:
- *      summary: update the Featured banner id.
+ *      summary: update the Featured Product id.
  *      tags: 
- *        - "Featured Banner"
+ *        - "Featured Product"
  *      parameters:
- *        - $ref: '#/components/requestParams/ProductBanner/id'
+ *        - $ref: '#/components/requestParams/featuredProduct/id'
  *      requestBody:
- *         $ref: '#/components/requestBody/ProductBanner/form'
+ *         $ref: '#/components/requestBody/featuredProduct/form'
  *      responses:
  *        '201':
  *          description: "ACCEPTED"
  */
-  .patch(controller.updateProductBannerRoute)
+  .patch(controller.updateFeaturedProductRoute)
 /**
  * @swagger
  * paths:
- *  /v1/product-banners/{productBannerId}:
+ *  /v1/product-banners/{featuredProductId}:
  *    delete:
- *      summary: remove the Featured banner id
+ *      summary: remove the Featured Product id
  *      tags: 
- *        - "Featured Banner"
+ *        - "Featured Product"
  *      parameters:
- *        - $ref: '#/components/requestParams/ProductBanner/id'
+ *        - $ref: '#/components/requestParams/featuredProduct/id'
  *      responses:
  *        '201':
  *          description: "ACCEPTED"
  */
-  .delete(controller.removeProductBannerRoute);
+  .delete(controller.removeFeaturedProductRoute);
 
 export default router;

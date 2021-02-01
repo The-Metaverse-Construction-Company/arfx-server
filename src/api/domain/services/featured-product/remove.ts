@@ -1,22 +1,22 @@
 import {
-  IProductBannerRepositoryGateway
-} from '../../entities/product-banner'
+  IFeaturedProductRepositoryGateway
+} from '../../entities/featured-product'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
-interface IServiceDependencies extends IGeneralServiceDependencies<IProductBannerRepositoryGateway>{
+interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProductRepositoryGateway>{
 }
-export class RemoveProductBannerService {
+export class RemoveFeaturedProductService {
   constructor (protected deps: IServiceDependencies) {
   }
   public removeOne = async (bannerId: string) => {
     try {
       // remove the product banner on the repository.
-      const removedProductBanner = await this.deps.repositoryGateway.removeOne({
+      const removedFeaturedProduct = await this.deps.repositoryGateway.removeOne({
         _id: bannerId
       })
       //add some logs
-      return removedProductBanner
+      return removedFeaturedProduct
     } catch (error) {
       console.log('failed to remove product banner. \nError:>> ', error);
       throw error

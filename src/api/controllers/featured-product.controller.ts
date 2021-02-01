@@ -4,10 +4,10 @@ import {
   Response, Request, NextFunction
 } from 'express'
 import {
-  createProductBannerService,
-  productBannerListService,
-  updateProductBannerService,
-  removeProductBannerService
+  createFeaturedProductService,
+  featuredProductListService,
+  updateFeaturedProductService,
+  removeFeaturedProductService
 } from '../service-configurations/product-banner'
 import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
@@ -19,12 +19,12 @@ import { IUserEntity } from '../domain/entities/users'
  *  @field => limit: number // number of list needed to be display/return
  *  @field => searchText: string
  */
-export const productBannerListRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const productBanner = await productBannerListService()
+    const featuredProduct = await featuredProductListService()
       .getList(req.query)
     res.status(httpStatus.OK)
-      .json(successReponse(productBanner))
+      .json(successReponse(featuredProduct))
     return
   } catch (error) {
     console.log('object :>> ', error);
@@ -39,16 +39,16 @@ export const productBannerListRoute = async (req: Request, res: Response, next: 
  *  @field => active: boolean
  *  @field => indexNo: number 
  */
-export const createProductBannerRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const createFeaturedProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id: adminId = ''} = <IUserEntity>req.user
-    const productBanner = await createProductBannerService()
+    const featuredProduct = await createFeaturedProductService()
       .createOne({
         ...req.body,
         adminAccountId: adminId
       })
     res.status(httpStatus.CREATED)
-      .json(successReponse(productBanner))
+      .json(successReponse(featuredProduct))
     return
   } catch (error) {
     console.log('object :>> ', error);
@@ -59,23 +59,23 @@ export const createProductBannerRoute = async (req: Request, res: Response, next
  * @public
  * create the product banner
  * @requestParams
- *  @field => productBannerId: string
+ *  @field => featuredProductId: string
  * @requestBody
  *  @field => productId: string
  *  @field => active: boolean
  *  @field => indexNo: number 
  */
-export const updateProductBannerRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const updateFeaturedProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id: adminId = ''} = <IUserEntity>req.user
-    const {productBannerId = ''} = req.params
-    const productBanner = await updateProductBannerService()
-      .updateOne(productBannerId, {
+    const {featuredProductId = ''} = req.params
+    const featuredProduct = await updateFeaturedProductService()
+      .updateOne(featuredProductId, {
         ...req.body,
         adminAccountId: adminId
       })
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(productBanner))
+      .json(successReponse(featuredProduct))
     return
   } catch (error) {
     console.log('object :>> ', error);
@@ -86,16 +86,16 @@ export const updateProductBannerRoute = async (req: Request, res: Response, next
  * @public
  * create the product banner
  * @requestParams
- *  @field => productBannerId: string
+ *  @field => featuredProductId: string
  */
-export const removeProductBannerRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const removeFeaturedProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id: adminId = ''} = <IUserEntity>req.user
-    const {productBannerId = ''} = req.params
-    const productBanner = await removeProductBannerService()
-      .removeOne(productBannerId)
+    const {featuredProductId = ''} = req.params
+    const featuredProduct = await removeFeaturedProductService()
+      .removeOne(featuredProductId)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(productBanner))
+      .json(successReponse(featuredProduct))
     return
   } catch (error) {
     console.log('object :>> ', error);

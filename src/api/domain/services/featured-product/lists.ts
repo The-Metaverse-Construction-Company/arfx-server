@@ -1,13 +1,13 @@
 import {
-  IProductBannerRepositoryGateway
-} from '../../entities/product-banner'
+  IFeaturedProductRepositoryGateway
+} from '../../entities/featured-product'
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 import { IPaginationParameters } from '../../interfaces/general-repository-gateway'
-interface IServiceDependencies extends IGeneralServiceDependencies<IProductBannerRepositoryGateway>{
+interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProductRepositoryGateway>{
 }
-export class ProductBannerListService {
+export class FeaturedProductListService {
   constructor (protected deps: IServiceDependencies) {
   }
   public getList = async (filterQuery: IPaginationParameters) => {

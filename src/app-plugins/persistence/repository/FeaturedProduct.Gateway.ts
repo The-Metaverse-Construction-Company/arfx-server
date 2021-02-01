@@ -1,20 +1,20 @@
 
 import {
-  IProductBannerRepositoryGateway,
-  IProductBannerEntity
-} from '../../../api/domain/entities/product-banner'
+  IFeaturedProductEntity,
+  IFeaturedProductRepositoryGateway
+} from '../../../api/domain/entities/featured-product'
 import {
-  default as ProductBannerRepositoryModel,
-  IProductBannerRepositoryModel
+  default as FeaturedProductRepositoryModel,
+  IFeaturedProductRepositoryModel
 } from './models/product-banner.model'
 
 import GeneralRepository from './General.Gateway'
 import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
-export class ProductBannerRepository extends GeneralRepository<IProductBannerEntity, IProductBannerRepositoryModel> implements IProductBannerRepositoryGateway {
+export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductEntity, IFeaturedProductRepositoryModel> implements IFeaturedProductRepositoryGateway {
   constructor () {
-    super(ProductBannerRepositoryModel)
+    super(FeaturedProductRepositoryModel)
   }
 
   public getPaginationList = (filterQuery: IPaginationParameters) => {

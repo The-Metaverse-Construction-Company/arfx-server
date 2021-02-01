@@ -6,35 +6,35 @@ import {RedisClient} from 'redis'
  * @services
  */
 import {
-  CreateProductBannerService,
-  ProductBannerListService,
-  RemoveProductBannerService,
-  UpdateProductBannerService
-} from '../domain/services/product-banner'
+  CreateFeaturedProductService,
+  FeaturedProductListService,
+  RemoveFeaturedProductService,
+  UpdateFeaturedProductService
+} from '../domain/services/featured-product'
 /**
  * @repositories
  */
 import {
-  ProductBannerRepository
+  FeaturedProductRepository
 } from '../../app-plugins/persistence/repository'
 
-export const createProductBannerService = () => (
-  new CreateProductBannerService({
-    repositoryGateway: new ProductBannerRepository(),
+export const createFeaturedProductService = () => (
+  new CreateFeaturedProductService({
+    repositoryGateway: new FeaturedProductRepository(),
   })
 )
-export const productBannerListService = () => (
-  new ProductBannerListService({
-    repositoryGateway: new ProductBannerRepository(),
+export const featuredProductListService = () => (
+  new FeaturedProductListService({
+    repositoryGateway: new FeaturedProductRepository(),
   })
 )
-export const removeProductBannerService = () => (
-  new RemoveProductBannerService({
-    repositoryGateway: new ProductBannerRepository(),
+export const removeFeaturedProductService = () => (
+  new RemoveFeaturedProductService({
+    repositoryGateway: new FeaturedProductRepository(),
   })
 )
-export const updateProductBannerService = () => (
-  new UpdateProductBannerService({
-    repositoryGateway: new ProductBannerRepository(),
+export const updateFeaturedProductService = () => (
+  new UpdateFeaturedProductService({
+    repositoryGateway: new FeaturedProductRepository(),
   })
 )
