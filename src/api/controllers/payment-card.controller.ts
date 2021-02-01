@@ -23,7 +23,6 @@ export const createCustomerIntent = async (req: Request, res: Response, next: Ne
     // const {userId} = req.params
     const {_id: userId = '', stripeCustomerId = ''} = <IUserEntity>req.user
     const intentSecret = await PaymentGateway.customer.setupIntents(stripeCustomerId)
-    // const user = await userDetails().findOne(userId)
     res.status(httpStatus.CREATED).send(successReponse(intentSecret.client_secret))
     return
   } catch (error) {

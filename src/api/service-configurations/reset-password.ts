@@ -7,7 +7,8 @@ import {
 import UserOTP from '../helper/user-otp-token'
 
 import {
-  userDetails
+  userDetails,
+  updateUserPasswordService
 } from './users'
 import {
   sendResetPasswordEmail
@@ -25,8 +26,7 @@ export const sendResetPassword = (redis: RedisClient) => (
 )
 export const updateResetPassword = (redis: RedisClient) => (
   new UserVerifyResetPasswordService({
-    repositoryGateway: new UserRepository(),
-    userDetails: userDetails(),
+    updateUserPasswordService: updateUserPasswordService(),
     revokeToken: new UserOTP({redisClient: redis}).removeOTPToken
   })
 )

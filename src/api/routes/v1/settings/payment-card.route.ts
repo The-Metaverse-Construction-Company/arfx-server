@@ -1,9 +1,6 @@
 import express from 'express'
 import validate from 'express-validation'
 import * as controller from '../../../controllers/payment-card.controller'
-import {
-  PurchaseValidation
-} from '../../../validations/purchase-history.validation'
 const router = express.Router({mergeParams: true});
 
 router.route('/set-up')

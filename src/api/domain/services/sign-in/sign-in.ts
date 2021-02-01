@@ -4,9 +4,13 @@ import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 import { IUserRepositoryGateway } from '../../entities/users'
+import {
+  ValidateUserPasswordService
+} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   generateToken: IGenerateToken
-  comparePassword(password: string, hashPassword: string): boolean
+  validateUserPasswordService: ValidateUserPasswordService
+  // comparePassword(password: string, hashPassword: string): boolean
 }
 export class UserSignInService {
   constructor (protected deps: IServiceDependencies) {
@@ -21,18 +25,16 @@ export class UserSignInService {
         //@ts-expect-error
         "email.value": username
       })
-      if (!user || !(this.deps.comparePassword(password, user.password))) {
-        throw new Error('Invalid credentials.')
-      } else if (!user.email.verified) {
+      // validate account password
+      await this.deps.validateUserPasswordService.validateOne(user._id, password)
+      // if pass, then validate email if verified.
+      if (!user.email.verified) {
         throw new Error('Account not yet verified, Please verify your account first.')
       }
       const token = await this.deps.generateToken({
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN
       })
-      // removing password field on responsing user data
-      //@ts-ignore
-      delete user.password
       // add some logs or notification.
       return {
         user: user,
