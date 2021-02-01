@@ -12,7 +12,7 @@ import {
 } from '../../validations/auth.validation'
 
 const router = express.Router();
-//Routesx
+//Routes
 /**
  * @swagger
  *  /v1/auth/login:
@@ -21,14 +21,14 @@ const router = express.Router();
  *      - "Authentication"
  *      summary: Authenticate the registered users.
  *      requestBody:
- *        $ref: '#/components/requestBody/SignIn'
+ *        $ref: '#/components/requestBody/User/signIn'
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/SignIn'
  */
 router.route('/login')
   .post(validate(login), controller.login)
-/**x
+/**
  * @swagger
  *  /v1/auth/sign-out:
  *    post:

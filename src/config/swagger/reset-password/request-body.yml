@@ -14,9 +14,7 @@ components:
             schema:
               type: object
               properties:
-                email:
-                  required: true
-                  type: string
+                $ref: '#/components/models/User/email/value'
       verified:
         content:
           application/json:
@@ -24,5 +22,4 @@ components:
               type: object
               properties:
                 password:
-                  required: true
-                  type: string
+                  $ref: '#/components/models/User/password'

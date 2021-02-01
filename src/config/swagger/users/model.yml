@@ -26,7 +26,22 @@ components:
         type: string
         description: 'customerId from payment gateway(stripe).'
       email:
-        $ref: '#/components/schemas/FieldVerificationEntity'
+        value: 
+          type: string
+          description: 'email address of the user.'
+        verified: 
+          $ref: '#/components/schemas/general/verificationEntity/verified'
+        verifiedAt: 
+          $ref: '#/components/schemas/general/verificationEntity/verifiedAt'
+      emailObj:
+        type: object
+        properties:
+          value: 
+            $ref: '#/components/models/User/email/value'
+          verified: 
+            # $ref: '#/components/models/User/email/verified'
+          verifiedAt: 
+            $ref: '#/components/models/User/email/verifiedAt'
       mobileNumber:
         $ref: '#/components/schemas/FieldVerificationEntity'
       createdAt:

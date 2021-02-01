@@ -7,16 +7,28 @@
 
 components:
   requestBody:
-    Users:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              username:
-                $ref: '#/components/models/User/email/value'
-              password:
-                $ref: '#/components/models/User/password'
+    User:
+      signIn:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/models/User/email/value'
+                password:
+                  $ref: '#/components/models/User/password'
+      changePassword:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  $ref: '#/components/models/User/password'
+                newPassword:
+                  type: string
+                  description: 'new password of the user.'
   requestParams:
     User:
       id:

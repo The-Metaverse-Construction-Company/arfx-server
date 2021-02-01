@@ -19,7 +19,7 @@ components:
         stripeCustomerId:
           $ref: '#/components/models/User/stripeCustomerId'
         email:
-          $ref: '#/components/models/User/email'
+          $ref: '#/components/models/User/emailObj'
         mobileNumber:
           $ref: '#/components/models/User/mobileNumber'
         createdAt:
