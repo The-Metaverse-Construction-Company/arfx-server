@@ -76,6 +76,8 @@ export class PurchaseProductService {
         name: product.name,
         productId: product._id,
         contentURL: product.contentURL,
+        previewVideoURL: product.previewVideoURL,
+        previewImageURL: product.previewImageURL,
         title: product.title,
         userId: user._id
       })

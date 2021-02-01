@@ -30,6 +30,14 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
     type: String,
     default: ''
   },
+  previewImageURL: {
+    type: String,
+    default: ''
+  },
+  previewVideoURL: {
+    type: String,
+    default: ''
+  },
   description: {
     type: String,
     default: '',

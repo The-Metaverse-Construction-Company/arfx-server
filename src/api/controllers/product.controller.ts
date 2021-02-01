@@ -36,9 +36,8 @@ import blobStorage from '../helper/blob-storage'
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const scene = req.file;
+    const scene = req.file || {};
     const {_id} = <IAdminAccountsEntity>req.user
-    console.log('scene :>> ', scene);
     const newProduct = await createProduct()
       .createOne({
         ...req.body,
@@ -66,9 +65,6 @@ export const uploadProductImageRoute = async (req: Request, res: Response, next:
     // const busboy = req.app.get('busboy')
     const {productId = ''} = req.params
     const {productId: prodId} = req.body
-    console.log('object :>> ', scene);
-    console.log('productId :>> ', productId);
-    console.log('prodId :>> ', prodId);
     // blobStorage.upload(productId, scene).then((result) => {
     //   console.log('object :>> ', result);
     // }

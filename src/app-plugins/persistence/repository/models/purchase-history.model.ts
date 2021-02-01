@@ -45,6 +45,14 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     type: String,
     default: '',
   },
+  previewImageURL: {
+    type: String,
+    default: '',
+  },
+  previewVideoURL: {
+    type: String,
+    default: '',
+  },
   paymentMethodId: {
     type: String,
     default: '',

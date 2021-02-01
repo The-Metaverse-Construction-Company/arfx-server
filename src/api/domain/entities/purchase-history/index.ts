@@ -16,7 +16,7 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IPurchaseHistoryEntity {
+  class ProductHistoryEntity implements IPurchaseHistoryEntity {
     public readonly _id!: string
     public readonly productId!: string
     public readonly amount!: number
@@ -25,6 +25,8 @@ export default ({
     public readonly title!: string
     public readonly description!: string
     public readonly contentURL!: string
+    public readonly previewImageURL!: string
+    public readonly previewVideoURL!: string
     public paymentIntentId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
@@ -41,6 +43,8 @@ export default ({
       description = '',
       name = '',
       contentURL = '',
+      previewImageURL = '',
+      previewVideoURL = '',
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -74,6 +78,8 @@ export default ({
       this.name = name
       this.description = description
       this.contentURL = contentURL
+      this.previewImageURL = previewImageURL
+      this.previewVideoURL = previewVideoURL
       // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()

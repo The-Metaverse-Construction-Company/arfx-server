@@ -13,7 +13,7 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IUserProductsEntity {
+  class UserProductEntity implements IUserProductsEntity {
     public readonly _id!: string
     public readonly name!: string
     public readonly title!: string
@@ -21,6 +21,8 @@ export default ({
     public readonly userId!: string
     public readonly productId!: string
     public readonly contentURL!: string
+    public readonly previewVideoURL!: string
+    public readonly previewImageURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
@@ -28,6 +30,8 @@ export default ({
       name = '',
       description = '',
       contentURL = '',
+      previewVideoURL = '',
+      previewImageURL = '',
       productId = '',
       userId = '',
       title = '',
@@ -57,6 +61,8 @@ export default ({
       this.name = name
       this.description = description
       this.contentURL = contentURL
+      this.previewVideoURL = previewVideoURL
+      this.previewImageURL = previewImageURL
       this.productId = productId
       this.userId = userId
       this.title = title

@@ -6,7 +6,9 @@ export interface IProductParams {
   name: string // some internal name
   title: string // title of the scene
   description: string // description of the scene
-  contentURL: string // url of the product or the scene,
+  contentURL: string // content URL of the product,
+  previewVideoURL: string // preview clip URL,
+  previewImageURL: string // preview image of the product,
 }
 export interface IProdutBody extends IProductParams {
   discountPercentage: number // discount of the scene/product

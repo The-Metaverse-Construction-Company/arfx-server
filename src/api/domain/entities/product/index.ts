@@ -26,6 +26,8 @@ export default ({
     public readonly purchaseCount!: number
     public readonly discountPercentage!: number
     public readonly contentURL!: string
+    public readonly previewVideoURL!: string
+    public readonly previewImageURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
@@ -37,6 +39,8 @@ export default ({
       adminAccountId = '',
       purchaseCount = 0,
       contentURL = '',
+      previewVideoURL = '',
+      previewImageURL = '',
       title = '',
       published = false,
       // stripeCustomerId = '',
@@ -70,6 +74,8 @@ export default ({
       this.price = price
       this.discountPercentage = discountPercentage
       this.contentURL = contentURL
+      this.previewVideoURL = previewVideoURL
+      this.previewImageURL = previewImageURL
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.title = title

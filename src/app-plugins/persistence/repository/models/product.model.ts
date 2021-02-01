@@ -32,6 +32,14 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
+  previewImageURL: {
+    type: String,
+    default: '',
+  },
+  previewVideoURL: {
+    type: String,
+    default: '',
+  },
   published: {
     type: Boolean,
     default: false

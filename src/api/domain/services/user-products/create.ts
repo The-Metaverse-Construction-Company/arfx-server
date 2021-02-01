@@ -1,6 +1,5 @@
 import {
   IUserProductsRepositoryGateway,
-  IUserProductsEntity,
   IUserProductsParams
 } from '../../entities/user-products'
 import {

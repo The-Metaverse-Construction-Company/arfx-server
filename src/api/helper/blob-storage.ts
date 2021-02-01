@@ -9,10 +9,8 @@ const blobStorage = {
     return new Promise(async (resolve, reject) => {
       try {
         const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, containerName, blobName)
-        if (!fs.existsSync(file)) {
-          setTimeout(() => {
-            resolve(blobStorage.upload(blobName, file))
-          }, 500)
+        if (fs.existsSync(file)) {
+          resolve(blobStorage.upload(blobName, file))
           return
         }
         // check env first, if env is only development, then save it only on the static folder.
@@ -21,7 +19,8 @@ const blobStorage = {
           // uploading the file thru cloud
           const uploadBlobResponse = await bbc.uploadFile(file)
         }
-        return true
+        resolve(true)
+        return
       } catch (error) {
         reject(error)
       }
