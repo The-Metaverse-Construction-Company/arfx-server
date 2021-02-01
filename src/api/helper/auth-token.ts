@@ -5,7 +5,7 @@ import { TOKEN_LABEL,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_DURATION_MINUTES,
   JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
-import Token from '../helper/token'
+import Token from './token'
 // import Token from '../../../helper/token'
 // import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
 // import Redis from '../../../../config/redis'

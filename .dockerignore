@@ -11,3 +11,5 @@ Dockerfile
 .eslintrc
 .editorconfig
 .gitlab-ci.yml
+.env.local
+.env.example
