@@ -1,0 +1,23 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  requestBody:
+    ProductBanner:
+      form:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductBannerParam'
+  requestParams:
+    ProductBanner:
+      id:
+        in: path
+        name: productBannerId
+        schema:
+          type: string
+          required: true

@@ -1,0 +1,33 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    ProductBannerParam:
+      type: object
+      properties:
+        productId:
+          $ref: '#/components/models/ProductBanner/productId'
+        indexNo:
+          $ref: '#/components/models/ProductBanner/indexNo'
+
+    ProductBanner:
+      allOf:
+      - $ref: '#/components/schemas/ProductBannerParam'
+      - type: object
+        properties:
+          _id:
+            $ref: '#/components/models/Product/_id'
+          adminAccountId:
+            $ref: '#/components/models/ProductBanner/adminAccountId'
+          active:
+            $ref: '#/components/models/ProductBanner/active'
+          createdAt:
+            $ref: '#/components/schemas/FieldCreatedAt'
+          updatedAt:
+            $ref: '#/components/schemas/FieldUpdatedAt'
+  

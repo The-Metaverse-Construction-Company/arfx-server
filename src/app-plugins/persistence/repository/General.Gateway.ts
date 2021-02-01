@@ -161,19 +161,19 @@ export default abstract class GeneralDBCommands<T, K> {
    * a function that return a pagination data.
    */
   public aggregateWithPagination <SF extends keyof K>(pipeline: any[], queryParams: IPaginationQueryParams & {searchFields?: SF[]}): Promise<IAggregatePagination<K>> {
-    let {limitTo = 0, startAt = 0, sortBy = null, searchFields = [], searchText = ''} = <any> queryParams || {}
+    let {limit = 20, pageNo = 0, sortBy = null, searchFields = [], searchText = ''} = queryParams || {}
     //@ts-ignore
-    const endPage = parseInt(limitTo) >= 0 ? parseInt(limitTo) : 20
+    const endPage = parseInt(limit) >= 0 ? parseInt(limit) : 20
     //@ts-ignore
-    const startPage = parseInt(startAt) > 0 ? parseInt(startAt) : 0
+    const startPage = parseInt(pageNo) >= 1 ? endPage * parseInt(pageNo - 1) : 0
     //@ts-ignore
     var sortTo = {createdAt: -1}
-    if (sortBy) {
-      sortTo = Array.isArray(sortBy) ? sortBy.reduce((obj, s) => {
-        obj[s.fieldName] = parseInt(s.status)
-        return obj
-      }, {}) : {[sortBy.fieldName]: sortBy.status}
-    }
+    // if (sortBy) {
+    //   sortTo = Array.isArray(sortBy) ? sortBy.reduce((obj, s) => {
+    //     obj[s.fieldName] = parseInt(s.status)
+    //     return obj
+    //   }, {}) : {[sortBy.fieldName]: sortBy.status}
+    // }
     const firstPipeline = <any[]>[
       {
         $sort: sortTo
@@ -193,6 +193,7 @@ export default abstract class GeneralDBCommands<T, K> {
         firstPipeline.splice(ind ,1)
       }
     }
+    // @ts-expect-error
     const q = (searchFields.length >= 1 ? searchFields : []).map((field: string) => ({[field]: {
       $regex: new RegExp(searchText, 'gi')
     }}))
@@ -232,15 +233,11 @@ export default abstract class GeneralDBCommands<T, K> {
     }])
     return this.collectionModel.aggregate(paginationQuery)
       .then((response: any) => {
-        const paginationResponse = {data: [], total: 0, pages: 0, totalCounts: 0, totalPages: 0}
+        const paginationResponse = {data: [], total: 0, pages: 0}
         if (response.length >= 1) {
           paginationResponse.data = response[0].data
           paginationResponse.pages = endPage >= 1 ? Math.ceil((response[0].counts / endPage)) : 1
           paginationResponse.total = response[0].counts
-          //@ts-ignore
-          paginationResponse.totalCounts = paginationResponse.total
-          //@ts-ignore
-          paginationResponse.totalPages = paginationResponse.pages
         }
         return paginationResponse
       })
