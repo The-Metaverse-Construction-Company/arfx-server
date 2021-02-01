@@ -23,7 +23,7 @@ router.route('/')
   .post(validate(register), controller.signUpRoute);
 /**
  * @swagger
- *  /v1/auth/sign-up:
+ *  /v1/auth/sign-up/verify:
  *    get:
  *      summary: Verify the newly created user/account.
  *      tags: 

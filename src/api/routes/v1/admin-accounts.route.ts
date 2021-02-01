@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRoute)
 router.route('/auth/sign-in')
   .post(authCrontroller.signInAdminAccountRoute)
-router.use('/', authorizeAdminAccount())
+// router.use('/', authorizeAdminAccount())
 router.route('/')
   .post(controller.createAdminAccountRoute)
   .get(controller.adminAccountListRoute)
