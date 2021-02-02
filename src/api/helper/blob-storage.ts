@@ -1,6 +1,6 @@
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import fs from 'fs'
-import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, AZURE_BLOB_CONTAINER_NAME, NODE_ENV } from '../utils/constants';
+import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, AZURE_BLOB_CONTAINER_NAME, NODE_ENV, BACKEND_HOST } from '../utils/constants';
 const containerName = AZURE_BLOB_CONTAINER_NAME;
 const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
 const blobStorage = {
@@ -17,6 +17,9 @@ const blobStorage = {
           const uploadBlobResponse = bbc.uploadFile(file)
           // wait the response and get the bbc url.
           blobLoc = bbc.url
+        } else {
+          const filePath = file.split(`/usr/src/app`)
+          blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
         }
         resolve(blobLoc)
         return

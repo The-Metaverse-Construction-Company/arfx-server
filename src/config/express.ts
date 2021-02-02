@@ -15,6 +15,7 @@ const Fingerprint = require('express-fingerprint')
 import swaggerUI from 'swagger-ui-express'
 import SwaggerOptions from './swagger/index'
 
+import path from 'path'
 const helmet = require('helmet')
 const compress = require('compression')
 const morgan = require('morgan')
@@ -30,6 +31,7 @@ app.use(morgan(logs));
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/public', express.static(path.join(__dirname, '../../public')))
 // initialize busboy middleware
 // app.use((req: Request, _: any, next: NextFunction) => {
 //   if (req.method === 'POST') {

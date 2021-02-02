@@ -6,7 +6,7 @@ import PurchaseRoute from './purchase.route'
 import path from 'path'
 // import uploder from '../../../config/uploader'
 import multer from 'multer'
-const uploadPath = path.join(__dirname, '../../../../uploaded');
+const uploadPath = path.join(__dirname, '../../../../public/uploaded');
 const getFilePath = (filename: string) => path.join(uploadPath, filename)
 const upload = multer({dest: uploadPath})
 const router = express.Router();

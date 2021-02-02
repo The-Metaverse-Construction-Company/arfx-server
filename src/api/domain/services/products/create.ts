@@ -7,7 +7,7 @@ import {
 } from '../../entities'
 import { IGeneralServiceDependencies, IUploader } from '../../interfaces';
 import {UploadProductBlobService} from './upload-blob'
-interface IProdutParams extends IProdutBody{
+export interface IProdutParams extends IProdutBody{
   contentZip: string,
   previewImage: string,
   previewVideo: string,
@@ -40,7 +40,7 @@ export class CreateProductService {
       newProductEntity.previewVideoURL = previewVideoURL || ''
       newProductEntity.contentURL = contentURL || ''
       // insert it thru the repo.
-      // await this.dependencies.repositoryGateway.insertOne(newProductEntity)
+      await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
       return newProductEntity
     } catch (error) {

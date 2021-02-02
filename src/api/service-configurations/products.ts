@@ -28,7 +28,8 @@ export const createProduct = () => (
 )
 export const updateProduct = () => (
   new UpdateProduct({
-    repositoryGateway: new ProductRepository()
+    repositoryGateway: new ProductRepository(),
+    uploadProductBlobService: uploadProductBlobService()
   })
 )
 export const productList = () => (
