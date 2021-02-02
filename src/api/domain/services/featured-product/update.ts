@@ -18,13 +18,15 @@ export class UpdateFeaturedProductService {
       const {
         active = true,
         adminAccountId = '',
-        productId = ''
+        productId = '',
+        indexNo
       } = data
       const featuredProduct = new FeaturedProductEntity({
         _id: bannerId,
         active,
         adminAccountId,
-        productId
+        productId,
+        indexNo
       })
       // insert product banner on the repository
       const updatedFeaturedProduct = await this.deps.repositoryGateway.updateOne({
@@ -32,7 +34,8 @@ export class UpdateFeaturedProductService {
       },
         {
           active: featuredProduct.active,
-          productId: featuredProduct.productId
+          productId: featuredProduct.productId,
+          indexNo: featuredProduct.indexNo
           // adminAccountId: featuredProduct.adminAccountId
         })
       //add some logs

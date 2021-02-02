@@ -18,12 +18,14 @@ export class CreateFeaturedProductService {
       const {
         active = true,
         adminAccountId = '',
+        indexNo = 0,
         productId = ''
       } = data
       const newFeaturedProduct = new FeaturedProductEntity({
         active,
         adminAccountId,
-        productId
+        productId,
+        indexNo
       })
       // insert product banner on the repository
       const featuredProduct = await this.deps.repositoryGateway.insertOne(newFeaturedProduct)
