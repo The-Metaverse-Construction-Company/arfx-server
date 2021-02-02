@@ -7,10 +7,13 @@ import {
   IAdminAccountRepositoryGateway,
   IAdminAccountsParams
  } from '../../entities/admin-accounts'
+import {
+  AdminAccountValidateEmailService
+} from './index'
 interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
   // generateToken: IGenerateToken
   // sendEmail(userId: string, token: string): Promise<any>
-  // validateEmail(data: {email: string, userId?: string}): Promise<any>
+  adminAccountValidateEmailService: AdminAccountValidateEmailService
 }
 export class CreateAdminAccountService {
   constructor (protected deps: IServiceDependencies) {
@@ -27,7 +30,7 @@ export class CreateAdminAccountService {
         },
       })
       // check duplicate email.
-      // await this.deps.validateEmail({email: newAdminAccount.email.value})
+      await this.deps.adminAccountValidateEmailService.validateOne(newAdminAccount.email.value)
       // insert to repository.
       await this.deps.repositoryGateway.insertOne(newAdminAccount)
       // const token = await this.deps.generateToken({

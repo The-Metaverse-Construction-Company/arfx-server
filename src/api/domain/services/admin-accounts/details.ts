@@ -16,6 +16,9 @@ export class AdminAccountDetailsService {
       const adminAccounts = await this.deps.repositoryGateway.findOne({
         _id: id
       }, {password: 0})
+      .catch(() => {
+        throw new Error('No admin account found.')
+      })
       //add some logs
       return adminAccounts
     } catch (error) {

@@ -7,17 +7,17 @@
 
 components:
   requestBody:
-    ProductBanner:
+    FeaturedProduct:
       form:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductBannerParam'
+              $ref: '#/components/schemas/FeaturedProductParam'
   requestParams:
-    ProductBanner:
+    FeaturedProduct:
       id:
         in: path
-        name: productBannerId
+        name: featuredProductId
         schema:
           type: string
           required: true

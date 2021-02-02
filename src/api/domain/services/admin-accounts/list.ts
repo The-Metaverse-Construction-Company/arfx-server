@@ -13,11 +13,11 @@ export class AdminAccountListService {
    */
   public getList = async (requestQuery: any) => {
     try {
-      const adminAccounts = await this.deps.repositoryGateway.findAll({}, {
+      const adminAccounts = await this.deps.repositoryGateway.getPaginationList({
         limit: requestQuery.limit,
         pageNo: requestQuery.pageNo,
         searchText: requestQuery.searchText
-      }, {password: 0})
+      })
       //add some logs
       return adminAccounts
     } catch (error) {

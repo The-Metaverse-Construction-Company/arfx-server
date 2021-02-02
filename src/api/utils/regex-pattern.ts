@@ -1,0 +1,1 @@
+export const HumanNamePattern = /^[a-z\s]{3,}$/i

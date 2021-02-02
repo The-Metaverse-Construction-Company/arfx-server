@@ -7,8 +7,8 @@
 
 components:
   responseBody:
-    ProductBanner:
+    FeaturedProduct:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductBanner'
+            $ref: '#/components/schemas/FeaturedProduct'

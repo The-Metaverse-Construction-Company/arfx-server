@@ -7,25 +7,25 @@
 
 components:
   schemas:
-    ProductBannerParam:
+    FeaturedProductParam:
       type: object
       properties:
         productId:
-          $ref: '#/components/models/ProductBanner/productId'
+          $ref: '#/components/models/FeaturedProduct/productId'
         indexNo:
-          $ref: '#/components/models/ProductBanner/indexNo'
+          $ref: '#/components/models/FeaturedProduct/indexNo'
 
-    ProductBanner:
+    FeaturedProduct:
       allOf:
-      - $ref: '#/components/schemas/ProductBannerParam'
+      - $ref: '#/components/schemas/FeaturedProductParam'
       - type: object
         properties:
           _id:
             $ref: '#/components/models/Product/_id'
           adminAccountId:
-            $ref: '#/components/models/ProductBanner/adminAccountId'
+            $ref: '#/components/models/FeaturedProduct/adminAccountId'
           active:
-            $ref: '#/components/models/ProductBanner/active'
+            $ref: '#/components/models/FeaturedProduct/active'
           createdAt:
             $ref: '#/components/schemas/FieldCreatedAt'
           updatedAt:

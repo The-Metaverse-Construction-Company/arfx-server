@@ -72,6 +72,7 @@
     "stripe": "^8.131.1",
     "swagger-jsdoc": "^6.0.2",
     "swagger-ui-express": "^4.1.6",
+    "ts-enum-extractor": "^1.0.4",
     "uuid": "^3.1.0",
     "winston": "^3.1.0"
   },

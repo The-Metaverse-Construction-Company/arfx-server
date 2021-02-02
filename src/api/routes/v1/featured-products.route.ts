@@ -12,13 +12,13 @@ router.route('/')
 /**
  * @swagger
  * paths:
- *  /v1/product-banners:
+ *  /v1/featured-products:
  *    post:
  *      summary: List of the banners.
  *      tags: 
  *        - "Featured Product"
  *      requestBody:
- *         $ref: '#/components/requestBody/featuredProduct/form'
+ *         $ref: '#/components/requestBody/FeaturedProduct/form'
  *      responses:
  *        '200':
  *          description: "OK"
@@ -27,7 +27,7 @@ router.route('/')
 /**
  * @swagger
  * paths:
- *  /v1/product-banners:
+ *  /v1/featured-products:
  *    get:
  *      summary: List of the banners.
  *      tags: 
@@ -43,18 +43,18 @@ router.route('/')
   .get(controller.featuredProductListRoute)
 
 router.route('/:featuredProductId')
-/**
+/**x
  * @swagger
  * paths:
- *  /v1/product-banners/{featuredProductId}:
+ *  /v1/featured-products/{featuredProductId}:
  *    patch:
  *      summary: update the Featured Product id.
  *      tags: 
  *        - "Featured Product"
  *      parameters:
- *        - $ref: '#/components/requestParams/featuredProduct/id'
+ *        - $ref: '#/components/requestParams/FeaturedProduct/id'
  *      requestBody:
- *         $ref: '#/components/requestBody/featuredProduct/form'
+ *         $ref: '#/components/requestBody/FeaturedProduct/form'
  *      responses:
  *        '201':
  *          description: "ACCEPTED"
@@ -63,13 +63,13 @@ router.route('/:featuredProductId')
 /**
  * @swagger
  * paths:
- *  /v1/product-banners/{featuredProductId}:
+ *  /v1/featured-products/{featuredProductId}:
  *    delete:
  *      summary: remove the Featured Product id
  *      tags: 
  *        - "Featured Product"
  *      parameters:
- *        - $ref: '#/components/requestParams/featuredProduct/id'
+ *        - $ref: '#/components/requestParams/FeaturedProduct/id'
  *      responses:
  *        '201':
  *          description: "ACCEPTED"
