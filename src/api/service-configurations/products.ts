@@ -5,7 +5,8 @@ import {
   ProductDetails,
   RemoveProduct,
   UpdateProductPublishStatus,
-  UpdateProductURLService
+  UpdateProductURLService,
+  UploadProductBlobService
 } from '../domain/services/products'
 
 import {
@@ -13,10 +14,16 @@ import {
 } from '../../app-plugins/persistence/repository'
 import BlobStorage from '../helper/blob-storage'
 
+export const uploadProductBlobService = () => (
+  new UploadProductBlobService({
+    fileUploader: BlobStorage
+  })
+)
+
 export const createProduct = () => (
   new CreateProductService({
     repositoryGateway: new ProductRepository(),
-    fileUploader: BlobStorage
+    uploadProductBlobService: uploadProductBlobService()
   })
 )
 export const updateProduct = () => (

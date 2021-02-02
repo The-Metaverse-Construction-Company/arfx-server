@@ -25,9 +25,9 @@ export default ({
     public readonly adminAccountId!: string
     public readonly purchaseCount!: number
     public readonly discountPercentage!: number
-    public readonly contentURL!: string
-    public readonly previewVideoURL!: string
-    public readonly previewImageURL!: string
+    public contentURL!: string
+    public previewVideoURL!: string
+    public previewImageURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({

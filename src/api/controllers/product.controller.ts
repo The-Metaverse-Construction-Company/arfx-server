@@ -28,9 +28,9 @@ import blobStorage from '../helper/blob-storage'
 export const mapProductUploadedBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {previewVideo = [], previewImage = [], contentZip = []} = <any> req.files || {};
-    res.locals['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0] : {}
-    res.locals['previewImage'] = previewImage.length >= 1 ? previewImage[0] : {}
-    res.locals['contentZip'] = contentZip.length >= 1 ? contentZip[0] : {}
+    res.locals['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0].path : undefined
+    res.locals['previewImage'] = previewImage.length >= 1 ? previewImage[0].path : undefined
+    res.locals['contentZip'] = contentZip.length >= 1 ? contentZip[0].path : undefined
     next()
   } catch (error) {
     next(error)
@@ -47,15 +47,16 @@ export const mapProductUploadedBlobRoute = async (req: Request, res: Response, n
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('res.locals :>> ', res.locals);
     const {_id} = <IAdminAccountsEntity>req.user
-    // const newProduct = await createProduct()
-    //   .createOne({
-    //     ...req.body,
-    //     filepath: scene.path
-    //   }, _id)
+    const newProduct = await createProduct()
+      .createOne({
+        ...req.body,
+        previewImage: res.locals['previewImage'],
+        previewVideo: res.locals['previewVideo'],
+        contentZip: res.locals['contentZip']
+      }, _id)
     res.status(httpStatus.CREATED)
-      .json(successReponse({}))
+      .json(successReponse(newProduct))
   } catch (error) {
     next(error)
   }
