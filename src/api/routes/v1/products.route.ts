@@ -17,6 +17,7 @@ import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
 router.route('/')
 /**
+/**
  * @swagger
  * /v1/products:
  *  post:
@@ -103,7 +104,20 @@ router.route('/:productId')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .patch(validate(validations.UpdateProductValidation), controller.updateProductRoute)
+  .patch(authorize(ALLOWED_USER_ROLE.ADMIN), upload.fields([
+    {
+      name: 'previewImage',
+      maxCount: 1,
+    },
+    {
+      name: 'previewVideo',
+      maxCount: 1,
+    },
+    {
+      name: 'contentZip',
+      maxCount: 1,
+    }
+  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute,controller.updateProductRoute)
   /**
  * @swagger
  * /v1/products/{productId}:

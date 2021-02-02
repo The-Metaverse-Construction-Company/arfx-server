@@ -10,9 +10,21 @@ components:
     Product:
       form:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ProductParam'
+              allOf:
+                - $ref: '#/components/schemas/ProductParam'
+                - type: object
+                  properties:
+                    contentZip:
+                      type: string
+                      format: binary
+                    previewImage:
+                      type: string
+                      format: binary
+                    previewVideo:
+                      type: string
+                      format: binary
       published:
         content:
           application/json:
