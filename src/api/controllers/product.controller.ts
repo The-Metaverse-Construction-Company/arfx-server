@@ -38,6 +38,7 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
   try {
     const scene = req.file || {};
     const {_id} = <IAdminAccountsEntity>req.user
+    console.log('scene :>> ', scene);
     const newProduct = await createProduct()
       .createOne({
         ...req.body,

@@ -9,16 +9,22 @@ const blobStorage = {
     return new Promise(async (resolve, reject) => {
       try {
         const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, containerName, blobName)
-        if (fs.existsSync(file)) {
-          resolve(blobStorage.upload(blobName, file))
-          return
-        }
+        console.log('fs.exisxtsSync(file) :>> ', blobName);
+        console.log('fs.exisxtsSync(file) x:>> ', file);
+        console.log('fs.exisxtsSync(file) :>> ', fs.existsSync(file));
+        // if (fs.existsSync(file)) {
+        //   setTimeout(() => {
+        //     resolve(blobStorage.upload(blobName, file))
+        //   }, 200)
+        //   return
+        // }
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
-        if (NODE_ENV === 'production') {
+        // if (NODE_ENV === 'production') {
           // uploading the file thru cloud
           const uploadBlobResponse = await bbc.uploadFile(file)
-        }
+        // }
+        console.log('uploadBlobResponse :>> ', uploadBlobResponse);
         resolve(true)
         return
       } catch (error) {

@@ -26,10 +26,11 @@ export class CreateProductService {
         adminAccountId: adminAccountId,
         contentURL: filepath
       })
+      console.log('object :>> ', newProductEntity);
       // upload to cloud storage provider
       await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)
       // insert it thru the repo.
-      await this.dependencies.repositoryGateway.insertOne(newProductEntity)
+      // await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
       return newProductEntity
     } catch (error) {

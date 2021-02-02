@@ -15,6 +15,7 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
+router.route('/')
 /**
  * @swagger
  * /v1/products:
@@ -30,9 +31,7 @@ router.use('/purchase', PurchaseRoute)
  *      '200':
  *        $ref: '#/components/responseBody/Product'
  */
-router.route('/')
-  .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
-router.route('/')
+  .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
 /**
  * @swagger
  * /v1/products:
