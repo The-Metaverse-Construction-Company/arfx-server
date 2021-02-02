@@ -6,7 +6,7 @@ import PurchaseRoute from './purchase.route'
 import path from 'path'
 // import uploder from '../../../config/uploader'
 import multer from 'multer'
-const uploadPath = path.join(__dirname, '../../../../uploaded');
+const uploadPath = path.join(__dirname, '../../../../public/uploaded');
 const getFilePath = (filename: string) => path.join(uploadPath, filename)
 const upload = multer({dest: uploadPath})
 const router = express.Router();
@@ -15,6 +15,8 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
+router.route('/')
+/**
 /**
  * @swagger
  * /v1/products:
@@ -30,9 +32,21 @@ router.use('/purchase', PurchaseRoute)
  *      '200':
  *        $ref: '#/components/responseBody/Product'
  */
-router.route('/')
-  .post(authorize(ALLOWED_USER_ROLE.ADMIN), validate(validations.CreateProductValidation), controller.createProductRoute)
-router.route('/')
+  .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.fields([
+    {
+      name: 'previewImage',
+      maxCount: 1,
+    },
+    {
+      name: 'previewVideo',
+      maxCount: 1,
+    },
+    {
+      name: 'contentZip',
+      maxCount: 1,
+    }
+  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute, controller.createProductRoute)
+  // .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
 /**
  * @swagger
  * /v1/products:
@@ -90,7 +104,20 @@ router.route('/:productId')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .patch(validate(validations.UpdateProductValidation), controller.updateProductRoute)
+  .patch(authorize(ALLOWED_USER_ROLE.ADMIN), upload.fields([
+    {
+      name: 'previewImage',
+      maxCount: 1,
+    },
+    {
+      name: 'previewVideo',
+      maxCount: 1,
+    },
+    {
+      name: 'contentZip',
+      maxCount: 1,
+    }
+  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute,controller.updateProductRoute)
   /**
  * @swagger
  * /v1/products/{productId}:

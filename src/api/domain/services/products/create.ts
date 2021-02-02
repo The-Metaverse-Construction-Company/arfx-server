@@ -6,9 +6,14 @@ import {
   ProductEntity
 } from '../../entities'
 import { IGeneralServiceDependencies, IUploader } from '../../interfaces';
-
+import {UploadProductBlobService} from './upload-blob'
+export interface IProdutParams extends IProdutBody{
+  contentZip: string,
+  previewImage: string,
+  previewVideo: string,
+}
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
-  fileUploader: IUploader
+  uploadProductBlobService: UploadProductBlobService
 }
 export class CreateProductService {
   constructor(protected dependencies: IDependencies) {
@@ -18,16 +23,22 @@ export class CreateProductService {
    * @param productBody 
    *  - filepath: path of the file that uploaded on the server.
    */
-  public createOne = async (productBody: IProdutBody & {filepath: string}, adminAccountId: string) => {
+  public createOne = async (productBody: IProdutParams, adminAccountId: string) => {
     try {
-      const {filepath} = productBody
+      const {contentZip, previewVideo, previewImage} = productBody
       const newProductEntity = new ProductEntity({
         ...productBody,
         adminAccountId: adminAccountId,
-        contentURL: filepath
       })
       // upload to cloud storage provider
-      await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)
+      const {contentURL, previewImageURL, previewVideoURL} = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
+        contentZip,
+        previewImage,
+        previewVideo
+      })
+      newProductEntity.previewImageURL = previewImageURL || ''
+      newProductEntity.previewVideoURL = previewVideoURL || ''
+      newProductEntity.contentURL = contentURL || ''
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
