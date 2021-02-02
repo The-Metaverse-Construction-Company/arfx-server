@@ -23,7 +23,8 @@ const User = require('../models/user.model');
  */
 export const load = async (req: Request, res: Response, next: NextFunction, id: any) => {
   try {
-    const user = await userDetails().findOne(id);
+    const user = await userDetails()
+      .findOne(id);
   //@ts-expect-error
     req.locals = { user };
     return next();

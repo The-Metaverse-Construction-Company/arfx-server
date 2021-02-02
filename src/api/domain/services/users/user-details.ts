@@ -11,7 +11,10 @@ export class UserDetailsService {
       // initiate user entity to run the validation for business rules.
       const user = await this.dependencies.repositoryGateway.findOne({
         _id: userId,
-      }, projection)
+      }, {
+        ...projection,
+        password: 0
+      })
       if (!user) {
         throw new Error('No User found.')
       }

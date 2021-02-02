@@ -112,7 +112,7 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .get(authorize(LOGGED_USER), controller.get)
+  .get(authorize(), controller.get)
   // .put(authorize(LOGGED_USER), validate(replaceUser), controller.replace)
   // .patch(authorize(LOGGED_USER), validate(updateUser), controller.update)
   // .delete(authorize(LOGGED_USER), controller.remove);
