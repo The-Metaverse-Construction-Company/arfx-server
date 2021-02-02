@@ -8,6 +8,7 @@ RUN npm install \
 FROM node:12-alpine
 WORKDIR /usr/src/app
 COPY --from=BUILDER /usr/src/app/dist /usr/src/app/dist
+COPY --from=BUILDER /usr/src/app/swagger /usr/src/app/swagger
 COPY --from=BUILDER /usr/src/app/package.json /usr/src/app/
 RUN npm install --production
 #RUN rm -R src/

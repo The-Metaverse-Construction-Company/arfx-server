@@ -49,7 +49,7 @@ export class UpdateAdminAccountService {
         //@ts-expect-error
         "email.value": newAdminAccount.email.value,
         // if its detect that the email is changed, then set the verified to false, if not, then just set the old value in it.
-        "email.verified": adminAccount.email.value !== newAdminAccount.email.value ? false : adminAccount.email.verified,
+        "email.verified": adminAccount && (adminAccount.email.value === newAdminAccount.email.value) ? adminAccount.email.verified : false,
       })
       // const token = await this.deps.generateToken({
       //   referenceId: newAdminAccount._id,

@@ -8,7 +8,7 @@
     "yarn": "*"
   },
   "scripts": {
-    "start": "pm2 start ./dist/index.js",
+    "start": "node ./dist/index.js",
     "dev": "nodemon -L ./dist/index.js",
     "dev:watch": "tsc -w",
     "build": "tsc",
