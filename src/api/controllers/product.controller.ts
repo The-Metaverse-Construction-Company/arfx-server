@@ -1,7 +1,4 @@
 import httpStatus from 'http-status'
-import path from 'path'
-import fs from 'fs'
-import Busboy from 'busboy'
 import {
   Response, Request, NextFunction
 } from 'express'
@@ -16,11 +13,6 @@ import {
 import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
-import blobStorage from '../helper/blob-storage'
-// const uploadPath = path.join(__dirname, '../../../uploaded');
-// const getFilePath = (filename: string) => path.join(uploadPath, filename)
-// blobStorage.upload(`93cb8721-548b-48f1-8743-e1bea7fc1f95`, getFilePath('new-workflow.mp4'))
-// const readStream = fs.createReadStream(getFilePath('new-workflow.mp4'))
 
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
@@ -44,6 +36,9 @@ export const mapProductUploadedBlobRoute = async (req: Request, res: Response, n
  *  @field: description: string
  *  @field: price: float
  *  @field: name: string
+ *  @field: previewVideo: file/binary
+ *  @field: previewImage: file/binary
+ *  @field: contentZip: file/binary
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
