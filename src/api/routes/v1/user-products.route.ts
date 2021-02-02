@@ -13,14 +13,14 @@ router.route('/')
 /**
  * @swagger
  * /v1/users/{userId}/products:
- *  patch:
+ *  get:
  *    summary: "List of product/scene that purchased of the user/customer."
  *    tags:
  *      - "User Products"
  *    security:
  *      - bearerAuth: []
  *    parameters:
- *      - $ref: '#/components/requestParams/Product/id'
+ *      - $ref: '#/components/requestParams/User/id'
  *    responses:
  *      '200':
  *        $ref: '#/components/responses/UserProducts'
@@ -30,7 +30,7 @@ router.route('/:userProductId')
 /**
  * @swagger
  * /v1/users/{userId}/products/{productId}:
- *  patch:
+ *  get:
  *    summary: "Details of product/scene that purchased of the user/customer."
  *    tags:
  *      - "User Products"

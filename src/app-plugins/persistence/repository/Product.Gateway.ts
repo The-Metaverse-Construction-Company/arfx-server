@@ -24,11 +24,11 @@ export class ProductRepository extends GeneralRepository<IProductEntity, IProduc
   public getPaginationList = async (userId: string, filterQuery: IPaginationParameters) => {
     try {
       const response = await this.aggregateWithPagination([
-        {
-          $match: {
-            published: true
-          }
-        },
+        // {
+        //   $match: {
+        //     published: true
+        //   }
+        // },
         {
           $sort: {
             createdAt: -1

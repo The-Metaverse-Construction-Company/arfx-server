@@ -160,17 +160,10 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
 export const productListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = ''} = <IUserEntity>req.user
-    const {
-      searchText = '',
-      startAt = 0,
-      limitTo = 0
-    } = req.query
     const newProduct = await productList()
       .getList({
+        ...req.query,
         userId: _id,
-        searchText,
-        startAt,
-        limitTo
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))

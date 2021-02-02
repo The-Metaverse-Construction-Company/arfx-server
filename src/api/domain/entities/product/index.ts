@@ -19,7 +19,7 @@ export default ({
     public readonly name!: string
     public readonly title!: string
     public readonly description!: string
-    public readonly published: boolean = false
+    public readonly published: boolean = true
     // public readonly stripeCustomerId!: string
     public readonly price!: number
     public readonly adminAccountId!: string
@@ -42,7 +42,7 @@ export default ({
       previewVideoURL = '',
       previewImageURL = '',
       title = '',
-      published = false,
+      published = true,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
