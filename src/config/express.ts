@@ -13,7 +13,7 @@ import RedisClient from './redis'
 
 const Fingerprint = require('express-fingerprint')
 import swaggerUI from 'swagger-ui-express'
-import SwaggerOptions from './swagger/index'
+import SwaggerOptions from './swagger'
 
 import path from 'path'
 const helmet = require('helmet')

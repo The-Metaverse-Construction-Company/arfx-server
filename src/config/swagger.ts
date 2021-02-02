@@ -1,5 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import { BACKEND_HOST } from '../../api/utils/constants';
+import { BACKEND_HOST } from '../api/utils/constants';
 console.log('BACKEND_HOST :>> ', BACKEND_HOST);
 const options = {
     // swaggerOptions: {
@@ -17,8 +17,8 @@ const options = {
         // servers: [`${BACKEND_HOST}`],
     },
     apis: [
-        './src/api/routes/**/*.ts',
-        './src/config/swagger/**/*.yml',
+        './dist/api/routes/**/*.js',
+        './swagger/**/*.yml',
     ],
 };
 export default swaggerJSDoc(options);

@@ -19,7 +19,7 @@ export class AdminAccountValidateEmailService {
         'email.value': email
       }, {password: 0})
       // add catch to ignore the built in error on the findOne on repository gateway.
-      // .catch(() => null)
+      .catch(() => null)
       if (adminAccount) {
         if (!adminAccountId || adminAccountId !== adminAccount._id) {
           throw new Error('email already exists.')
