@@ -13,6 +13,16 @@ components:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminAccountParam'
+      signIn:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/models/AdminAccount/email/value'
+                password:
+                  $ref: '#/components/models/AdminAccount/password'
   requestParams:
     AdminAccount:
       id:

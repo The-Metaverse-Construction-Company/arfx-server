@@ -9,7 +9,35 @@ import * as adminValidations from '../../validations/admin-account.validation'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
 const router = express.Router();
+/**x
+ * @swagger
+ * paths:
+ *  /v1/admin-accounts/auth:
+ *    get:
+ *      summary: valite admin token.
+ *      security:
+ *        - bearerAuth: []
+ *      tags: 
+ *        - "Admin Account Authentication"
+ *      responses:
+ *        '201':
+ *          description: "OK"
+ */
 router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRoute)
+/**xx
+ * @swagger
+ * paths:
+ *  /v1/admin-accounts/auth/sign-in:
+ *    post:
+ *      summary: sign in or login admin account.
+ *      tags: 
+ *        - "Admin Account Authentication"
+ *      requestBody:
+ *         $ref: '#/components/requestBody/AdminAccount/signIn'
+ *      responses:
+ *        '201':
+ *          description: "OK"
+ */
 router.route('/auth/sign-in')
   .post(authCrontroller.signInAdminAccountRoute)
 // router.use('/', authorizeAdminAccount())

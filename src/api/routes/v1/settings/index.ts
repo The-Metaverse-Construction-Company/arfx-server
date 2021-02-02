@@ -13,7 +13,7 @@ router.use('/payment-card',
  *  patch:
  *    summary: "Set/update new user password."
  *    tags:
- *      - "User-Settings"
+ *      - "User Settings"
  *    security:
  *      - bearerAuth: []
  *    parameters:

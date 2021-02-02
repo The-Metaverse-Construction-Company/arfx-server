@@ -16,7 +16,7 @@ router.route('/')
  *  patch:
  *    summary: "List of product/scene that purchased of the user/customer."
  *    tags:
- *      - "User-Products"
+ *      - "User Products"
  *    security:
  *      - bearerAuth: []
  *    parameters:
@@ -33,7 +33,7 @@ router.route('/:userProductId')
  *  patch:
  *    summary: "Details of product/scene that purchased of the user/customer."
  *    tags:
- *      - "User-Products"
+ *      - "User Products"
  *    security:
  *      - bearerAuth: []
  *    parameters:
