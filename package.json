@@ -8,8 +8,7 @@
     "yarn": "*"
   },
   "scripts": {
-    "prestart": "yarn docs",
-    "start": "cross-env NODE_ENV=production pm2 start ./dist/index.js",
+    "start": "pm2 start ./dist/index.js",
     "dev": "nodemon -L ./dist/index.js",
     "dev:watch": "tsc -w",
     "build": "tsc",
