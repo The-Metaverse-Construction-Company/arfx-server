@@ -1,0 +1,25 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  requestBody:
+    resetPassword:
+      send: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                $ref: '#/components/models/User/email/value'
+      verified:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  $ref: '#/components/models/User/password'

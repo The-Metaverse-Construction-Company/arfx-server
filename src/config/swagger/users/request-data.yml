@@ -1,0 +1,40 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  requestBody:
+    User:
+      signIn:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  $ref: '#/components/models/User/email/value'
+                password:
+                  $ref: '#/components/models/User/password'
+      changePassword:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  $ref: '#/components/models/User/password'
+                newPassword:
+                  type: string
+                  description: 'new password of the user.'
+  requestParams:
+    User:
+      id:
+        in: path
+        name: userId
+        schema:
+          type: string
+          required: true
+          description: id of the user/customer.

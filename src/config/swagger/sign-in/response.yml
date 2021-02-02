@@ -1,0 +1,22 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  responses:
+    SignIn:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              result:
+                $ref: '#/components/schemas/SignIn'
+              error:
+                type: null

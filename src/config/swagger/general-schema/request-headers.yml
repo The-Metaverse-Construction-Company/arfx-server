@@ -1,0 +1,53 @@
+components:
+  requestQuery:
+    authTokenParam:
+      in: query
+      name: "token"
+      required: true
+      example: "JWT Token"
+    AuthOTPParam:
+      in: query
+      name: "token"
+      required: true
+      example: "OTP Token"
+    startAtQueryParam:
+      in: query
+      name: startAt
+      required: false
+      schema:
+        type: number
+        minimum: 0
+        default: 0
+    limitToQueryParam:
+      in: query
+      name: limitTo
+      required: false
+      schema:
+        type: number
+        mininmum: 0
+        maximum: 20
+        default: 20
+    dateFromQueryParam:
+      in: query
+      name: dateFrom
+      required: false
+      schema:
+        type: number
+    dateToQueryParam:
+      in: query
+      name: dateTo
+      required: false
+      schema:
+        type: number
+    addedByQueryParam:
+      in: query
+      name: addedBy
+      required: false
+      schema:
+        type: string
+    searchTextQueryParam:
+      in: query
+      name: searchText
+      required: false
+      schema:
+        type: string

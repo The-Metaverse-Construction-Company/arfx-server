@@ -1,9 +1,12 @@
 # Use yarn.lock instead
+dist
 package-lock.json
-
+# uploaded product content
+uploaded
 # Environment variables
 .env
-
+.env.local
+.env.example
 # Logs
 logs
 *.log

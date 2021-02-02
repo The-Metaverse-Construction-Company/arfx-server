@@ -1,0 +1,30 @@
+components:
+  requestQuery:
+    authTokenParam:
+      in: query
+      name: "token"
+      required: true
+      example: "JWT Token"
+    pageNo:
+      in: query
+      name: pageNo
+      required: false
+      schema:
+        type: number
+        minimum: 0
+        default: 0
+    limit:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: number
+        mininmum: 0
+        maximum: 100
+        default: 20
+    searchText:
+      in: query
+      name: searchText
+      required: false
+      schema:
+        type: string

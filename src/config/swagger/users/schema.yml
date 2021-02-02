@@ -1,0 +1,29 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    Users:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/models/User/_id'
+        name:
+          $ref: '#/components/models/User/name'
+        role:
+          $ref: '#/components/models/User/role'
+        stripeCustomerId:
+          $ref: '#/components/models/User/stripeCustomerId'
+        email:
+          $ref: '#/components/models/User/emailObj'
+        mobileNumber:
+          $ref: '#/components/models/User/mobileNumber'
+        createdAt:
+          $ref: '#/components/schemas/FieldCreatedAt'
+        updatedAt:
+          $ref: '#/components/schemas/FieldUpdatedAt'
+        
