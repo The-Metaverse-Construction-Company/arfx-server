@@ -31,7 +31,21 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Product'
  */
-  .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
+  .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.fields([
+    {
+      name: 'previewImage',
+      maxCount: 1,
+    },
+    {
+      name: 'previewVideo',
+      maxCount: 1,
+    },
+    {
+      name: 'contentZip',
+      maxCount: 1,
+    }
+  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute, controller.createProductRoute)
+  // .post(authorize(ALLOWED_USER_ROLE.ADMIN), upload.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
 /**
  * @swagger
  * /v1/products:

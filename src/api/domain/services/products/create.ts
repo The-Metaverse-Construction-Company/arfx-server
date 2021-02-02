@@ -28,7 +28,8 @@ export class CreateProductService {
       })
       console.log('object :>> ', newProductEntity);
       // upload to cloud storage provider
-      await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)
+      const blobURL = await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)
+      console.log('blobURL :>> ', blobURL);
       // insert it thru the repo.
       // await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs

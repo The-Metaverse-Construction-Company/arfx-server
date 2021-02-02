@@ -1,31 +1,24 @@
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import fs from 'fs'
-import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, NODE_ENV } from '../utils/constants';
-const containerName = "simple-blob-storage";
-// const blobName = "<blob name>";
+import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, AZURE_BLOB_CONTAINER_NAME, NODE_ENV } from '../utils/constants';
+const containerName = AZURE_BLOB_CONTAINER_NAME;
 const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
 const blobStorage = {
   upload: (blobName: string, file: string) => {
     return new Promise(async (resolve, reject) => {
       try {
+        let blobLoc = file
         const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, containerName, blobName)
-        console.log('fs.exisxtsSync(file) :>> ', blobName);
-        console.log('fs.exisxtsSync(file) x:>> ', file);
-        console.log('fs.exisxtsSync(file) :>> ', fs.existsSync(file));
-        // if (fs.existsSync(file)) {
-        //   setTimeout(() => {
-        //     resolve(blobStorage.upload(blobName, file))
-        //   }, 200)
-        //   return
-        // }
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
-        // if (NODE_ENV === 'production') {
+        if (NODE_ENV === 'production') {
           // uploading the file thru cloud
-          const uploadBlobResponse = await bbc.uploadFile(file)
-        // }
-        console.log('uploadBlobResponse :>> ', uploadBlobResponse);
-        resolve(true)
+          // upload the file and run it thru background.
+          const uploadBlobResponse = bbc.uploadFile(file)
+          // wait the response and get the bbc url.
+          blobLoc = bbc.url
+        }
+        resolve(blobLoc)
         return
       } catch (error) {
         reject(error)

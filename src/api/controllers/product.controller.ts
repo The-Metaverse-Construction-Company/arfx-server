@@ -25,6 +25,17 @@ import blobStorage from '../helper/blob-storage'
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
 // })
+export const mapProductUploadedBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {previewVideo = [], previewImage = [], contentZip = []} = <any> req.files || {};
+    res.locals['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0] : {}
+    res.locals['previewImage'] = previewImage.length >= 1 ? previewImage[0] : {}
+    res.locals['contentZip'] = contentZip.length >= 1 ? contentZip[0] : {}
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
 /**
  * @public
  * create a product
@@ -36,16 +47,15 @@ import blobStorage from '../helper/blob-storage'
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const scene = req.file || {};
+    console.log('res.locals :>> ', res.locals);
     const {_id} = <IAdminAccountsEntity>req.user
-    console.log('scene :>> ', scene);
-    const newProduct = await createProduct()
-      .createOne({
-        ...req.body,
-        filepath: scene.path
-      }, _id)
+    // const newProduct = await createProduct()
+    //   .createOne({
+    //     ...req.body,
+    //     filepath: scene.path
+    //   }, _id)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newProduct))
+      .json(successReponse({}))
   } catch (error) {
     next(error)
   }
