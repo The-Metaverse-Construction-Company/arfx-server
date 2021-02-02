@@ -35,6 +35,9 @@ export class UserSignInService {
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN
       })
+      // removing password field on responsing user data
+      //@ts-ignore
+      delete user.password
       // add some logs or notification.
       return {
         user: user,
