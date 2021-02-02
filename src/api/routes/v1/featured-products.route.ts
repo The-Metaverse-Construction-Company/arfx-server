@@ -1,14 +1,13 @@
 import express, {Request, Response} from 'express'
 import validate from 'express-validation'
 import * as controller from '../../controllers/featured-product.controller'
+import * as validations from '../../validations/featured-products.validation'
 import {
-  sendPasswordReset,
-  updateResetPasswordValidation,
-  verifyResetPasswordToken
-} from '../../validations/auth.validation'
-
+  authorizeAdminAccount
+} from '../../middlewares/auth'
+import { requestValidatorMiddleware } from '../../validations'
 const router = express.Router();
-
+router.use(authorizeAdminAccount())
 router.route('/')
 /**
  * @swagger
@@ -24,7 +23,7 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .post(validate(sendPasswordReset), controller.createFeaturedProductRoute)
+  .post(validations.FormPipeline, requestValidatorMiddleware, controller.createFeaturedProductRoute)
 /**
  * @swagger
  * paths:

@@ -21,20 +21,31 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
     try {
       const response = this.aggregateWithPagination([
         {
-          $match: {}
+          $match: {
+            active: true
+          }
         }, 
         {
           $lookup: {
             from : COLLECTION_NAMES.PRODUCT,
             let: {
-              prodId: 'productId'
+              prodId: '$productId'
             },
             pipeline: [
               {
                 $match: {
                   $expr: {
-                    $eq: ['$$prodId', '_id']
+                    $eq: ['$$prodId', '$_id']
                   }
+                }
+              },
+              {
+                $project: {
+                  name: 1,
+                  title: 1,
+                  description: 1,
+                  previewImageURL: 1,
+                  previewVideoURL: 1,
                 }
               },
               {
@@ -42,7 +53,14 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
                   _id: 1
                 }
               }
-            ]
+            ],
+            as: "products"
+          }
+        },
+        {
+          $unwind: {
+            preserveNullAndEmptyArrays: false,
+            path: "$products"
           }
         },
         {

@@ -6,6 +6,7 @@ import SignUpRoute from './sign-up.route'
 import ProductsRoute from './products.route'
 import StripeRoute from './stripe.route'
 import AdminAccountsRoute from './admin-accounts.route'
+import FeaturedProductRoute from './featured-products.route'
 const router = express.Router();
 
 
@@ -25,6 +26,7 @@ router.use(StripeRoute)
 router.use('/admin-accounts', AdminAccountsRoute);
 router.use('/users', userRoutes);
 router.use('/products', ProductsRoute);
+router.use('/featured-products', FeaturedProductRoute);
 router.use('/auth', authRoutes);
 router.use('/auth/sign-up', SignUpRoute);
 router.use('/auth/reset-password', ResetPasswordRoute);

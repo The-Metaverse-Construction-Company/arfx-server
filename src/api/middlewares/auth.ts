@@ -24,7 +24,7 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
     return next(apiError);
   }
   if (user.isAdmin) {
-    if (roles && roles !== ALLOWED_USER_ROLE.ADMIN) {
+    if (roles && !roles.includes(ALLOWED_USER_ROLE.ADMIN)) {
       // unable to sign in. invalid user role.
       apiError.status = httpStatus.FORBIDDEN;
       apiError.message = 'Forbidden';
