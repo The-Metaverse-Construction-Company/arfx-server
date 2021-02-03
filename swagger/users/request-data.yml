@@ -53,6 +53,7 @@ components:
                 newPassword:
                   type: string
                   description: 'new password of the user.'
+                  default: 'newpwd123'
   requestParams:
     User:
       id:

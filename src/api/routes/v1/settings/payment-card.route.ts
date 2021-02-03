@@ -11,9 +11,10 @@ router.route('/set-up')
  *  get:
  *    summary: "Get the payment methods of the users."
  *    tags:
- *      - "User-Settings"
+ *      - "User Settings"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    responses:
