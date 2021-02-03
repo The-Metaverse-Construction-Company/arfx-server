@@ -1,8 +1,7 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/user-products.controller'
-import { authorize, LOGGED_USER } from '../../middlewares/auth';
-import * as validations from '../../validations/purchase-history.validation'
+import { ALLOWED_USER_ROLE } from '../../domain/entities/users';
+import { authorize } from '../../middlewares/auth';
 
 const router = express.Router();
 
@@ -18,14 +17,14 @@ router.route('/')
  *    tags:
  *      - "User Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    responses:
  *      '200':
  *        $ref: '#/components/responses/UserProducts'
  */
-  .get(controller.userProductListRoute)
+  .get(authorize(ALLOWED_USER_ROLE.USER), controller.userProductListRoute)
 router.route('/:userProductId')
 /**
  * @swagger
@@ -35,7 +34,7 @@ router.route('/:userProductId')
  *    tags:
  *      - "User Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *      - $ref: '#/components/requestParams/Product/id'
@@ -43,6 +42,6 @@ router.route('/:userProductId')
  *      '200':
  *        $ref: '#/components/responses/UserProduct'
  */
-  .get(controller.userProductDetailsRoute)
+  .get(authorize(ALLOWED_USER_ROLE.USER), controller.userProductDetailsRoute)
 
 export default router;

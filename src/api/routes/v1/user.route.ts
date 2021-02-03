@@ -52,7 +52,7 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    responses:
  *      '200':
  *        $ref: '#/components/responses/User/List'
@@ -66,7 +66,7 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    requestBody:
  *      $ref: '#/components/requestBody/User/createForm'
  *    responses:
@@ -85,7 +85,8 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    responses:
@@ -101,7 +102,8 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    requestBody:
@@ -119,7 +121,7 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    responses:
@@ -137,7 +139,7 @@ router
  *    tags:
  *      - "Users"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    responses:

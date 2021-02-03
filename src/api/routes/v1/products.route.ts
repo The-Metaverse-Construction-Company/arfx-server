@@ -11,7 +11,8 @@ const getFilePath = (filename: string) => path.join(uploadPath, filename)
 const upload = multer({dest: uploadPath})
 const router = express.Router();
 import {
-  authorize
+  authorize,
+  authorizeAdminAccount
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 router.use('/purchase', PurchaseRoute)
@@ -25,7 +26,7 @@ router.route('/')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    requestBody:
  *       $ref: '#/components/requestBody/Product/form'
  *    responses:
@@ -55,7 +56,8 @@ router.route('/')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestQuery/pageNo'
  *      - $ref: '#/components/requestQuery/limit'
@@ -76,7 +78,8 @@ router.route('/upload')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/Product/id'
  *    responses:
@@ -84,7 +87,7 @@ router.route('/upload')
  *        $ref: '#/components/responseBody/Product'
  */
 router.route('/:productId')
-  .get(controller.productDetailsRoute)
+  .get(authorize(), controller.productDetailsRoute)
   // router.use('/', authorize(ALLOWED_USER_ROLE.ADMIN))
 router.route('/:productId')
 /**x
@@ -95,7 +98,7 @@ router.route('/:productId')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/Product/id'
  *    requestBody:
@@ -104,7 +107,7 @@ router.route('/:productId')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .patch(authorize(ALLOWED_USER_ROLE.ADMIN), upload.fields([
+  .patch(authorizeAdminAccount(), upload.fields([
     {
       name: 'previewImage',
       maxCount: 1,
@@ -126,14 +129,18 @@ router.route('/:productId')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/Product/id'
  *    responses:
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .delete(validate(validations.RemoveProductValidation), controller.removeProductRoute)
+  .delete(
+    authorizeAdminAccount(),
+    validate(validations.RemoveProductValidation),
+    controller.removeProductRoute
+  )
 /**
  * @swagger
  * /v1/products/{productId}/published:
@@ -142,7 +149,7 @@ router.route('/:productId')
  *    tags:
  *      - "Products"
  *    security:
- *      - bearerAuth: []
+ *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/Product/id'
  *    requestBody:

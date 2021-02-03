@@ -16,7 +16,7 @@ router.route('/')
  *    post:
  *      summary: List of the banners.
  *      security:
- *        - bearerAuth: []
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Featured Product"
  *      requestBody:
@@ -33,7 +33,8 @@ router.route('/')
  *    get:
  *      summary: List of the banners.
  *      security:
- *        - bearerAuth: []
+ *        - adminBearerAuth: []
+ *        - userBearerAuth: []
  *      tags: 
  *        - "Featured Product"
  *      parameters:
@@ -47,14 +48,14 @@ router.route('/')
   .get(controller.featuredProductListRoute)
 
 router.route('/:featuredProductId')
-/**x
+/**
  * @swagger
  * paths:
  *  /v1/featured-products/{featuredProductId}:
  *    patch:
  *      summary: update the Featured Product id.
  *      security:
- *        - bearerAuth: []
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Featured Product"
  *      parameters:
@@ -73,7 +74,7 @@ router.route('/:featuredProductId')
  *    delete:
  *      summary: remove the Featured Product id
  *      security:
- *        - bearerAuth: []
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Featured Product"
  *      parameters:

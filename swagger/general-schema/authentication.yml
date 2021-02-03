@@ -6,7 +6,13 @@
 
 components:
   securitySchemes:
-    bearerAuth:
+    userBearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: "User bearer token"
+    adminBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Admin bearer token"
