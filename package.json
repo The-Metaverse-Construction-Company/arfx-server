@@ -11,7 +11,7 @@
     "start": "node ./dist/index.js",
     "dev": "nodemon -L ./dist/index.js",
     "dev:watch": "tsc -w",
-    "build": "tsc",
+    "build": "tsc -p .",
     "test": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 20000 --exit --recursive src/api/tests",
     "test:unit": "cross-env NODE_ENV=test mocha src/api/tests/unit",
     "test:integration": "cross-env NODE_ENV=test mocha --timeout 20000 --exit src/api/tests/integration",
