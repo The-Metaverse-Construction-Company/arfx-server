@@ -10,7 +10,8 @@ import {
   UpdateUserPasswordService,
   ValidateUserPasswordService,
   CreateUserService,
-  UpdateUserService
+  UpdateUserService,
+  UpdateUserSuspendStatusService
 } from '../domain/services/users'
 import {
   UserRepository
@@ -61,6 +62,11 @@ export const sendUserOTPService = (redis: RedisClient) => (
 )
 export const updateUserPasswordService = () => (
   new UpdateUserPasswordService({
+    repositoryGateway: new UserRepository()
+  })
+)
+export const updateUserSuspendStatusService = () => (
+  new UpdateUserSuspendStatusService({
     repositoryGateway: new UserRepository()
   })
 )

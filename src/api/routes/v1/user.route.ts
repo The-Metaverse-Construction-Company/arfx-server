@@ -117,7 +117,7 @@ router
  * @swagger
  * /v1/users/{userId}:
  *  delete:
- *    summary: "Update selected user/customer."
+ *    summary: "Suspend the selected customer/user account."
  *    tags:
  *      - "Users"
  *    security:
@@ -128,7 +128,25 @@ router
  *      '201':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .delete(authorizeAdminAccount(), controller.RemoveUserRoute)
+  .delete(authorizeAdminAccount(), controller.SuspendUserRoute)
+  router
+    .route('/:userId/unsuspend')
+/**
+ * @swagger
+ * /v1/users/{userId}/unsuspend:
+ *  patch:
+ *    summary: "Unsuspend user/customer account."
+ *    tags:
+ *      - "Users"
+ *    security:
+ *      - adminBearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/User/id'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responses/User/Detail'
+ */
+    .patch(authorizeAdminAccount(), controller.UnsuspendUserRoute)
   router
     .route('/:userId/resend-sign-in-otp')
 /**
@@ -146,6 +164,6 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/resendOTP'
  */
-    .post(controller.resendAccountVerificationOTPRoute)
-    // .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
+    // .post(controller.resendAccountVerificationOTPRoute)
+    .post(authorizeAdminAccount(), controller.resendAccountVerificationOTPRoute)
 export default router;

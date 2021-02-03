@@ -38,7 +38,6 @@ export const createCustomerIntent = async (req: Request, res: Response, next: Ne
  */
 export const getCustomerPaymentMethods = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {userId} = req.params
     const {stripeCustomerId = ''} = <IUserEntity>req.user
     const paymentMethodList = await PaymentGateway.customer.getPaymentMethods(stripeCustomerId)
     res.status(httpStatus.OK).send(successReponse(paymentMethodList))

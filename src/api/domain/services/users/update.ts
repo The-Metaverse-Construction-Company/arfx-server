@@ -38,7 +38,7 @@ export class UpdateUserService {
         role,
       })
       // check duplicate email on the repository
-      await this.deps.validateEmail({email: newUser.email.value})
+      await this.deps.validateEmail({userId: newUser._id, email: newUser.email.value})
       // update user entity in the repository.
       await this.deps.repositoryGateway.updateOne({
         _id: newUser._id
@@ -48,6 +48,8 @@ export class UpdateUserService {
         mobileNumber: newUser.mobileNumber,
         role: newUser.role,
       })
+      //@ts-ignore
+      delete newUser.password
       //add some logs
       return newUser
     } catch (error) {

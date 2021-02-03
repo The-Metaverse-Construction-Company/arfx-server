@@ -24,7 +24,7 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responses/UserProducts'
  */
-  .get(authorize(ALLOWED_USER_ROLE.USER), controller.userProductListRoute)
+  .get(controller.userProductListRoute)
 router.route('/:userProductId')
 /**
  * @swagger
@@ -42,6 +42,6 @@ router.route('/:userProductId')
  *      '200':
  *        $ref: '#/components/responses/UserProduct'
  */
-  .get(authorize(ALLOWED_USER_ROLE.USER), controller.userProductDetailsRoute)
+  .get(controller.userProductDetailsRoute)
 
 export default router;

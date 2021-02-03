@@ -3,25 +3,24 @@ import {
   Request, Response, NextFunction,
 } from 'express'
 import {
-  userSignUp,
-} from '../service-configurations/sign-up'
-import {
   userListService,
   userDetails,
   sendUserOTPService,
   updateUserService,
-  createUserService
+  createUserService,
+  updateUserSuspendStatusService
 } from '../service-configurations/users'
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
 import { successReponse } from '../helper/http-response'
-const { omit } = require('lodash');
 const User = require('../models/user.model');
 
 /**
- * Load user and append to req.
  * @public
+ * Load user and append to req.
+ * @requestParams
+ *  @field -> userId: string
  */
 export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: any) => {
   try {
@@ -35,24 +34,20 @@ export const UserDetailsMiddleware = async (req: Request, res: Response, next: N
 };
 
 /**
- * Get user
  * @public
+ * Get customer/user detail based on the requestParams.userId
  */
 export const UserDetailsRoute = (req: Request, res: Response) => {
   res.json(res.locals['user']);
 }
 
 /**
- * Get logged in user info
  * @public
- */
-export const loggedIn = (req: Request, res: Response) => {
-  res.json(JSON.parse(JSON.stringify(req.user)));
-}
-
-/**
- * Create new user
- * @public
+ * create user/customer account.
+ * @requestBody
+ *  @field -> name: string
+ *  @field -> email: string
+ *  @field -> mobileNumber: string
  */
 export const CreateUserRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -71,8 +66,15 @@ export const CreateUserRoute = async (req: Request, res: Response, next: NextFun
 };
 
 /**
- * Update existing user
  * @public
+ * Update selected user/customer account.
+ * @requestParams
+ *  @field -> userId: string
+ * @requestBody
+ *  @field -> name: string
+ *  @field -> email: string
+ *  @field -> role: string
+ *  @field -> mobileNumber: string
  */
 export const UpdateUserRoute = (req: Request, res: Response, next: NextFunction) => {
   const {userId = ''} = req.params
@@ -82,9 +84,14 @@ export const UpdateUserRoute = (req: Request, res: Response, next: NextFunction)
     .catch((e: Error) => next(e));
 };
 
+
 /**
- * Get user list
  * @public
+ * resend sign-in otp for user/customer who didn't received the otp via sms or email.
+ * @requestQuery
+ *  @field -> searchText: string
+ *  @field -> pageNo: number // page number of pagination list
+ *  @field -> limit: number // limit of the list.
  */
 export const UserListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -99,19 +106,38 @@ export const UserListRoute = async (req: Request, res: Response, next: NextFunct
 };
 
 /**
- * Delete user
  * @public
+ * update suspend status of the user/customer account
+ * @requestParam
+ *  @field -> userId: string
  */
-export const RemoveUserRoute = (req: Request, res: Response, next: NextFunction) => {
+export const SuspendUserRoute = (req: Request, res: Response, next: NextFunction) => {
   // const { user } = req.locals;
-
-  // user.remove()
-  //   .then(() => res.status(httpStatus.NO_CONTENT).end())
-  //   .catch((e: Error) => next(e));
+  const {userId = ''} = req.params
+  updateUserSuspendStatusService()
+    .updateOne(userId, true)
+    .then((user) => res.status(httpStatus.OK).json(successReponse(user)))
+    .catch((e: Error) => next(e));
 };
 /**
- * resend a otp
  * @public
+ * update un-suspend status of the user/customer account
+ * @requestParam
+ *  @field -> userId: string
+ */
+export const UnsuspendUserRoute = (req: Request, res: Response, next: NextFunction) => {
+  // const { user } = req.locals;
+  const {userId = ''} = req.params
+  updateUserSuspendStatusService()
+    .updateOne(userId, false)
+    .then((user) => res.status(httpStatus.OK).json(successReponse(user)))
+    .catch((e: Error) => next(e));
+};
+/**
+ * @public
+ * resend sign-in otp for user/customer who didn't received the otp via sms or email.
+ * @requestParam
+ *  @field -> userId: string
  */
 export const resendAccountVerificationOTPRoute = (req: Request, res: Response, next: NextFunction) => {
   const {userId} = req.params
