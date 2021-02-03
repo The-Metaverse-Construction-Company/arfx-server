@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express, {NextFunction, Request, Response} from 'express'
 import validate from 'express-validation'
 import { authorize } from '../../middlewares/auth'
 import * as controller from '../../controllers/auth.controller'
@@ -10,8 +10,46 @@ import {
   oAuth,
   refresh,
 } from '../../validations/auth.validation'
+import passport from 'passport'
 
 const router = express.Router();
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  console.log('req.user :>> ', req.isAuthenticated());
+  console.log('req.user :>> ', req.user);
+  // res.redirect('/login');
+};
+router.get('/account', ensureAuthenticated, function(req, res) {
+  console.log(req.user);
+  res.render('account', { user: req.user });
+});
+router.route('/')
+  .get((req, res, next) => {
+//     passport.authenticate('oauth-bearer', 
+//   { 
+//     session: false 
+//   }
+// )(req, res, next)
+    console.log('object :>> ');
+    res.end()
+    console.log('object :>> ', req.body);
+    console.log('objectxx :>> ', req.files);
+    console.log('object :>> ', req.query);
+  })
+router.route('/sign-in')
+  .get((req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate('oauth-bearer', 
+      { 
+        session: false 
+      }
+    )(req, res, next);
+  }, (req, res) => {
+    console.log('object :>> ');
+    res.end()
+    console.log('object :>> ', req.body);
+    console.log('object :>> ', req.files);
+    console.log('object :>> ', req.query);
+  })
 //Routes
 /**
  * @swagger

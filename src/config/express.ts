@@ -78,9 +78,13 @@ app.use(cors());
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
 passport.use('admin-auth', strategies.adminAuthJWT);
+passport.use(strategies.AzureADAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
-
+app.get('/api/ad-auth', passport.authenticate('oauth-bearer', { session: false }), (req, res, next) => {
+  res.json({ message: 'response from API endpoint' });
+  return next();
+});
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(SwaggerOptions))
 /**
  * @swagger
