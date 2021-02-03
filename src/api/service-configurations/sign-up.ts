@@ -1,25 +1,31 @@
-import PaymentGateway from '../../config/payment-gateway'
-
+/**
+ * @lib
+ */
 import {RedisClient} from 'redis'
 import {
   UserSignUpService,
   VerifyUserTokenService,
   VerifiedUserService
 } from '../domain/services/sign-up'
+/**
+ * @services
+ */
 import {
-  sendVerificationEmail
-} from './email'
-import {
-  validateUserEmail,
   userDetails,
   userVerifyOTPToken,
-  sendUserOTPService
+  sendUserOTPService,
+  createUserService
 } from './users'
-
+/**
+ * @repositories
+ */
 import {
   UserRepository
 } from '../../app-plugins/persistence/repository'
-
+/**
+ * @helper
+ */
+import PaymentGateway from '../../config/payment-gateway'
 import OTPToken from '../helper/user-otp-token'
 
 
@@ -27,7 +33,7 @@ export const userSignUp = (redis: RedisClient) => (
   new UserSignUpService({
     repositoryGateway: new UserRepository(),
     sendUserOTPService: sendUserOTPService(redis),
-    validateEmail: validateUserEmail().validateOne
+    createUserService: createUserService()
   })
 )
 export const verifyUser = (redis: RedisClient) => {

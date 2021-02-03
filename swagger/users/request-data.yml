@@ -8,6 +8,30 @@
 components:
   requestBody:
     User:
+      createForm:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/models/User/name'
+                email:
+                  $ref: '#/components/models/User/email/value'
+                password:
+                  $ref: '#/components/models/User/password'
+      updateForm:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/models/User/name'
+                email:
+                  $ref: '#/components/models/User/email/value'
+                role:
+                  $ref: '#/components/models/User/role'
       signIn:
         content:
           application/json:

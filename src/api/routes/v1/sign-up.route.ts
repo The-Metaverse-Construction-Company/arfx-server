@@ -14,7 +14,7 @@ const router = express.Router();
  *      tags: 
  *        - "Sign-Up"
  *      requestBody:
- *        $ref: '#/components/requestBody/SignUp'
+ *        $ref: '#/components/requestBody/User/createForm'
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/signUp'
