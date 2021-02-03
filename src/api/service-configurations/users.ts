@@ -8,7 +8,10 @@ import {
   ValidateDuplicateEmailService,
   SendUserOTPService,
   UpdateUserPasswordService,
-  ValidateUserPasswordService
+  ValidateUserPasswordService,
+  CreateUserService,
+  UpdateUserService,
+  UpdateUserSuspendStatusService
 } from '../domain/services/users'
 import {
   UserRepository
@@ -24,6 +27,19 @@ export const userListService = () => (
 )
 export const userDetails = () => (
   new UserDetailsService({repositoryGateway: new UserRepository()})
+)
+export const createUserService = () => (
+  new CreateUserService({
+    repositoryGateway: new UserRepository(),
+    validateEmail: validateUserEmail().validateOne
+  })
+)
+export const updateUserService = () => (
+  new UpdateUserService({
+    repositoryGateway: new UserRepository(),
+    userDetailsService: userDetails(),
+    validateEmail: validateUserEmail().validateOne
+  })
 )
 export const userVerifyToken = (redis: RedisClient) => (
   new UserVerifyTokenService({
@@ -46,6 +62,11 @@ export const sendUserOTPService = (redis: RedisClient) => (
 )
 export const updateUserPasswordService = () => (
   new UpdateUserPasswordService({
+    repositoryGateway: new UserRepository()
+  })
+)
+export const updateUserSuspendStatusService = () => (
+  new UpdateUserSuspendStatusService({
     repositoryGateway: new UserRepository()
   })
 )

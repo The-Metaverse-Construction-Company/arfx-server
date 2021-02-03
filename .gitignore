@@ -7,6 +7,8 @@ uploaded
 .env
 .env.local
 .env.example
+#electron app released version
+electron-released-version
 # Logs
 logs
 *.log

@@ -14,7 +14,8 @@ components:
             schema:
               type: object
               properties:
-                $ref: '#/components/models/User/email/value'
+                email:
+                  $ref: '#/components/models/User/email/value'
       verified:
         content:
           application/json:

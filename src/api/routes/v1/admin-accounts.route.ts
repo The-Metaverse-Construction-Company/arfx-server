@@ -14,9 +14,9 @@ const router = express.Router();
  * paths:
  *  /v1/admin-accounts/auth:
  *    get:
- *      summary: valite admin token.
+ *      summary: validate admin auth token.
  *      security:
- *        - bearerAuth: []
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Admin Account Authentication"
  *      responses:
@@ -40,7 +40,7 @@ router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRo
  */
 router.route('/auth/sign-in')
   .post(authCrontroller.signInAdminAccountRoute)
-// router.use('/', authorizeAdminAccount())
+// router.use('/', authorizeAdminAccount()) // disable this to create the first admin acct.
 router.route('/')
 /**
  * @swagger
@@ -62,7 +62,9 @@ router.route('/')
  * paths:
  *  /v1/admin-accounts:
  *    get:
- *      summary: List ofAdmin Account.
+ *      summary: List of Admin Account.
+ *      security:
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Admin Account"
  *      parameters:
@@ -73,7 +75,7 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(PaginationQueryPipeline, requestValidatorMiddleware, controller.adminAccountListRoute)
+  .get(authorizeAdminAccount(), PaginationQueryPipeline, requestValidatorMiddleware, controller.adminAccountListRoute)
 router.route('/:adminAccountId')
 /**
  * @swagger
@@ -81,6 +83,8 @@ router.route('/:adminAccountId')
  *  /v1/admin-accounts/{adminAccountId}:
  *    patch:
  *      summary: update Admin Account.
+ *      security:
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Admin Account"
  *      parameters:
@@ -91,13 +95,15 @@ router.route('/:adminAccountId')
  *        '202':
  *          description: "OK"
  */
-  .patch(adminValidations.FormPipeline, requestValidatorMiddleware, controller.updateAdminAccountRoute)
+  .patch(authorizeAdminAccount(), adminValidations.FormPipeline, requestValidatorMiddleware, controller.updateAdminAccountRoute)
 /**
  * @swagger
  * paths:
  *  /v1/admin-accounts/{adminAccountId}:
  *    get:
  *      summary: details of Admin Account.
+ *      security:
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Admin Account"
  *      parameters:
@@ -106,6 +112,6 @@ router.route('/:adminAccountId')
  *        '200':
  *          description: "OK"
  */
-  .get(controller.adminAccountDetailsRoute)
+  .get(authorizeAdminAccount(), controller.adminAccountDetailsRoute)
 
 export default router;

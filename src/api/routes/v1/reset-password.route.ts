@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.route('/')
-/**x
+/**
  * @swagger
  * paths:
  *  /v1/auth/reset-password:

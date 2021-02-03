@@ -17,21 +17,26 @@ export class UserRepository extends GeneralRepository<IUserEntity, IUserReposito
     super(UserRepositoryModel)
   }
 
-  // public paginationList = async (query: IPaginationQueryParams, projection: any = {}) => {
-  //   try {
-  //     const {
-  //       limit = 10,
-  //       pageNo = 1,
-  //       searchText
-  //     } = query
-  //     const searchFields = generateSearchTextFields<IUserEntity>([''], searchText)
-  //     const userList = await UserRepositoryModel.find(query, {...projection, password: 0})
-  //     .sort({ createdAt: -1 })
-  //     .skip(limit * (pageNo - 1))
-  //     .limit(limit)
-  //     .exec();
-  //   } catch (error) {
-  //     throw error
-  //   }
-  // }
+  public paginationList = async (filterQuery: IPaginationQueryParams, projection:any = {}) => {
+    try {
+      const paginationList = await this.aggregateWithPagination([
+        {
+          $project: {
+            ...projection,
+            password: 0
+          }
+        },
+        {
+          $sort: {
+            createdAt: 1
+          }
+        },
+      ], {
+        ...filterQuery,
+      })
+      return paginationList
+    } catch (error) {
+      throw error
+    }
+  }
 }

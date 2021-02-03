@@ -18,16 +18,10 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserListService {
   constructor (protected dependencies: IServiceDependencies) {
   }
-  public getList = async ({pageNo = 1, limit = 10, searchText = ''}: Partial<IPaginationParameters>) => {
+  public getList = async (filterQuery: Partial<IPaginationParameters>) => {
     try {
-      const query = {
-        name: new RegExp(searchText, 'i'),
-        "email.value": new RegExp(searchText, 'i')
-      }
-      const list = await this.dependencies.repositoryGateway.findAll(query, {pageNo, limit}, {
-        password: 0
-      })
-      return list
+      const response = await this.dependencies.repositoryGateway.paginationList(filterQuery)
+      return response
     } catch (error) {
       console.log('error :>> ', error);
       throw error

@@ -13,9 +13,11 @@ components:
       firstName:
         type: string
         description: "firstName of the admin account."
+        example: 'John'
       lastName:
         type: string
         description: "lastName of the admin account."
+        example: 'Doe'
       roleLevel:
         type: number
         description: "roleLevel of the admin account."
@@ -23,10 +25,12 @@ components:
       password:
         type: string
         description: "password of the admin account."
+        example: 'test123'
       email:
         value: 
           type: string
           description: 'email address of the admin account.'
+          example: 'testmail0001@mailnesia.com'
         verified: 
           $ref: '#/components/schemas/general/verificationEntity/verified'
         verifiedAt: 

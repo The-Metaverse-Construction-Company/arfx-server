@@ -7,6 +7,7 @@ import ProductsRoute from './products.route'
 import StripeRoute from './stripe.route'
 import AdminAccountsRoute from './admin-accounts.route'
 import FeaturedProductRoute from './featured-products.route'
+import ReleasedVersionRoute from './released-version.route'
 const router = express.Router();
 
 
@@ -23,6 +24,7 @@ router.use('/docs', express.static('docs'));
  * @expose_routes
  */
 router.use(StripeRoute)
+router.use('/electron-released-version', ReleasedVersionRoute);
 router.use('/admin-accounts', AdminAccountsRoute);
 router.use('/users', userRoutes);
 router.use('/products', ProductsRoute);

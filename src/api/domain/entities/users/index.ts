@@ -34,8 +34,8 @@ export default ({
     public mobileNumber!: IGeneralVerificationEntityProperties;
     public service!: IUserAuthenticationServices;
     public name: string = '';
-    public userId: string = '';
     public role: string = '';
+    public suspended: boolean = false;
     public stripeCustomerId: string = '';
     public password: string = '';
     public readonly createdAt: number = 0;
@@ -47,7 +47,8 @@ export default ({
       mobileNumber = {value: '', verified: false, verifiedAt: 0},
       password = '',
       role = '',
-      stripeCustomerId = ''
+      stripeCustomerId = '',
+      suspended = false
     }: Partial<IUserEntity>) {
       if (!_id) {
         _id = generateId()
@@ -60,6 +61,7 @@ export default ({
       this.mobileNumber = mobileNumber
       this.name = name
       this.role = role
+      this.suspended = suspended
       this.stripeCustomerId = stripeCustomerId
       this.password = hash(password)
       // this.avatarUrl = avatarUrl

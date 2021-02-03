@@ -6,7 +6,7 @@ import * as validations from '../../validations/purchase-history.validation'
 
 const router = express.Router();
 router.route('/')
-  .get(authorize(LOGGED_USER), controller.purchaseHistoryListRoute)
+  .get(controller.purchaseHistoryListRoute)
 router.route('/:purchasedProductId')
-  .get(authorize(LOGGED_USER), controller.purchaseHistoryDetailsRoute)
+  .get(controller.purchaseHistoryDetailsRoute)
 export default router;

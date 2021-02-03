@@ -63,6 +63,10 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
     default: '',
     required: true
   },
+  suspended: {
+    type: Boolean,
+    default: false
+  },
   service: {
     facebook: {
       type: String,
