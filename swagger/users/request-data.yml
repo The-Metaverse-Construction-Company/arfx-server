@@ -54,6 +54,19 @@ components:
                   type: string
                   description: 'new password of the user.'
                   default: 'newpwd123'
+      settings:
+        bankCard:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  password:
+                    $ref: '#/components/models/User/password'
+                  newPassword:
+                    type: string
+                    description: 'new password of the user.'
+                    default: 'newpwd123'
   requestParams:
     User:
       id:
