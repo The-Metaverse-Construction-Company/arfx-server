@@ -73,8 +73,8 @@ router.route('/login')
  *      summary: Sign-out/logout the current logged-in user based on the access token used.
  *      tags: 
  *        - "Authentication"
- *      parameters:
- *        - $ref: "#/components/requestHeaders/authorizationParam"
+ *      security:
+ *        - userBearerAuth: []
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/SignOut'

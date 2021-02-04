@@ -65,7 +65,7 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
 };
 const azureADAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
 
-  console.log('object :>> ', req);
+  console.log('object :>> xxxxxxxxxxxx', req);
   console.log('object :>> ', payload);
   done(null)
   // try {
@@ -95,14 +95,18 @@ const azureADAuthHandler = async (req: Request, payload: any, done: any = () => 
 export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
 export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy({
-  identityMetadata: 'https://login.microsoftonline.com/5a71251f-2d3f-4454-af4b-aaac1aa58cbb/v2.0/.well-known/openid-configuration', 
+  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
+  identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
+  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/authorize', 
   clientID: '96d26178-9443-46ee-b43f-8e1ae3c6cd6a',
   validateIssuer: false,
   isB2C: false,
-  issuer: '',
-  passReqToCallback: true,
+  audience: '96d26178-9443-46ee-b43f-8e1ae3c6cd6a',
+  // issuer: '96d26178-9443-46ee-b43f-8e1ae3c6cd6a',
+  passReqToCallback: false,
   // useCookieInsteadOfSession: true,
-  scope: ['profile', 'offline_access', 'https://graph.microsoft.com/mail.read'],
+  scope: ['user.read'],
+  // scope: ['mail.read', 'offline_access', 'openid', 'profile'],
   loggingLevel: 'info'
 }, azureADAuthHandler);
 // export const facebook = new BearerStrategy(oAuth('facebook'));
