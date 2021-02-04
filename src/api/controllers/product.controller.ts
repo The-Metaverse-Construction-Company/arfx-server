@@ -13,6 +13,7 @@ import {
 import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
+import { IProductEntity } from '../domain/entities/product'
 
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
@@ -177,15 +178,24 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
  * @requestParams
  *  @field -> productId: string
  */
-export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const productDetailsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       productId = ''
     } = req.params
     const product = await productDetails()
       .findOne(productId)
+      // set productDetails on the response locals to access other routes.
+    res.locals['productDetails'] = product
+    next()
+  } catch (error) {
+    next(error)
+  }
+};
+export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
     res.status(httpStatus.OK)
-      .json(successReponse(product))
+      .json(successReponse(res.locals['productDetails']))
   } catch (error) {
     next(error)
   }
@@ -227,6 +237,23 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
       .removeOne(productId)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(product))
+  } catch (error) {
+    next(error)
+  }
+};
+/**
+ * @public
+ * product list
+ * @requestParams
+ *  @field -> productId: string
+ */
+export const downloadContentZipRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const product = <IProductEntity>res.locals['productDetails']
+      // .removeOne(productId)
+    res.sendFile("/usr/src/app/public/uploaded/16a71423-6d42-4e6a-8d0b-4226a7c4e7bb.mp4")
+    // res.status(httpStatus.ACCEPTED)
+      // .json(successReponse(product))
   } catch (error) {
     next(error)
   }
