@@ -30,20 +30,23 @@ router.route('/')
 //     session: false 
 //   }
 // )(req, res, next)
-    console.log('object :>> ');
+    console.log('objectd :>> ');
     res.end()
     console.log('object :>> ', req.body);
-    console.log('objectxx :>> ', req.files);
+    console.log('objectxxx :>> ', req.files);
     console.log('object :>> ', req.query);
   })
 router.route('/sign-in')
-  .get((req: Request, res: Response, next: NextFunction) => {
+  .get(
+    (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('oauth-bearer', 
       { 
-        session: false 
+        session: false,
+        // scope: ['user.read'],
       }
     )(req, res, next);
-  }, (req, res) => {
+  }, 
+  (req, res) => {
     console.log('object :>> ');
     res.end()
     console.log('object :>> ', req.body);
