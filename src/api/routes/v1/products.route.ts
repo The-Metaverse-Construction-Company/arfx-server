@@ -172,7 +172,11 @@ router.route('/:productId')
  *        $ref: '#/components/schemas/Product'
  */
 router.route('/:productId/published')
-  .patch(validate(validations.UpdateProductPublishValidation), controller.updateProductPublishStatusRoute)
+  .patch(
+    authorizeAdminAccount(),
+    validate(validations.UpdateProductPublishValidation),
+    controller.updateProductPublishStatusRoute
+    )
 /**
  * @swagger
  * /v1/products/{productId}/content-zip:
