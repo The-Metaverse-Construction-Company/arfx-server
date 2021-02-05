@@ -18,8 +18,8 @@ const blobStorage = {
           // wait the response and get the bbc url.
           blobLoc = bbc.url
         } else {
-          const filePath = file.split(`/usr/src/app`)
-          blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
+          // const filePath = file.split(`/usr/src/app`)
+          // blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
         }
         resolve(blobLoc)
         return

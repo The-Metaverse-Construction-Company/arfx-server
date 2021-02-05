@@ -1,4 +1,5 @@
 import {
+  IProductBlobProperties,
   IProductEntity
 } from './interfaces'
 import {
@@ -25,9 +26,9 @@ export default ({
     public readonly adminAccountId!: string
     public readonly purchaseCount!: number
     public readonly discountPercentage!: number
-    public contentURL!: string
-    public previewVideoURL!: string
-    public previewImageURL!: string
+    public contentZip!: IProductBlobProperties
+    public previewVideo!: IProductBlobProperties
+    public previewImage!: IProductBlobProperties
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
@@ -38,9 +39,9 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentURL = '',
-      previewVideoURL = '',
-      previewImageURL = '',
+      contentZip = {blobURL: '', originalFilepath: ''},
+      previewVideo = {blobURL: '', originalFilepath: ''},
+      previewImage = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
       // stripeCustomerId = '',
@@ -73,9 +74,9 @@ export default ({
       this.description = description
       this.price = price
       this.discountPercentage = discountPercentage
-      this.contentURL = contentURL
-      this.previewVideoURL = previewVideoURL
-      this.previewImageURL = previewImageURL
+      this.contentZip = contentZip
+      this.previewVideo = previewVideo
+      this.previewImage = previewImage
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.title = title
