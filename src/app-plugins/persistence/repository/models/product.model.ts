@@ -7,6 +7,16 @@ import {
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
+const ProductBlobObject = {
+  originalFilepath: {
+    type: String,
+    default: ''
+  },
+  blobURL: {
+    type: String,
+    default: ''
+  },
+}
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
 }
@@ -28,18 +38,9 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  contentURL: {
-    type: String,
-    default: '',
-  },
-  previewImageURL: {
-    type: String,
-    default: '',
-  },
-  previewVideoURL: {
-    type: String,
-    default: '',
-  },
+  contentZip: ProductBlobObject,
+  previewImage: ProductBlobObject,
+  previewVideo: ProductBlobObject,
   published: {
     type: Boolean,
     default: false

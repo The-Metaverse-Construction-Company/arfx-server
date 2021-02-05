@@ -13,7 +13,7 @@ import {
 import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
-import { IProductEntity } from '../domain/entities/product'
+import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
 
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
@@ -249,11 +249,25 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
  */
 export const downloadContentZipRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const {blobType = ''} = req.params
     const product = <IProductEntity>res.locals['productDetails']
-      // .removeOne(productId)
-    res.sendFile("/usr/src/app/public/uploaded/16a71423-6d42-4e6a-8d0b-4226a7c4e7bb.mp4")
-    // res.status(httpStatus.ACCEPTED)
-      // .json(successReponse(product))
+
+    const blobOriginalFilepath = ((blobType: string) => {
+      switch (blobType) {
+        case PRODUCT_BLOB_TYPE.CONTENT_ZIP:
+          return product.contentZip.originalFilepath
+        case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
+          return product.contentZip.originalFilepath
+        case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
+          return product.contentZip.originalFilepath
+        default:
+          return ''
+      }
+    })(blobType)
+    if (!blobOriginalFilepath) {
+      throw new Error('Invalid url')
+    }
+    res.sendFile(blobOriginalFilepath)
   } catch (error) {
     next(error)
   }

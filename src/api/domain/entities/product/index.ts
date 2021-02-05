@@ -6,6 +6,7 @@ import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
 
+export * from './constants'
 export * from './interfaces'
 export * from './RepositoryGatewayInterfaces'
 
