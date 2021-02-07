@@ -6,6 +6,7 @@ import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
 import { PURCHASE_HISTORY_STATE } from './enum'
+import { IProductBlobProperties } from '../product'
 
 export * from './enum'
 export * from './interfaces'
@@ -24,9 +25,9 @@ export default ({
     public readonly name!: string
     public readonly title!: string
     public readonly description!: string
-    public readonly contentURL!: string
-    public readonly previewImageURL!: string
-    public readonly previewVideoURL!: string
+    public readonly contentZip!: IProductBlobProperties
+    public readonly previewImage!: IProductBlobProperties
+    public readonly previewVideo!: IProductBlobProperties
     public paymentIntentId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
@@ -42,9 +43,9 @@ export default ({
       paymentIntentId = '',
       description = '',
       name = '',
-      contentURL = '',
-      previewImageURL = '',
-      previewVideoURL = '',
+      contentZip = {blobURL: '', originalFilepath: ''},
+      previewImage = {blobURL: '', originalFilepath: ''},
+      previewVideo = {blobURL: '', originalFilepath: ''},
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -77,9 +78,9 @@ export default ({
       this.title = title
       this.name = name
       this.description = description
-      this.contentURL = contentURL
-      this.previewImageURL = previewImageURL
-      this.previewVideoURL = previewVideoURL
+      this.contentZip = contentZip
+      this.previewImage = previewImage
+      this.previewVideo = previewVideo
       // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()

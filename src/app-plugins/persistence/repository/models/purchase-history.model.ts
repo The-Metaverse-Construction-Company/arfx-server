@@ -41,17 +41,35 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
-  contentURL: {
-    type: String,
-    default: '',
+  contentZip: {
+    originalFilepath: {
+      type: String,
+      default: '',
+    },
+    blobURL: {
+      type: String,
+      default: '',
+    }
   },
-  previewImageURL: {
-    type: String,
-    default: '',
+  previewImage: {
+    originalFilepath: {
+      type: String,
+      default: '',
+    },
+    blobURL: {
+      type: String,
+      default: '',
+    }
   },
-  previewVideoURL: {
-    type: String,
-    default: '',
+  previewVideo: {
+    originalFilepath: {
+      type: String,
+      default: '',
+    },
+    blobURL: {
+      type: String,
+      default: '',
+    }
   },
   paymentMethodId: {
     type: String,
