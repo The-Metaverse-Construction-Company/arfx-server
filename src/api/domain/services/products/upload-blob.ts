@@ -1,5 +1,5 @@
 import { BACKEND_HOST } from '../../../utils/constants';
-import { IProductBlobProperties } from '../../entities/product';
+import { IProductBlobProperties, PRODUCT_BLOB_TYPE } from '../../entities/product';
 import {  IUploader } from '../../interfaces';
 interface IUploadProductBlob{
   contentZip: string,
@@ -34,7 +34,7 @@ export class UploadProductBlobService {
         const blobArr = contentZip.split('.')
         // upload to cloud storage provider
         uploadedBlobURLs.contentZip = {
-          blobURL: `${BACKEND_HOST}/v1/products/${productId}/contentZip.${this.getBlobExtension(contentZip)}`,
+          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
           originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip)
         }
          // const filePath = file.split(`/usr/src/app`)
@@ -43,14 +43,14 @@ export class UploadProductBlobService {
       if (previewImage) {
         // upload to cloud storage provider
         uploadedBlobURLs.previewImage = {
-          blobURL: `${BACKEND_HOST}/v1/products/${productId}/previewImage.${this.getBlobExtension(previewImage)}`,
+          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
           originalFilepath: await this.dependencies.fileUploader.upload(productId, previewImage)
         }
       }
       if (previewVideo) {
         // upload to cloud storage provider
         uploadedBlobURLs.previewVideo = {
-          blobURL: `${BACKEND_HOST}/v1/products/${productId}/previewVideo.${this.getBlobExtension(previewVideo)}`,
+          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
           originalFilepath: await this.dependencies.fileUploader.upload(productId, previewVideo)
         }
       }

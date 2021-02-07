@@ -1,4 +1,5 @@
 import httpStatus from 'http-status'
+import fs from 'fs'
 import {
   Response, Request, NextFunction
 } from 'express'
@@ -14,6 +15,7 @@ import { successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
 import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
+import ProductImageResize from '../helper/image-resize'
 
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
@@ -252,21 +254,44 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
     const {blobType = ''} = req.params
     const product = <IProductEntity>res.locals['productDetails']
 
-    const blobOriginalFilepath = ((blobType: string) => {
-      switch (blobType) {
-        case PRODUCT_BLOB_TYPE.CONTENT_ZIP:
-          return product.contentZip.originalFilepath
-        case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
-          return product.contentZip.originalFilepath
-        case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
-          return product.contentZip.originalFilepath
-        default:
-          return ''
-      }
+    const blobOriginalFilepath = <string>await ((blobType: string) => {
+      return new Promise((resolve, reject) => {
+        switch (blobType) {
+          case PRODUCT_BLOB_TYPE.CONTENT_ZIP:
+            resolve(product.contentZip.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
+            const orgiFilepath = product.previewImage.originalFilepath.split('.')
+            const blobType = orgiFilepath.pop()
+            const height = 150, width=150;
+            const newFilepath = `${orgiFilepath.join('.')}-${width}x${height}.${blobType}`
+            ProductImageResize({
+                filepath: product.previewImage.originalFilepath,
+                height: 150,
+                width: 150
+            })
+            .toFile(newFilepath)
+            .then(() => {
+              resolve(newFilepath)
+              setTimeout(() => {
+                fs.unlinkSync(newFilepath)
+              }, 1000)
+              return newFilepath
+            })
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
+            resolve(product.previewVideo.originalFilepath)
+            break;
+          default:
+            return ''
+        }
+      })
     })(blobType)
     if (!blobOriginalFilepath) {
       throw new Error('Invalid url')
     }
+    console.log('blobOriginalFilepath :>> ', blobOriginalFilepath);
+    // res.send(blobOriginalFilepath)
     res.sendFile(blobOriginalFilepath)
   } catch (error) {
     next(error)
