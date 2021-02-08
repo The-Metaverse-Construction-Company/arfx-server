@@ -10,8 +10,6 @@ export const LOGGED_USER = '_loggedUser';
 
 const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
   const error = err || info;
-  console.log('req :>> ', req.body);
-  console.log('req :>> ', req.files);
   //@ts-expect-error
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({
@@ -84,6 +82,12 @@ export const authorizeAdminAccount = () => (req: Request, res: Response, next: N
   passport.authenticate(
     // ['admin-auth'], { session: false },
     ['admin-auth'], { session: false },
+    handleJWT(req, res, next, ALLOWED_USER_ROLE.ADMIN),
+  )(req, res, next);
+export const authAzureAD = () => (req: Request, res: Response, next: NextFunction) =>
+  passport.authenticate(
+    // ['admin-auth'], { session: false },
+    ['oauth-bearer'], { session: false },
     handleJWT(req, res, next, ALLOWED_USER_ROLE.ADMIN),
   )(req, res, next);
 

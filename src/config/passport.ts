@@ -63,11 +63,12 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
     return done(error, false);
   }
 };
-const azureADAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
+const azureADAuthHandler = async (req: any, done: any = () => null) => {
 
   console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22 :>> xxxxxxxxxxxx', req);
-  console.log('object :>> ', payload);
-  done(null, {}, payload)
+  console.log('object :>> ', done);
+  done(null, req.oid)
+  return
   // try {
   //   const {authorization = ''} = req.headers
   //   const accessToken = authorization.split(' ')[1]
@@ -98,20 +99,18 @@ export const AzureADAuthJWT = new BearerStrategy({
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
   identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/.well-known/openid-configuration', 
-  // identityMetadata: 'https://login.microsoftonline.com/5a71251f-2d3f-4454-af4b-aaac1aa58cbb/.well-known/openid-configuration', 
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/authorize', 
+  // identityMetadata: 'https://login.microsoftonline.com/common/.well-known/openid-configuration', 
   clientID: '315c2870-ce96-4824-8512-d608b99b20dd',
   audience: '315c2870-ce96-4824-8512-d608b99b20dd',
-
   // allowMultiAudiencesInToken: true,
   validateIssuer: true,
   // isB2C: true,
-  // policyName: 'B2C_1_SUSI',
+  // policyName: 'B2C_1_signupsignin1',
   // resourceURL: 'https://graph.windows.net',
-  issuer: 'https://login.microsoftonline.com/5a71251f-2d3f-4454-af4b-aaac1aa58cbb/v2.0',
+  // issuer: 'https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0',
   passReqToCallback: false,
   // useCookieInsteadOfSession: true,
-  scope: ['openid email'],
+  scope: ['access_as_user'],
   // scope: ['mail.read', 'offline_access', 'openid', 'profile'],
   loggingNoPII: false,
   loggingLevel: 'info'

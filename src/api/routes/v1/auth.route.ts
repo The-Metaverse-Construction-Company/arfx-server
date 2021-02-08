@@ -1,28 +1,16 @@
 import express, {NextFunction, Request, Response} from 'express'
 import validate from 'express-validation'
-import { authorize } from '../../middlewares/auth'
+import { authAzureAD, authorize } from '../../middlewares/auth'
 import * as controller from '../../controllers/auth.controller'
 import {LOGGED_USER, oAuth as oAuthLogin} from '../../middlewares/auth'
-
 import {
   login,
   register,
   oAuth,
   refresh,
 } from '../../validations/auth.validation'
-import passport from 'passport'
 
 const router = express.Router();
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  console.log('req.user :>> ', req.isAuthenticated());
-  console.log('req.user :>> ', req.user);
-  // res.redirect('/login');
-};
-router.get('/account', ensureAuthenticated, function(req, res) {
-  console.log(req.user);
-  res.render('account', { user: req.user });
-});
 router.route('/')
   .get((req, res, next) => {
 //     passport.authenticate('oauth-bearer', 
@@ -37,21 +25,10 @@ router.route('/')
     console.log('object :>> ', req.query);
   })
 router.route('/sign-in')
-  .get(
-    (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate('oauth-bearer', 
-      { 
-        session: false,
-        // scope: ['user.read'],
-      }
-    )(req, res, next);
-  }, 
+  .get(authAzureAD(),
   (req, res) => {
-    console.log('object :>> ');
+    console.log('object :>> ', req.user);
     res.end()
-    console.log('object :>> ', req.body);
-    console.log('object :>> ', req.files);
-    console.log('object :>> ', req.query);
   })
 //Routes
 /**
