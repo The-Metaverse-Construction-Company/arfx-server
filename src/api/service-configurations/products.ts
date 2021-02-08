@@ -5,7 +5,7 @@ import {
   ProductDetails,
   RemoveProduct,
   UpdateProductPublishStatus,
-  UpdateProductURLService,
+  // UpdateProductURLService,
   UploadProductBlobService
 } from '../domain/services/products'
 
@@ -52,8 +52,8 @@ export const updateProductPublishStatus = () => (
     repositoryGateway: new ProductRepository()
   })
 )
-export const updateProductURLService = () => (
-  new UpdateProductURLService({
-    repositoryGateway: new ProductRepository()
-  })
-)
+// export const updateProductURLService = () => (
+//   new UpdateProductURLService({
+//     repositoryGateway: new ProductRepository()
+//   })
+// )

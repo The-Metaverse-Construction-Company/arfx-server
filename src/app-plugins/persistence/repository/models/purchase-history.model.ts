@@ -6,7 +6,7 @@ import {
   IPurchaseHistoryEntity, PURCHASE_HISTORY_STATE
 } from '../../../../api/domain/entities/purchase-history'
 import { COLLECTION_NAMES } from '../constants/collection-names'
-
+import {ProductBlobObject} from './product.model'
 export interface IPurchaseHistoryRepository extends Document, IPurchaseHistoryEntity {
   _id: any
 }
@@ -41,36 +41,9 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
-  contentZip: {
-    originalFilepath: {
-      type: String,
-      default: '',
-    },
-    blobURL: {
-      type: String,
-      default: '',
-    }
-  },
-  previewImage: {
-    originalFilepath: {
-      type: String,
-      default: '',
-    },
-    blobURL: {
-      type: String,
-      default: '',
-    }
-  },
-  previewVideo: {
-    originalFilepath: {
-      type: String,
-      default: '',
-    },
-    blobURL: {
-      type: String,
-      default: '',
-    }
-  },
+  contentZip: ProductBlobObject,
+  previewImage: ProductBlobObject,
+  previewVideo: ProductBlobObject,
   paymentMethodId: {
     type: String,
     default: '',

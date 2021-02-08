@@ -1,6 +1,8 @@
 import {
+  IProductBlob,
   IProductBlobProperties,
-  IProductEntity
+  IProductEntity,
+  IProductParams
 } from './interfaces'
 import {
   IGeneralEntityDependencies
@@ -13,23 +15,40 @@ export * from './RepositoryGatewayInterfaces'
 interface Dependencies extends IGeneralEntityDependencies {
   
 }
+export class ProductCoreEntity {
+  public readonly name!: string
+  public readonly title!: string
+  public readonly description!: string
+  public contentZip!: IProductBlobProperties
+  public previewVideo!: IProductBlobProperties
+  public previewImage!: IProductBlobProperties
+  constructor ({
+    name,
+    title,
+    description,
+    contentZip,
+    previewImage,
+    previewVideo
+  }: IProductParams & IProductBlob) {
+    this.name = name
+    this.title = title
+    this.description = description
+    this.contentZip = contentZip
+    this.previewImage = previewImage
+    this.previewVideo = previewVideo
+  }
+}
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IProductEntity {
+  class ProductEntity extends ProductCoreEntity implements IProductEntity  {
     public readonly _id!: string
-    public readonly name!: string
-    public readonly title!: string
-    public readonly description!: string
     public readonly published: boolean = true
     // public readonly stripeCustomerId!: string
     public readonly price!: number
     public readonly adminAccountId!: string
     public readonly purchaseCount!: number
     public readonly discountPercentage!: number
-    public contentZip!: IProductBlobProperties
-    public previewVideo!: IProductBlobProperties
-    public previewImage!: IProductBlobProperties
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
@@ -49,7 +68,14 @@ export default ({
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IProductEntity>) {
-      
+      super({
+        title,
+        name,
+        description,
+        contentZip,
+        previewImage,
+        previewVideo,
+      })
       price = parseFloat(<any>price)
       discountPercentage = parseFloat(<any>discountPercentage)
       if (!_id) {
@@ -71,16 +97,10 @@ export default ({
       }
       // add additional business rules here if needed.
       this._id = _id
-      this.name = name
-      this.description = description
       this.price = price
       this.discountPercentage = discountPercentage
-      this.contentZip = contentZip
-      this.previewVideo = previewVideo
-      this.previewImage = previewImage
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
-      this.title = title
       this.published = published
       // this.stripeCustomerId = stripeCustomerId
       this.updatedAt = updatedAt

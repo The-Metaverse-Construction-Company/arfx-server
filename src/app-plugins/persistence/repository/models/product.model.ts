@@ -7,7 +7,7 @@ import {
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
-const ProductBlobObject = {
+export const ProductBlobObject = {
   originalFilepath: {
     type: String,
     default: ''

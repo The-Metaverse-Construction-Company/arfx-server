@@ -6,7 +6,7 @@ import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
 import { PURCHASE_HISTORY_STATE } from './enum'
-import { IProductBlobProperties } from '../product'
+import { IProductBlobProperties, ProductCoreEntity } from '../product'
 
 export * from './enum'
 export * from './interfaces'
@@ -17,17 +17,17 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductHistoryEntity implements IPurchaseHistoryEntity {
+  class ProductHistoryEntity extends ProductCoreEntity implements IPurchaseHistoryEntity {
     public readonly _id!: string
     public readonly productId!: string
     public readonly amount!: number
     public readonly paymentMethodId!: string
-    public readonly name!: string
-    public readonly title!: string
-    public readonly description!: string
-    public readonly contentZip!: IProductBlobProperties
-    public readonly previewImage!: IProductBlobProperties
-    public readonly previewVideo!: IProductBlobProperties
+    // public readonly name!: string
+    // public readonly title!: string
+    // public readonly description!: string
+    // public readonly contentZip!: IProductBlobProperties
+    // public readonly previewImage!: IProductBlobProperties
+    // public readonly previewVideo!: IProductBlobProperties
     public paymentIntentId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
@@ -49,6 +49,14 @@ export default ({
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
+      super({
+        name,
+        title,
+        description,
+        contentZip,
+        previewImage,
+        previewVideo
+      })
       amount = parseFloat(<any>amount)
       if (isNaN(amount)) {
         throw new Error('Amount must be a numeric with 2 decimal places.')
@@ -75,12 +83,12 @@ export default ({
       this.userId = userId
       this.amount = amount
       this.state = state
-      this.title = title
-      this.name = name
-      this.description = description
-      this.contentZip = contentZip
-      this.previewImage = previewImage
-      this.previewVideo = previewVideo
+      // this.title = title
+      // this.name = name
+      // this.description = description
+      // this.contentZip = contentZip
+      // this.previewImage = previewImage
+      // this.previewVideo = previewVideo
       // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()

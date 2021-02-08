@@ -4,6 +4,7 @@ import {
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
+import { IProductBlobProperties, ProductCoreEntity } from '../product'
 
 export * from './interfaces'
 export * from './repository-gateway-interfaces'
@@ -13,25 +14,19 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class UserProductEntity implements IUserProductsEntity {
+  class UserProductEntity extends ProductCoreEntity implements IUserProductsEntity {
     public readonly _id!: string
-    public readonly name!: string
-    public readonly title!: string
-    public readonly description!: string
     public readonly userId!: string
     public readonly productId!: string
-    public readonly contentURL!: string
-    public readonly previewVideoURL!: string
-    public readonly previewImageURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
       _id = '',
       name = '',
       description = '',
-      contentURL = '',
-      previewVideoURL = '',
-      previewImageURL = '',
+      contentZip = {blobURL: '', originalFilepath: ''},
+      previewVideo = {blobURL: '', originalFilepath: ''},
+      previewImage = {blobURL: '', originalFilepath: ''},
       productId = '',
       userId = '',
       title = '',
@@ -39,6 +34,14 @@ export default ({
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IUserProductsEntity>) {
+      super({
+        title,
+        name,
+        description,
+        contentZip,
+        previewImage,
+        previewVideo,
+      })
       if (!_id) {
         _id = generateId()
       }
@@ -58,14 +61,8 @@ export default ({
       }
       // add additional business rules here if needed.
       this._id = _id
-      this.name = name
-      this.description = description
-      this.contentURL = contentURL
-      this.previewVideoURL = previewVideoURL
-      this.previewImageURL = previewImageURL
       this.productId = productId
       this.userId = userId
-      this.title = title
       this.updatedAt = updatedAt
       this.createdAt = createdAt
     }
