@@ -24,7 +24,10 @@ export class UserSignInService {
       const user = await this.deps.repositoryGateway.findOne({
         //@ts-expect-error
         "email.value": username
-      })
+      }).catch(() => null)
+      if (!user) {
+        throw new Error('Invalid user credentials.')
+      }
       // validate account password
       await this.deps.validateUserPasswordService.validateOne(user._id, password)
       // if pass, then validate email if verified.
@@ -44,7 +47,7 @@ export class UserSignInService {
         token
       }
     } catch (error) {
-      console.log('error :>> ', error);
+      console.log('error on sign-in user:>> ', error.message);
       throw error
     }
   }

@@ -9,7 +9,13 @@ import {
 import PaymentGateway from '../../../config/payment-gateway'
 import faker from 'faker'
 import {v4 as uuid} from 'uuid'
-before(async (done) => {
+import DB from '../../../config/mongoose'
+import './sign-up.test'
+import './sign-in.test'
+import './products.test'
+before((done) => {
+  // overwrite the logger function
+  // console.log = () => ({})
   PaymentGateway.customer = {
     create: async () => uuid(),
     //@ts-expect-error
@@ -19,25 +25,19 @@ before(async (done) => {
     //@ts-expect-error
     setupIntents: async () => ({}),
   }
-  // Promise.all([
-  //   AdminAccountCollectionModel.remove({}),
-  //   ProductBannerCollectionModel.remove({}),
-  //   ProductCollectionModel.remove({}),
-  //   PurchaseHistoryCollectionModel.remove({}),
-  //   UserCollectionModel.remove({}),
-  //   UserProductCollectionModel.remove({})
-  // ])
-  // .then(() => {
-    done()
-  // })
-})
-before(async (done) => {
-  // await AdminAccountCollectionModel.remove({})
-  // await ProductBannerCollectionModel.remove({})
-  // await ProductCollectionModel.remove({})
-  // await PurchaseHistoryCollectionModel.remove({})
-  // await UserCollectionModel.remove({})
-  // await UserProductCollectionModel.remove({})
-  // console.log('Done testing');
   done()
+})
+after((done) => {
+   Promise.all([
+    AdminAccountCollectionModel.deleteMany({}),
+    ProductBannerCollectionModel.deleteMany({}),
+    ProductCollectionModel.deleteMany({}),
+    PurchaseHistoryCollectionModel.deleteMany({}),
+    UserCollectionModel.deleteMany({}),
+    UserProductCollectionModel.deleteMany({})
+  ])
+  .then(() => {
+    DB.close()
+    done()
+  })
 })

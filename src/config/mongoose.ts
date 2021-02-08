@@ -35,5 +35,9 @@ export default {
       })
       .then(() => console.log('mongoDB connected...'));
     return mongoose.connection;
+  },
+  close: () => {
+    mongoose.connection.close()
+    return true
   }
 }

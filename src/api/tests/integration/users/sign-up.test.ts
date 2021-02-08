@@ -1,16 +1,25 @@
+/**
+ * @lib
+ */
 import supertest from 'supertest'
 import {assert, expect} from 'chai'
 import faker from 'faker'
-import App from '../../../index'
 import httpStatus from 'http-status'
+/**
+ * @main_App
+ */
+import App from '../../../../index'
+
 const http = supertest(App)
-const signInObjc = {
+
+export const signInObjc = {
   email: faker.internet.email(),
   name: faker.name.findName(),
   password: 'asdasd123123',
   mobileNumber: faker.phone.phoneNumber('+639##########')
 }
-describe('@Auth Service', () => {
+
+describe('@Signup Service', () => {
   let signUpResponse = <any>{}
   it('Sign-Up User', (done) => {
      http
@@ -41,7 +50,8 @@ describe('@Auth Service', () => {
   })
   it('should verify the user', (done) => {
     http
-      .get(`/v1/auth/sign-up/verify?token=${signUpResponse.token}`)
+      .get(`/v1/auth/sign-up/verify`)
+      .query({token: signUpResponse.token})
       .expect(httpStatus.OK)
       .then((data) => {
         const {success, result} = data.body
@@ -55,10 +65,10 @@ describe('@Auth Service', () => {
   })
   it('should failed. invalid token for verify user', (done) => {
     http
-      .get(`/v1/auth/sign-up/verify?token=x${signUpResponse.token}`)
+      .get(`/v1/auth/sign-up/verify`)
+      .query({token: signUpResponse.token})
       .expect(httpStatus.OK)
-      .then((data) => {
-        const {success, result} = data.body
+      .then(({body, status}) => {
         assert.isOk(false)
         done(true)
       })

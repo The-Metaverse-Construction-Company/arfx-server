@@ -18,7 +18,7 @@ export class ValidateUserPasswordService {
         _id: userId
       })
       if (!user || !(this.deps.comparePassword(password, user.password))) {
-        throw new Error('Invalid credentials.')
+        throw new Error('Invalid user credentials.')
       }
       // removing password field on responsing user data
       //@ts-ignore

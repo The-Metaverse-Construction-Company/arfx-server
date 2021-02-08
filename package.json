@@ -14,7 +14,7 @@
     "build": "tsc .",
     "test": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 20000 --exit --recursive src/api/tests",
     "test:unit": "cross-env NODE_ENV=test mocha src/api/tests/unit",
-    "test:integration": "cross-env NODE_ENV=test mocha --timeout 20000 --exit dist/api/tests/integration/**/*.test.js",
+    "test:integration": "cross-env NODE_ENV=test mocha --timeout 20000 --exit dist/api/tests/integration/index.test.js",
     "test:watch": "cross-env NODE_ENV=test mocha --watch src/api/tests/unit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "postcoverage": "open-cli coverage/lcov-report/index.html",
@@ -24,7 +24,7 @@
     "postdocs": "open-cli docs/index.html",
     "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/index.js",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
-    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+    "docker:dev": "sudo docker exec $(sudo docker ps -a -q -f name=^backend-service$) npm run dev:watch",
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit",
     "docker:test:integration": "sudo docker exec $(sudo docker ps -a -q -f name=^backend-service$) npm run test:integration"
   },

@@ -10,8 +10,6 @@ export const LOGGED_USER = '_loggedUser';
 
 const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
   const error = err || info;
-  console.log('req :>> ', req.body);
-  console.log('req :>> ', req.files);
   //@ts-expect-error
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({

@@ -27,6 +27,7 @@ import {
   authorizeAdminAccount
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
+import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
 router.route('/')
@@ -79,7 +80,7 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Products'
  */
-  .get(authorize(), controller.productListRoute)
+  .get(authorize(), PaginationQueryPipeline, requestValidatorMiddleware, controller.productListRoute)
 router.route('/upload')
   .post(uploader.single('scene'), controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
