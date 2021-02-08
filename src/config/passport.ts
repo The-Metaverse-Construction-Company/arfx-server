@@ -119,20 +119,11 @@ const azureADAuthHandler = async (req: any, done: any = () => null) => {
 export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
 export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy({
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
   identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/.well-known/openid-configuration', 
-  // identityMetadata: 'https://login.microsoftonline.com/common/.well-known/openid-configuration', 
   clientID: '315c2870-ce96-4824-8512-d608b99b20dd',
   audience: '315c2870-ce96-4824-8512-d608b99b20dd',
-  // allowMultiAudiencesInToken: true,
   validateIssuer: true,
-  // isB2C: true,
-  // policyName: 'B2C_1_signupsignin1',
-  // resourceURL: 'https://graph.windows.net',
-  // issuer: 'https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0',
   passReqToCallback: false,
-  // useCookieInsteadOfSession: true,
   scope: ['access_as_user'],
   // scope: ['mail.read', 'offline_access', 'openid', 'profile'],
   loggingNoPII: false,
