@@ -86,9 +86,8 @@ export const authorizeAdminAccount = () => (req: Request, res: Response, next: N
   )(req, res, next);
 export const authAzureAD = () => (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
-    // ['admin-auth'], { session: false },
     ['oauth-bearer'], { session: false },
-    handleJWT(req, res, next, ALLOWED_USER_ROLE.ADMIN),
+    handleJWT(req, res, next, ALLOWED_USER_ROLES),
   )(req, res, next);
 
 export const oAuth = (service: string) =>

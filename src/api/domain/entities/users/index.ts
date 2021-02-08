@@ -48,13 +48,23 @@ export default ({
       password = '',
       role = '',
       stripeCustomerId = '',
-      suspended = false
+      suspended = false,
+      service = {
+        facebook: '',
+        google: '',
+        azureAd: ''
+      }
     }: Partial<IUserEntity>) {
       if (!_id) {
         _id = generateId()
       }
       if (!allowed_roles.includes(role)) {
         throw new Error(`Invalid user roles. Valid Roles: ${allowed_roles.join(', ')}.`)
+      }
+      if (service) {
+        if (service.azureAd && !(typeof(service.azureAd) === 'string')) {
+          throw new Error('service.azureAd must be a string.')
+        }
       }
       this._id = _id
       this.email = email
@@ -63,14 +73,13 @@ export default ({
       this.role = role
       this.suspended = suspended
       this.stripeCustomerId = stripeCustomerId
-      this.password = hash(password)
+      if (password) {
+        this.password = hash(password)
+      }
       // this.avatarUrl = avatarUrl
       this.createdAt = Date.now()
       this.updatedAt = Date.now()
-      this.service = {
-        facebook: '',
-        google: '',
-      }
+      this.service = service
     }
   }
 )

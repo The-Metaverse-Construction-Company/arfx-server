@@ -6,6 +6,9 @@ import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   validateEmail(data: {email: string, userId?: string}): Promise<any>
 }
+interface _ICreateUserParams extends IUserParams {
+  azureAdUserId?: string
+}
 export class CreateUserService {
   constructor (protected deps: IServiceDependencies) {
   }
@@ -14,9 +17,11 @@ export class CreateUserService {
     name = '',
     password = '',
     role = '',
-    mobileNumber = ''
-  }: IUserParams) => {
+    mobileNumber = '',
+    azureAdUserId = ''
+  }: _ICreateUserParams) => {
     try {
+      console.log('Creating users...');
       // initiate user entity to run the validation for business rules.
       const newUser = new UserEntity({
         email: {
@@ -32,12 +37,18 @@ export class CreateUserService {
         name,
         password,
         role,
+        service: {
+          azureAd: azureAdUserId,
+          facebook: '',
+          google: ''
+        }
       })
       // check duplicate email.
       await this.deps.validateEmail({email: newUser.email.value})
       // insert user to the repository.
       await this.deps.repositoryGateway.insertOne(newUser)
       //add some logs
+      console.log('User created.');
       return newUser
     } catch (error) {
       console.log('failed to create new user. \nError: ', error);

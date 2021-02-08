@@ -55,8 +55,7 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
   },
   password: {
     type: String,
-    default: '',
-    required: true
+    default: ''
   },
   role: {
     type: String,
@@ -73,6 +72,10 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
       default: '',
     },
     google: {
+      type: String,
+      default: '',
+    },
+    azureAd: {
       type: String,
       default: '',
     },

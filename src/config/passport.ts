@@ -13,7 +13,10 @@ import {
  * @services
  */
 import {
-  userVerifyToken
+  userVerifyToken,
+  verifyUserService,
+  createUserService,
+  userDetails
 } from '../api/service-configurations/users'
 import {
   adminAccountVerifyAuthTokenService
@@ -22,6 +25,7 @@ import { TOKEN_TYPE } from '../api/utils/constants';
 import RedisClient from './redis'
 import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
 import AzureADOpt from '../config/azure-ad'
+import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
 const jwtOptions = {
   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
@@ -65,10 +69,29 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
 };
 const azureADAuthHandler = async (req: any, done: any = () => null) => {
 
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22 :>> xxxxxxxxxxxx', req);
-  console.log('object :>> ', done);
-  done(null, req.oid)
-  return
+  try {
+    const user = await userDetails()
+      .findByAzureAdUserId(req.oid)
+      .catch(async (err) => {
+        if (err.message === 'No data found.') {
+          const newUser = await createUserService()
+            .createOne({
+              name: req.name,
+              email: req.preferred_username,
+              mobileNumber: '',
+              password: '',
+              azureAdUserId: req.oid,
+              role: ALLOWED_USER_ROLE.USER
+            })
+          const user  = await verifyUserService().verifyOne(newUser._id)
+          return user
+        }
+      })
+    done(null, user)
+    return
+  } catch (error) {
+    done(error, null, {})
+  }
   // try {
   //   const {authorization = ''} = req.headers
   //   const accessToken = authorization.split(' ')[1]
