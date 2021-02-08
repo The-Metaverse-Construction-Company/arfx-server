@@ -274,9 +274,9 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
             .then(() => {
               resolve(newFilepath)
               setTimeout(() => {
+                // unlike or remove the newly created image after 1000.
                 fs.unlinkSync(newFilepath)
               }, 1000)
-              return newFilepath
             })
             break;
           case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
