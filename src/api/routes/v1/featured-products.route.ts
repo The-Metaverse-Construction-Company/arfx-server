@@ -3,11 +3,11 @@ import validate from 'express-validation'
 import * as controller from '../../controllers/featured-product.controller'
 import * as validations from '../../validations/featured-products.validation'
 import {
-  authorizeAdminAccount
+  authorizeAdminAccount,
+  authorize
 } from '../../middlewares/auth'
 import { requestValidatorMiddleware } from '../../validations'
 const router = express.Router();
-router.use(authorizeAdminAccount())
 router.route('/')
 /**
  * @swagger
@@ -25,7 +25,7 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .post(validations.FormPipeline, requestValidatorMiddleware, controller.createFeaturedProductRoute)
+  .post(authorizeAdminAccount(), validations.FormPipeline, requestValidatorMiddleware, controller.createFeaturedProductRoute)
 /**
  * @swagger
  * paths:
@@ -45,7 +45,7 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(controller.featuredProductListRoute)
+  .get(authorize(), controller.featuredProductListRoute)
 
 router.route('/:featuredProductId')
 /**
@@ -66,7 +66,7 @@ router.route('/:featuredProductId')
  *        '201':
  *          description: "ACCEPTED"
  */
-  .patch(controller.updateFeaturedProductRoute)
+  .patch(authorizeAdminAccount(), controller.updateFeaturedProductRoute)
 /**x
  * @swagger
  * paths:
@@ -83,6 +83,6 @@ router.route('/:featuredProductId')
  *        '201':
  *          description: "ACCEPTED"
  */
-  .delete(controller.removeFeaturedProductRoute);
+  .delete(authorizeAdminAccount(), controller.removeFeaturedProductRoute);
 
 export default router;
