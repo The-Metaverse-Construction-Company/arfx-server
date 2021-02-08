@@ -24,7 +24,6 @@ export class VerifiedUserService {
         email: user.email.value,
         name: user.name
       })
-      console.log('customerId :>> ', customerId);
       // initiate user entity to validate the updated if allowed on the business rules.
       const validatedUser = new UserEntity({
         ...user,

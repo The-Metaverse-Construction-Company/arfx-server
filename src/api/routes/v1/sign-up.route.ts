@@ -1,8 +1,9 @@
 import express, {Request, Response} from 'express'
 import validate from 'express-validation'
 import * as controller from '../../controllers/sign-up.controller'
+import { requestValidatorMiddleware } from '../../validations';
 import {
-  register,
+  register, signUpValidationPipeline,
 } from '../../validations/auth.validation'
 
 const router = express.Router();
@@ -20,7 +21,7 @@ const router = express.Router();
  *          $ref: '#/components/responses/signUp'
  */
 router.route('/')
-  .post(validate(register), controller.signUpRoute);
+  .post(signUpValidationPipeline, requestValidatorMiddleware, controller.signUpRoute);
 /**
  * @swagger
  *  /v1/auth/sign-up/verify:

@@ -41,11 +41,7 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
               },
               {
                 $project: {
-                  name: 1,
-                  title: 1,
-                  description: 1,
-                  previewImageURL: 1,
-                  previewVideoURL: 1,
+                  contentZip: 0,
                 }
               },
               {

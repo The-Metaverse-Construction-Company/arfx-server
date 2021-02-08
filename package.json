@@ -8,10 +8,10 @@
     "yarn": "*"
   },
   "scripts": {
-    "start": "node ./dist/index.js",
-    "dev": "nodemon -L ./dist/index.js",
+    "start": "node ./dist/server.js",
+    "dev": "nodemon -L ./dist/server.js",
     "dev:watch": "tsc -w",
-    "build": "tsc",
+    "build": "tsc .",
     "test": "cross-env NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 20000 --exit --recursive src/api/tests",
     "test:unit": "cross-env NODE_ENV=test mocha src/api/tests/unit",
     "test:integration": "cross-env NODE_ENV=test mocha --timeout 20000 --exit dist/api/tests/integration/**/*.test.js",
@@ -25,7 +25,8 @@
     "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/index.js",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
-    "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
+    "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit",
+    "docker:test:integration": "sudo docker exec $(sudo docker ps -a -q -f name=^backend-service$) npm run test:integration"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.4.0",
@@ -81,6 +82,7 @@
     "@types/chai": "^4.2.14",
     "@types/connect-busboy": "0.0.2",
     "@types/cors": "^2.8.9",
+    "@types/faker": "^5.1.6",
     "@types/helmet": "^4.0.0",
     "@types/into-stream": "^3.1.1",
     "@types/jwt-simple": "^0.5.33",
@@ -102,6 +104,7 @@
     "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^12.0.1",
     "eslint-plugin-import": "^2.2.0",
+    "faker": "^5.3.1",
     "husky": "^3.0.7",
     "mocha": "^6.2.3",
     "nodemon": "^2.0.1",

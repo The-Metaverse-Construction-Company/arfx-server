@@ -8,7 +8,7 @@ export const TOKEN_TYPE = {
   RESET_PASSWORD: 'RESET_PASSWORD',
 }
 
-export const BACKEND_HOST = `http://localhost:3000`
+export const BACKEND_HOST = process.env.BACKEND_HOST || `http://localhost:3000`
 export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
 export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || ''
