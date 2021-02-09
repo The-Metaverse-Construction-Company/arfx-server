@@ -33,7 +33,7 @@ import './admin/products/index.test'
 // import './users/products.test'
 before((done) => {
   // overwrite the logger function
-  // console.log = () => ({})
+  console.log = () => ({})
   PaymentGateway.customer = {
     create: async () => uuid(),
     //@ts-expect-error
@@ -49,7 +49,7 @@ after((done) => {
    Promise.all([
     AdminAccountCollectionModel.deleteMany({}),
     ProductBannerCollectionModel.deleteMany({}),
-    // ProductCollectionModel.deleteMany({}),
+    ProductCollectionModel.deleteMany({}),
     PurchaseHistoryCollectionModel.deleteMany({}),
     UserCollectionModel.deleteMany({}),
     UserProductCollectionModel.deleteMany({})

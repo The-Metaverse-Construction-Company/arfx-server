@@ -11,7 +11,7 @@ import {
   removeProduct,
   updateProductPublishStatus
 } from '../service-configurations/products'
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
 import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
@@ -191,7 +191,9 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
     res.locals['productDetails'] = product
     next()
   } catch (error) {
-    next(error)
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
@@ -221,7 +223,9 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(product))
   } catch (error) {
-    next(error)
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 /**
@@ -232,6 +236,7 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
  */
 export const removeProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log('object :>> x');
     const {
       productId = ''
     } = req.params
@@ -240,7 +245,9 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(product))
   } catch (error) {
-    next(error)
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 /**
@@ -290,10 +297,11 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
     if (!blobOriginalFilepath) {
       throw new Error('Invalid url')
     }
-    console.log('blobOriginalFilepath :>> ', blobOriginalFilepath);
     // res.send(blobOriginalFilepath)
     res.sendFile(blobOriginalFilepath)
   } catch (error) {
-    next(error)
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };

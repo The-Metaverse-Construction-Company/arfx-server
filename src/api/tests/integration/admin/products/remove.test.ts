@@ -5,6 +5,7 @@ import supertest from 'supertest'
 import {assert} from 'chai'
 import httpStatus from 'http-status'
 import faker from 'faker'
+import {v4 as uuid} from 'uuid'
 /**
  * @main_app
  */
@@ -14,17 +15,12 @@ import App from '../../../../../index'
  */
 import {adminSignInResponse} from '../auth.test'
 import {addedProductResponse} from './create.test'
-const title = faker.lorem.word(4)
 const request = supertest(App)
-describe('@Update Product API', () => {
-  it('should success update product.', (done) => {
+describe('@Remove Product API', () => {
+  it('should success remove product.', (done) => {
     request
-      .patch(`/v1/products/${addedProductResponse._id}`)
+      .delete(`/v1/products/${addedProductResponse._id}`)
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .field('name', title)
-      .field('title', title)
-      .field('description', faker.lorem.sentence())
-      .field('price', Number(faker.finance.amount(1, 25)))
       .expect(httpStatus.ACCEPTED)
       .then(({body}) => {
         const {success = false, result, errors} = body
@@ -33,34 +29,28 @@ describe('@Update Product API', () => {
       })
       .catch(done)
   })
-  it('should failed creating update due to incorrect variable types for product price.', (done) => {
+  it('should failed removing product again.', (done) => {
     request
-      .patch(`/v1/products/${addedProductResponse._id}`)
+      .delete(`/v1/products/${addedProductResponse._id}`)
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .field('name', title)
-      .field('title', title)
-      .field('description', faker.lorem.sentence())
-      .field('price', 'x12')
       .expect(httpStatus.BAD_REQUEST)
       .then(({body}) => {
         const {success = false, result, errors} = body
         assert.isNotOk(success)
+        assert.isAbove(errors.length, 0, 'errors must not be empty array.')
         done()
       })
       .catch(done)
   })
-  it('should failed update product due to incorrect negative value for product price.', (done) => {
+  it('should failed removing product due to non existing product id', (done) => {
     request
-      .patch(`/v1/products/${addedProductResponse._id}`)
+      .delete(`/v1/products/${uuid()}`)
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .field('name', title)
-      .field('title', title)
-      .field('description', faker.lorem.sentence())
-      .field('price', -15)
       .expect(httpStatus.BAD_REQUEST)
       .then(({body}) => {
         const {success = false, result, errors} = body
         assert.isNotOk(success)
+        assert.isAbove(errors.length, 0, 'errors must not be empty array.')
         done()
       })
       .catch(done)
