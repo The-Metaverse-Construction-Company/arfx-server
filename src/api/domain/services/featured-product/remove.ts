@@ -15,6 +15,9 @@ export class RemoveFeaturedProductService {
       const removedFeaturedProduct = await this.deps.repositoryGateway.removeOne({
         _id: bannerId
       })
+      if (!removedFeaturedProduct) {
+        throw new Error('No featured product found.')
+      } 
       //add some logs
       return removedFeaturedProduct
     } catch (error) {

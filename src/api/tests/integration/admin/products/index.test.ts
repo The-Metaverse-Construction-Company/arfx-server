@@ -1,5 +1,0 @@
-import './create.test'
-import './lists.test'
-import './update.test'
-import './update-published-status.test'
-import './remove.test'

@@ -29,9 +29,9 @@ describe('@Create Product API', () => {
     request
       .post('/v1/products')
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .attach('contentZip', path.join(__dirname, '../../../../../../test/products/contentzip.zip'))
-      .attach('previewImage', path.join(__dirname, '../../../../../../test/products/preview-image.png'))
-      .attach('previewVideo', path.join(__dirname, '../../../../../../test/products/preview-video.mp4'))
+      // .attach('contentZip', path.join(__dirname, '../../../../../../test/products/contentzip.zip'))
+      // .attach('previewImage', path.join(__dirname, '../../../../../../test/products/preview-image.png'))
+      // .attach('previewVideo', path.join(__dirname, '../../../../../../test/products/preview-video.mp4'))
       .field('name', title)
       .field('title', title)
       .field('description', faker.lorem.sentence())

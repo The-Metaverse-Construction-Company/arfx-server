@@ -22,9 +22,7 @@ import DB from '../../../config/mongoose'
 /**
  * @admin_tester
  */
-import './admin/admin-accounts.test'
-import './admin/auth.test'
-import './admin/products/index.test'
+import './admin/index.test'
 /**
  * @user_tester
  */
