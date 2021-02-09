@@ -60,7 +60,11 @@ router.route('/')
       name: 'contentZip',
       maxCount: 1,
     }
-  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute, controller.createProductRoute)
+  ]),
+  validations.ProductFormValidationPipeline,
+  requestValidatorMiddleware,
+  controller.mapProductUploadedBlobRoute,
+  controller.createProductRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
 /**
  * @swagger
@@ -80,7 +84,12 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Products'
  */
-  .get(authorize(), PaginationQueryPipeline, requestValidatorMiddleware, controller.productListRoute)
+  .get(
+    authorize(),
+    PaginationQueryPipeline,
+    requestValidatorMiddleware,
+    controller.productListRoute
+  )
 router.route('/upload')
   .post(uploader.single('scene'), controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
@@ -134,7 +143,11 @@ router.route('/:productId')
       name: 'contentZip',
       maxCount: 1,
     }
-  ]), validate(validations.CreateProductValidation), controller.mapProductUploadedBlobRoute,controller.updateProductRoute)
+  ]), 
+  validations.ProductFormValidationPipeline,
+  requestValidatorMiddleware,
+  controller.mapProductUploadedBlobRoute,
+  controller.updateProductRoute)
   /**
  * @swagger
  * /v1/products/{productId}:
