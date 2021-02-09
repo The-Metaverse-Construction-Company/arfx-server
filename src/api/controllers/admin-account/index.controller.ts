@@ -19,7 +19,7 @@ import {
 /**
  * @helpers
  */
-import { successReponse } from '../../helper/http-response'
+import { errorResponse, successReponse } from '../../helper/http-response'
 /**
  * @public
  * create admin account
@@ -80,7 +80,8 @@ export const adminAccountDetailsRoute = async (req: Request, res: Response, next
     res.status(httpStatus.OK)
       .json(successReponse(adminAccount))
   } catch (error) {
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .json(errorResponse([error.message]))
   }
 };
 /**

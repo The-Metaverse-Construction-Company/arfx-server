@@ -21,7 +21,9 @@ import './users/update-suspend-status.test'
 /**
  * @admin_acounts
  */
-import './admin-accounts.test'
+import './accounts/create.test'
+import './accounts/update.test'
+import './accounts/details.test'
 /**
  * @auth
  */

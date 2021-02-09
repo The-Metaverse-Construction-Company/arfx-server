@@ -9,7 +9,7 @@ import httpStatus from 'http-status'
  * @main_App
  */
 import App from '../../../../index'
-import {adminSignUpResponse} from './admin-accounts.test'
+import {adminSignUpResponse} from './accounts/create.test'
 import { IAdminAccountsEntity } from '../../../domain/entities/admin-accounts'
 const http = supertest(App)
 export let adminSignInResponse = <{token: string, admin: IAdminAccountsEntity}>{}
@@ -19,7 +19,7 @@ describe('@Sign In Admin Account Service', () => {
      http
       .post('/v1/admin-accounts/auth/sign-in')
       .send({
-        username: adminSignUpResponse.admin.email.value,
+        username: adminSignUpResponse.email.value,
         password: adminPassword
       })
       .expect(httpStatus.CREATED)
@@ -35,7 +35,7 @@ describe('@Sign In Admin Account Service', () => {
     http
       .post('/v1/admin-accounts/auth/sign-in')
       .send({
-        username: adminSignUpResponse.admin.email.value + 'x',
+        username: faker.internet.email(),
         password: adminPassword,
       })
       .expect(httpStatus.BAD_REQUEST)
@@ -51,7 +51,7 @@ describe('@Sign In Admin Account Service', () => {
     http
       .post('/v1/admin-accounts/auth/sign-in')
       .send({
-        username: adminSignUpResponse.admin.email.value,
+        username: adminSignUpResponse.email.value,
         password: adminPassword + 'x',
       })
       .expect(httpStatus.BAD_REQUEST)
