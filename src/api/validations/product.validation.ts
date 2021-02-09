@@ -1,7 +1,10 @@
 import Joi from 'joi'
+import {param} from 'express-validator'
+import {extractValue} from 'ts-enum-extractor'
 import {
-  IProdutBody
+  IProdutBody, PRODUCT_BLOB_TYPE
 } from '../domain/entities/product'
+const AvailableBlobType = extractValue(PRODUCT_BLOB_TYPE)
   // POST /v1/auth/register
 export const CreateProductValidation = <{body: Record<keyof IProdutBody, any>}>{
   body: {
@@ -44,3 +47,8 @@ export const ProductListValidation = {
       Joi.number(),
   }
 }
+export const ProductBlobTypeValidationPipeline = [
+  param('blobType')
+  .isIn(AvailableBlobType)
+  .withMessage(`Invalid blob type. is either ${AvailableBlobType.join(', ')} of this only.`)
+]

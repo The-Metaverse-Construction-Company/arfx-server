@@ -6,7 +6,7 @@ import {
   IUserProductsEntity
 } from '../../../../api/domain/entities/user-products'
 import { COLLECTION_NAMES } from '../constants/collection-names'
-
+import {ProductBlobObject} from './product.model'
 export interface IUserProductsRepositoryModel extends Document, IUserProductsEntity {
   _id: any
 }
@@ -26,18 +26,9 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
     default: '',
     required: true,
   },
-  contentURL: {
-    type: String,
-    default: ''
-  },
-  previewImageURL: {
-    type: String,
-    default: ''
-  },
-  previewVideoURL: {
-    type: String,
-    default: ''
-  },
+  contentZip: ProductBlobObject,
+  previewImage: ProductBlobObject,
+  previewVideo: ProductBlobObject,
   description: {
     type: String,
     default: '',

@@ -27,6 +27,7 @@ import {
   authorizeAdminAccount
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
+import { requestValidatorMiddleware } from '../../validations'
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
 router.route('/')
@@ -192,7 +193,11 @@ router.route('/:productId/published')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-router.route('/:productId/content-zip')
-  .get(controller.downloadContentZipRoute)
+router.route('/:productId/:blobType.:fileType')
+  .get(
+    validations.ProductBlobTypeValidationPipeline,
+    requestValidatorMiddleware,
+    controller.downloadContentZipRoute
+    )
 
 export default router;

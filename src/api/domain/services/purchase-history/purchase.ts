@@ -44,14 +44,18 @@ export class PurchaseProductService {
       const product = await this.dependencies.productDetailsService.findOne(purchaseBody.productId)
       // initialize purchase entity
       const newPurchaseHistory = new PurchaseHistoryEntity({
-        ...purchaseBody,
-        amount: product.price,
+        // ...purchaseBody,
+        productId: purchaseBody.productId,
         paymentMethodId: purchaseBody.paymentMethodId,
+        paymentIntentId: purchaseBody.paymentMethodId,
+        amount: product.price,
         userId: user._id,
         title: product.title,
         name: product.name,
         description: product.description,
-        contentURL: product.contentURL,
+        contentZip: product.contentZip,
+        previewImage: product.previewImage,
+        previewVideo: product.previewVideo,
         state: PURCHASE_HISTORY_STATE.PENDING,
       })
       
@@ -75,9 +79,9 @@ export class PurchaseProductService {
         description: product.description,
         name: product.name,
         productId: product._id,
-        contentURL: product.contentURL,
-        previewVideoURL: product.previewVideoURL,
-        previewImageURL: product.previewImageURL,
+        contentZip: product.contentZip,
+        previewVideo: product.previewVideo,
+        previewImage: product.previewImage,
         title: product.title,
         userId: user._id
       })

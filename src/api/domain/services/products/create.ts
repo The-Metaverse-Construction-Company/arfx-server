@@ -1,6 +1,6 @@
 import {
   IProdutBody,
-  IProductRepositoryGateway
+  IProductRepositoryGateway,
 } from '../../entities/product'
 import {
   ProductEntity
@@ -25,20 +25,25 @@ export class CreateProductService {
    */
   public createOne = async (productBody: IProdutParams, adminAccountId: string) => {
     try {
-      const {contentZip, previewVideo, previewImage} = productBody
+      const {contentZip, previewVideo, previewImage, discountPercentage = 0, published = true} = productBody
       const newProductEntity = new ProductEntity({
-        ...productBody,
+        name: productBody.name,
+        description: productBody.description,
+        title: productBody.title,
         adminAccountId: adminAccountId,
+        price: productBody.price,
+        published,
+        discountPercentage
       })
       // upload to cloud storage provider
-      const {contentURL, previewImageURL, previewVideoURL} = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
+      const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
         contentZip,
         previewImage,
         previewVideo
       })
-      newProductEntity.previewImageURL = previewImageURL || ''
-      newProductEntity.previewVideoURL = previewVideoURL || ''
-      newProductEntity.contentURL = contentURL || ''
+      newProductEntity.previewImage = blobResponse.previewImage
+      newProductEntity.previewVideo = blobResponse.previewVideo
+      newProductEntity.contentZip = blobResponse.contentZip
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs

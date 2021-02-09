@@ -2,9 +2,10 @@ import {
   IGeneralEntityProperties,
 } from '../../interfaces/index'
 import {
+  IProductBlob,
   IProductParams
 } from '../product'
-export interface IUserProductsParams extends IProductParams {
+export interface IUserProductsParams extends IProductParams, IProductBlob {
   userId: string
   // productURL: string
   // name: string
