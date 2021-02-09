@@ -39,8 +39,8 @@ export const UserDetailsMiddleware = async (req: Request, res: Response, next: N
  * Get customer/user detail based on the requestParams.userId
  */
 export const UserDetailsRoute = (req: Request, res: Response) => {
-  res.status(httpStatus.ACCEPTED)
-        .send(successReponse(res.locals['user']))
+  res.status(httpStatus.OK)
+     .send(successReponse(res.locals['user']))
 }
 
 /**

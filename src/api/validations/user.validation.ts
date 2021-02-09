@@ -24,7 +24,8 @@ export const createUser = {
     role: Joi.string().valid(allowed_roles),
   },
 }
-export const createUserPipeline = [
+
+export const UserFormValidationPipeline = [
   body('email')
     .isString()
     .withMessage('Invalid variable type. must be string.')
@@ -34,14 +35,16 @@ export const createUserPipeline = [
   body('name')
     .isString()
     .matches(HumanNamePattern),
-  body('password')
-    .isString(),
-    // .matches() // enable to if you already have a pattern for the password.
   body('role')
     .isString()
     .isIn(allowed_roles)
     .optional()
-    
+]
+export const createUserPipeline = [
+  ...UserFormValidationPipeline,
+  body('password')
+    .isString(),
+    // .matches() // enable to if you already have a pattern for the password.
 ]
 // PUT /v1/users/:userId
 export const replaceUser = {

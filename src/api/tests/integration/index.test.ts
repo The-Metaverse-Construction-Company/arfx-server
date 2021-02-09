@@ -26,9 +26,7 @@ import './admin/index.test'
 /**
  * @user_tester
  */
-// import './users/sign-up.test'
-// import './users/sign-in.test'
-// import './users/products.test'
+import './users/index.test'
 before((done) => {
   // overwrite the logger function
   console.log = () => ({})
