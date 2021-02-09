@@ -13,6 +13,12 @@ import './featured-products/update.test'
 import './featured-products/remove.test'
 import './featured-products/lists.test'
 /**
+ * @users
+ */
+import './users/create.test'
+import './users/update.test'
+import './users/update-suspend-status.test'
+/**
  * @admin_acounts
  */
 import './admin-accounts.test'

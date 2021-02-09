@@ -3,7 +3,7 @@ import {body} from 'express-validator'
 import {
   ALLOWED_USER_ROLE
 } from '../domain/entities/users'
-import { HumanNamePattern } from '../utils/regex-pattern'
+import { EmailAddressPattern, HumanNamePattern } from '../utils/regex-pattern'
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
 // GET /v1/users
 export const listUsers = {
@@ -27,9 +27,10 @@ export const createUser = {
 export const createUserPipeline = [
   body('email')
     .isString()
-    .withMessage('email must be string.')
+    .withMessage('Invalid variable type. must be string.')
     .bail()
-    .isEmail(),
+    .matches(EmailAddressPattern)
+    .withMessage('Invalid email address format.'),
   body('name')
     .isString()
     .matches(HumanNamePattern),

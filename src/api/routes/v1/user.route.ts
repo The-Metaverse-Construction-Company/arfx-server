@@ -73,7 +73,11 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .post(authorizeAdminAccount(), createUserPipeline, requestValidatorMiddleware, controller.CreateUserRoute);
+  .post(authorizeAdminAccount(), 
+    createUserPipeline,
+    requestValidatorMiddleware,
+    controller.CreateUserRoute
+    );
 
 router
   .route('/:userId')
