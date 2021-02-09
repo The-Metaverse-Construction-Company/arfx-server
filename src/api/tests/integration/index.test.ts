@@ -1,3 +1,11 @@
+/**
+ * @lib
+ */
+import faker from 'faker'
+import {v4 as uuid} from 'uuid'
+/**
+ * @repository_collections
+ */
 import {
   AdminAccountCollectionModel,
   ProductBannerCollectionModel,
@@ -6,13 +14,23 @@ import {
   UserCollectionModel,
   UserProductCollectionModel
 } from '../../../app-plugins/persistence/repository/models/index.model'
+/**
+ * @configs
+ */
 import PaymentGateway from '../../../config/payment-gateway'
-import faker from 'faker'
-import {v4 as uuid} from 'uuid'
 import DB from '../../../config/mongoose'
-import './sign-up.test'
-import './sign-in.test'
-import './products.test'
+/**
+ * @admin_tester
+ */
+import './admin/admin-accounts.test'
+import './admin/auth.test'
+import './admin/products/index.test'
+/**
+ * @user_tester
+ */
+// import './users/sign-up.test'
+// import './users/sign-in.test'
+// import './users/products.test'
 before((done) => {
   // overwrite the logger function
   // console.log = () => ({})

@@ -16,7 +16,7 @@ import {
 /**
  * @helpers
  */
-import { successReponse } from '../../helper/http-response'
+import { errorResponse, successReponse } from '../../helper/http-response'
 /**
  * @public
  * create admin account
@@ -36,7 +36,9 @@ export const signInAdminAccountRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.CREATED)
       .json(successReponse(response))
   } catch (error) {
-    next(error)
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 export const validateAuthTokenRoute = async (req: Request, res: Response, next: NextFunction) => {
