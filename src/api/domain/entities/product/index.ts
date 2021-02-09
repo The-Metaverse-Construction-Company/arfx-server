@@ -1,33 +1,54 @@
 import {
-  IProductEntity
+  IProductBlob,
+  IProductBlobProperties,
+  IProductEntity,
+  IProductParams
 } from './interfaces'
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
 
+export * from './constants'
 export * from './interfaces'
 export * from './RepositoryGatewayInterfaces'
 
 interface Dependencies extends IGeneralEntityDependencies {
   
 }
+export class ProductCoreEntity {
+  public readonly name!: string
+  public readonly title!: string
+  public readonly description!: string
+  public contentZip!: IProductBlobProperties
+  public previewVideo!: IProductBlobProperties
+  public previewImage!: IProductBlobProperties
+  constructor ({
+    name,
+    title,
+    description,
+    contentZip,
+    previewImage,
+    previewVideo
+  }: IProductParams & IProductBlob) {
+    this.name = name
+    this.title = title
+    this.description = description
+    this.contentZip = contentZip
+    this.previewImage = previewImage
+    this.previewVideo = previewVideo
+  }
+}
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IProductEntity {
+  class ProductEntity extends ProductCoreEntity implements IProductEntity  {
     public readonly _id!: string
-    public readonly name!: string
-    public readonly title!: string
-    public readonly description!: string
     public readonly published: boolean = true
     // public readonly stripeCustomerId!: string
     public readonly price!: number
     public readonly adminAccountId!: string
     public readonly purchaseCount!: number
     public readonly discountPercentage!: number
-    public contentURL!: string
-    public previewVideoURL!: string
-    public previewImageURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
@@ -38,16 +59,23 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentURL = '',
-      previewVideoURL = '',
-      previewImageURL = '',
+      contentZip = {blobURL: '', originalFilepath: ''},
+      previewVideo = {blobURL: '', originalFilepath: ''},
+      previewImage = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IProductEntity>) {
-      
+      super({
+        title,
+        name,
+        description,
+        contentZip,
+        previewImage,
+        previewVideo,
+      })
       price = parseFloat(<any>price)
       discountPercentage = parseFloat(<any>discountPercentage)
       if (!_id) {
@@ -69,16 +97,10 @@ export default ({
       }
       // add additional business rules here if needed.
       this._id = _id
-      this.name = name
-      this.description = description
       this.price = price
       this.discountPercentage = discountPercentage
-      this.contentURL = contentURL
-      this.previewVideoURL = previewVideoURL
-      this.previewImageURL = previewImageURL
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
-      this.title = title
       this.published = published
       // this.stripeCustomerId = stripeCustomerId
       this.updatedAt = updatedAt

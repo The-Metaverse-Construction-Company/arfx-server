@@ -26,10 +26,11 @@ export class UpdateProduct {
    */
   public updateOne = async (productId: string, productBody: IProductParams) => {
     try {
-      const {contentZip, previewVideo, previewImage} = productBody
+      const {contentZip, previewVideo, previewImage, ..._productBody} = productBody
+      // initiate product entity to validate the submitted fields on the business rules.
       const newProductEntity = new ProductEntity({
-        ...productBody,
-        _id: productId
+        ..._productBody,
+        _id: productId,
       })
       const fieldsToUpdate = <Partial<IProductEntity>> {
         name: newProductEntity.name,
@@ -40,20 +41,14 @@ export class UpdateProduct {
         updatedAt: newProductEntity.updatedAt,
       }
       // upload to cloud storage provider
-      const {contentURL, previewImageURL, previewVideoURL} = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
+      const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
         contentZip,
         previewImage,
         previewVideo
       })
-      if (previewImageURL) {
-        fieldsToUpdate.previewImageURL = previewImageURL
-      }
-      if (previewVideoURL) {
-        fieldsToUpdate.previewVideoURL = previewVideoURL
-      }
-      if (contentURL) {
-        fieldsToUpdate.contentURL = contentURL
-      }
+      // merge to fieldsToUpload object
+      Object.assign(fieldsToUpdate, blobResponse)
+      // update to repository
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: newProductEntity._id
       }, fieldsToUpdate)

@@ -49,7 +49,7 @@ after((done) => {
    Promise.all([
     AdminAccountCollectionModel.deleteMany({}),
     ProductBannerCollectionModel.deleteMany({}),
-    ProductCollectionModel.deleteMany({}),
+    // ProductCollectionModel.deleteMany({}),
     PurchaseHistoryCollectionModel.deleteMany({}),
     UserCollectionModel.deleteMany({}),
     UserProductCollectionModel.deleteMany({})
