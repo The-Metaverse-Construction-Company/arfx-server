@@ -29,5 +29,27 @@ export class UserProductRepository extends GeneralRepository<IUserProductsEntity
       }
     ], filterQuery)
   }
-
+  /**
+   * get user product details by userId
+   * @param userId 
+   * @param id either userProductId or productId
+   */
+  public getOneByUserId = async (userId: string, id: string) => {
+    try {
+      const userProductDetails = await this.collectionModel.findOne({
+        userId,
+        $or: [
+          {
+            _id: id
+          },
+          {
+            productId: id
+          },
+        ]
+      })
+      return userProductDetails
+    } catch (error) {
+      throw error
+    }
+  }
 }

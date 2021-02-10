@@ -12,7 +12,8 @@ import {
   UserDetailsService
 } from '../users'
 import {
-  CreateUserProductsService
+  CreateUserProductsService,
+  UserProductDetailsService
 } from '../user-products'
 import { IGeneralServiceDependencies } from '../../interfaces';
 import { IUserEntity } from '../../entities/users';
@@ -27,6 +28,7 @@ interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRep
   productDetailsService: ProductDetails
   userDetailsService: UserDetailsService
   createUserProductsService: CreateUserProductsService
+  userProductDetailsService: UserProductDetailsService
 }
 export class PurchaseProductService {
   constructor(protected dependencies: IDependencies) {
@@ -38,6 +40,11 @@ export class PurchaseProductService {
   public purchaseOne = async (userId: string, purchaseBody: IPurchaseHistoryParams) => {
     try {
       console.log('purchaseBody :>> ', purchaseBody);
+      // check first if the product selected product is already brought by user/customer
+      const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
+      if (purchasedProduct) {
+        throw new Error('Failed to purchase this product. Product already purchased by this user.')
+      }
       // fetch user data.
       const user = await this.dependencies.userDetailsService.findOne(userId)
       // fetch product data.

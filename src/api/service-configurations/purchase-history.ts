@@ -12,7 +12,8 @@ import {
   userDetails
 } from './users'
 import {
-  createUserProductsService
+  createUserProductsService,
+  userProductDetailsService
 } from './user-products'
 
 import {
@@ -25,6 +26,7 @@ export const purchaseProductService = () => (
     productDetailsService: productDetails(),
     userDetailsService: userDetails(),
     createUserProductsService: createUserProductsService(),
+    userProductDetailsService: userProductDetailsService(),
     payment: {
       chargeCustomer: PaymentGateway.customer.charge,
       setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents

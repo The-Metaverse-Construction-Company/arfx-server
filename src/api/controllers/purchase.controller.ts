@@ -8,7 +8,7 @@ import {
   purchaseHistoryDetails
 } from '../service-configurations/purchase-history'
 
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
 /**
  * @public
@@ -26,7 +26,8 @@ export const purchaseProductRoute = async (req: Request, res: Response, next: Ne
     res.status(httpStatus.CREATED)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .json(errorResponse([error.message]))
   }
 };
 /**

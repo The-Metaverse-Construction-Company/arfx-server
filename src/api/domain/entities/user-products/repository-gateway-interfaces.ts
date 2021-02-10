@@ -8,4 +8,5 @@ import {
 
 export interface IUserProductsRepositoryGateway extends IGeneralRepositoryGateway<IUserProductsEntity> {
   getPaginationList: (userId: string, filterQuery: IPaginationParameters) => Promise<IAggregatePaginationResponse<IUserProductsEntity>>
+  getOneByUserId: (userId: string, id: string) => Promise<IUserProductsEntity|null>
 }
