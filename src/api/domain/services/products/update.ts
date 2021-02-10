@@ -28,8 +28,12 @@ export class UpdateProduct {
     try {
       const {contentZip, previewVideo, previewImage, ..._productBody} = productBody
       // initiate product entity to validate the submitted fields on the business rules.
+      const product = await this.dependencies.repositoryGateway.findOne({
+        _id: productId
+      })
       const newProductEntity = new ProductEntity({
         ..._productBody,
+         version: product.version,
         _id: productId,
       })
       const fieldsToUpdate = <Partial<IProductEntity>> {
@@ -46,6 +50,11 @@ export class UpdateProduct {
         previewImage,
         previewVideo
       })
+      console.log('blobResponse :>> ', blobResponse);
+      if (blobResponse.contentZip) {
+        fieldsToUpdate.version = (newProductEntity.version + 1)
+      }
+      console.log('fieldsToUpdate :>> ', fieldsToUpdate);
       // merge to fieldsToUpload object
       Object.assign(fieldsToUpdate, blobResponse)
       // update to repository

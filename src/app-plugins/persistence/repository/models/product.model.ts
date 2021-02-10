@@ -49,6 +49,10 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  version: {
+    type: Number,
+    default: 0,
+  },
   discountPercentage: {
     type: Number,
     default: 0,

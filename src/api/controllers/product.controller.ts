@@ -23,9 +23,9 @@ import ProductImageResize from '../helper/image-resize'
 export const mapProductUploadedBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {previewVideo = [], previewImage = [], contentZip = []} = <any> req.files || {};
-    res.locals['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0].path : undefined
-    res.locals['previewImage'] = previewImage.length >= 1 ? previewImage[0].path : undefined
-    res.locals['contentZip'] = contentZip.length >= 1 ? contentZip[0].path : undefined
+    req.body['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0].path : undefined
+    req.body['previewImage'] = previewImage.length >= 1 ? previewImage[0].path : undefined
+    req.body['contentZip'] = contentZip.length >= 1 ? contentZip[0].path : undefined
     next()
   } catch (error) {
     next(error)
@@ -47,12 +47,7 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
   try {
     const {_id} = <IAdminAccountsEntity>req.user
     const newProduct = await createProduct()
-      .createOne({
-        ...req.body,
-        previewImage: res.locals['previewImage'],
-        previewVideo: res.locals['previewVideo'],
-        contentZip: res.locals['contentZip']
-      }, _id)
+      .createOne(req.body, _id)
     res.status(httpStatus.CREATED)
       .json(successReponse(newProduct))
   } catch (error) {

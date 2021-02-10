@@ -20,6 +20,7 @@ export interface IProdutBody extends IProductParams {
   published: boolean // toggle if it will show it portal or not.
   discountPercentage: number // discount of the scene/product
   price: number // price of the scene. float
+  version: number // version of the product. will increase this every time product is updated.
 }
 export interface IProductEntity extends IProdutBody, IProductBlob, IGeneralEntityProperties {
   adminAccountId: string // admin account who added the product

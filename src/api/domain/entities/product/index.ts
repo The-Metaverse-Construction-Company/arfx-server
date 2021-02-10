@@ -48,6 +48,7 @@ export default ({
     public readonly price!: number
     public readonly adminAccountId!: string
     public readonly purchaseCount!: number
+    public readonly version!: number
     public readonly discountPercentage!: number
     public readonly createdAt!: number
     public readonly updatedAt!: number
@@ -64,6 +65,7 @@ export default ({
       previewImage = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
+      version = 0,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
@@ -95,6 +97,9 @@ export default ({
       if (!description) {
         throw new Error('description must not be null, undefined or empty string.')
       }
+      if (!(typeof(version) === 'number' && version >= 0)) {
+        throw new Error('version must integer and not a negative number.')
+      }
       // add additional business rules here if needed.
       this._id = _id
       this.price = price
@@ -102,7 +107,7 @@ export default ({
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = published
-      // this.stripeCustomerId = stripeCustomerId
+      this.version = version
       this.updatedAt = updatedAt
       this.createdAt = createdAt
     }
