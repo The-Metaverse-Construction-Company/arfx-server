@@ -5,7 +5,7 @@ import {
   IProductBlob,
   IProductParams
 } from '../product'
-export interface IUserProductsParams extends IProductParams, IProductBlob {
+export interface IUserProductsParams {
   userId: string
   // productURL: string
   // name: string

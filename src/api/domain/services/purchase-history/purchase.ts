@@ -77,19 +77,21 @@ export class PurchaseProductService {
         customerId: user.stripeCustomerId,
         paymentMethodId: newPurchaseHistory.paymentMethodId
       })
+      if (authenticated) {
+        // if the payment is authenticated, then set purchase history state to completed.
+        newPurchaseHistory.state = PURCHASE_HISTORY_STATE.COMPLETED
+      }
       newPurchaseHistory.paymentIntentId = paymentIntent.id
       // newPurchaseHistory
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
       // insert the product details on the user products
       await this.dependencies.createUserProductsService.createOne({
-        description: product.description,
-        name: product.name,
         productId: product._id,
-        contentZip: product.contentZip,
-        previewVideo: product.previewVideo,
-        previewImage: product.previewImage,
-        title: product.title,
+        // contentZip: product.contentZip,
+        // previewVideo: product.previewVideo,
+        // previewImage: product.previewImage,
+        // title: product.title,
         userId: user._id
       })
       // add logs
