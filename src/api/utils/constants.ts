@@ -7,7 +7,10 @@ export const TOKEN_TYPE = {
   SIGN_IN: 'SIGN_IN',
   RESET_PASSWORD: 'RESET_PASSWORD',
 }
-
+export const PAYMENT_GATEWAY_CHARGE_STATUSES = {
+  SUCCEEDED: 'succeeded',
+  FAILED: 'failed',
+}
 export const BACKEND_HOST = process.env.BACKEND_HOST || `http://localhost:3000`
 export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES

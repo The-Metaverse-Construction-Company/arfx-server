@@ -1,52 +1,106 @@
-import {Router} from 'express'
+import {Request, NextFunction, Router} from 'express'
+import PaymentGateway, {stripe} from '../../../config/payment-gateway'
+import {
+  purchaseProductService
+} from '../../service-configurations/purchase-history'
+import httpStatus from 'http-status';
 import { PURCHASE_HISTORY_STATE } from '../../domain/entities/purchase-history';
-import {updatePurchaseStateService} from '../../service-configurations/purchase-history'
-const app = Router({mergeParams: true})
+import {updatePurchasePaymentChargeService, updatePurchaseStateService} from '../../service-configurations/purchase-history'
 
+const app = Router({mergeParams: true})
+const middleware = async (request: Request, response: Response, next: NextFunction) => {
+  const sig = request.headers['stripe-signature'] as string
+  const endpointSecret =  process.env.STRIPE_WBS
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(request.body.rawBody, sig, endpointSecret)
+  } catch (error) {
+    
+  }
+}
 app.post('/webhook', (request, response) => {
   let event = request.body;
-  // Handle the event
-  if (!event.data.object.last_payment_error) {
-    response.end()
-    return
+  let state = -1
+  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@event.type xxxxxxx:>> ', event.type);
+  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@event.type xxxxxxx:>> ', event);
+  new Promise((resolve, reject) => {
+    switch (event.type) {
+      case 'payment_intent.failed':
+        resolve(updatePurchaseStateService()
+          .updateOne(event.data.object.id, event.data.object.payment_method, PURCHASE_HISTORY_STATE.FAILED))
+        break;
+      case 'payment_intent.payment_failed':
+        console.log('event.data.object.id :>> ', event.data.object);
+        console.log('event.data.object.id :>> ', event.data.object.id);
+        console.log('event.data.object.id :>> ', event.data.object.status);
+        console.log('event.data.object.last_payment_error.payment_method.id :>> ', event.data.object.last_payment_error.payment_method.id);
+        resolve(updatePurchaseStateService()
+          .updateOne(event.data.object.id, event.data.object.last_payment_error.payment_method.id, PURCHASE_HISTORY_STATE.FAILED))
+        break;
+      case 'payment_intent.succeeded':
+        resolve(updatePurchaseStateService()
+          .updateOne(event.data.object.id, event.data.object.payment_method, PURCHASE_HISTORY_STATE.COMPLETED))
+        break;
+      case 'charge.succeeded':
+        resolve(updatePurchasePaymentChargeService()
+          .updateOne(event.data.object.payment_intent, event.data.object.payment_method, event.data.object.id))
+        break;
+      case 'charge.failed':
+        // resolve(updatePurchaseStateService()
+        //   .updateOne(event.data.payment_intent.id, event.data.payment_method.id, PURCHASE_HISTORY_STATE.FAILED))
+        resolve(true)
+        break;
+      default:
+        resolve(false)
+        break;
+    }
+  })
+  .then(() => {
+    response.sendStatus(httpStatus.OK)
+  })
+  .catch(() => {
+    response.sendStatus(httpStatus.BAD_REQUEST)
+  })
+})
+app.post('/mock-cards', async (request, response) => {
+  let {productId = '', cardDetails = []} = request.body;
+  let state = -1
+  const responsesData = []
+  const userId = 'f1ff1c00-f22c-47aa-86f0-e8a4fde15c48'
+  for (let card of cardDetails) {
+    const result = await new Promise((resolve) => {
+      setTimeout(() => {
+        PaymentGateway.paymentMethod.create({
+          cvc: "123",
+          exp_month: 11,
+          exp_year: 24,
+          number: card
+        })
+        .then((paymentMethod) => {
+          purchaseProductService()
+            .purchaseOne(userId, {
+              keepCardDetails: false,
+              paymentMethodId: paymentMethod.id,
+              productId: productId
+            })
+          resolve({
+            success: true,
+            card,
+            result: 'success'
+          })
+        })
+        .catch((err) => {
+          resolve({
+            success: false,
+            card,
+            result: err.message
+          })
+        })
+      }, 1000)
+    })
+    responsesData.push(result)
   }
-  const {code = '', payment_method, message = ''} = event.data.object?.last_payment_error || {}
-  console.error('failuddre_code :>> ', event.type);
-  console.error('failure_code :>> ', code);
-  console.error('failure_code :>> ', message);
-  console.error('payment_method_details :>> ', payment_method);
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-      // Then define and call a method to handle the successful payment intent.
-      // handlePaymentIntentSucceeded(paymentIntent);
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      console.log('object :>> ', paymentMethod);
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
-      break;
-    case 'payment_intent.payment_failed':
-      console.log('Payment intent failed. ');
-      updatePurchaseStateService()
-        .updateOne(payment_method.id, PURCHASE_HISTORY_STATE.FAILED)
-        .catch((err) => null)
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
-      break;
-    case 'charge.failed':
-      console.log('charge.failed. ');
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
-      break;
-    default:
-      // Unexpected event type
-      console.log(`Unhandled event type ${event.type}.`);
-  }
-  // Return a 200 response to acknowledge receipt of the event
-  response.send();
-});
+  response.send(responsesData)
+})
 
 export default app

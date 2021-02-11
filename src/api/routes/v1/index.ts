@@ -23,7 +23,7 @@ router.use('/docs', express.static('docs'));
 /**
  * @expose_routes
  */
-router.use(StripeRoute)
+router.use('/payment-gateway', StripeRoute)
 router.use('/electron-released-version', ReleasedVersionRoute);
 router.use('/admin-accounts', AdminAccountsRoute);
 router.use('/users', userRoutes);

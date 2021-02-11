@@ -13,6 +13,7 @@ export interface IPurchaseHistoryBody extends Omit<IPurchaseHistoryParams, 'keep
   amount: number // total amount of the purchase.
   userId: string // user who do the action purchase.
   paymentIntentId: string // paymentId/transactionId from stripe.
+  paymentChargeId: string // payment charge Id from stripe.
   state: PURCHASE_HISTORY_STATE // state of the purchase.
 }
 
