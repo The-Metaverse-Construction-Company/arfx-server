@@ -28,7 +28,9 @@ export default ({
     // public readonly contentZip!: IProductBlobProperties
     // public readonly previewImage!: IProductBlobProperties
     // public readonly previewVideo!: IProductBlobProperties
+    
     public paymentIntentId!: string
+    public paymentChargeId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
     public readonly discountPercentage!: number
@@ -38,9 +40,10 @@ export default ({
     constructor ({
       productId = '',
       amount = 0,
-      paymentMethodId = '',
       userId = '',
+      paymentMethodId = '',
       paymentIntentId = '',
+      paymentChargeId = '',
       description = '',
       name = '',
       contentZip = {blobURL: '', originalFilepath: ''},
@@ -69,9 +72,9 @@ export default ({
       if (!productId) {
         throw new Error('productId must not be null, undefined or empty string.')
       }
-      if (!paymentMethodId) {
-        throw new Error('paymentMethodId must not be null, undefined or empty string.')
-      }
+      // if (!paymentMethodId) {
+      //   throw new Error('paymentMethodId must not be null, undefined or empty string.')
+      // }
       if (!userId) {
         throw new Error('userId must not be null, undefined or empty string.')
       }
@@ -80,6 +83,7 @@ export default ({
       this.productId = productId
       this.paymentMethodId = paymentMethodId
       this.paymentIntentId = paymentIntentId
+      this.paymentChargeId = paymentChargeId
       this.userId = userId
       this.amount = amount
       this.state = state
