@@ -30,10 +30,12 @@ import './users/index.test'
 before((done) => {
   // overwrite the logger function
   console.log = () => ({})
+  PaymentGateway.paymentIntent = {
+    //@ts-expect-error
+    create: async () => ({}),
+  }
   PaymentGateway.customer = {
     create: async () => uuid(),
-    //@ts-expect-error
-    charge: async () => ({}),
     //@ts-expect-error
     getPaymentMethods: async () => ({}),
     //@ts-expect-error

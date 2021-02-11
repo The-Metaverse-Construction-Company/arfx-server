@@ -22,7 +22,8 @@ export interface IChargeCustomerPaymentParams {
 }
 interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
   payment: {
-    chargeCustomer(paymentData: IChargeCustomerPaymentParams): Promise<{authenticated: boolean, paymentIntent: any}>
+    createIntent(purchaseHistoryId: string, paymentData: IChargeCustomerPaymentParams): Promise<{authenticated: boolean, paymentIntent: any}>
+    retrieveIntent(paymentMethodId: string): Promise<{authenticated: boolean, paymentIntent: any}>
     setupCustomerPaymentIntent(customerId: string): Promise<any>
   }
   productDetailsService: ProductDetails
@@ -39,12 +40,12 @@ export class PurchaseProductService {
    */
   public purchaseOne = async (userId: string, purchaseBody: IPurchaseHistoryParams) => {
     try {
-      console.log('purchaseBody :>> ', purchaseBody);
+      console.log('======================================================================================================================================');
       // check first if the product selected product is already brought by user/customer
-      const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
-      if (purchasedProduct) {
-        throw new Error('Failed to purchase this product. Product already purchased by this user.')
-      }
+      // const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
+      // if (purchasedProduct) {
+      //   throw new Error('Failed to purchase this product. Product already purchased by this user.')
+      // }
       // fetch user data.
       const user = await this.dependencies.userDetailsService.findOne(userId)
       // fetch product data.
@@ -54,7 +55,6 @@ export class PurchaseProductService {
         // ...purchaseBody,
         productId: purchaseBody.productId,
         paymentMethodId: purchaseBody.paymentMethodId,
-        paymentIntentId: purchaseBody.paymentMethodId,
         amount: product.price,
         userId: user._id,
         title: product.title,
@@ -71,29 +71,26 @@ export class PurchaseProductService {
       if (purchaseBody.keepCardDetails) {
         intentSecret = await this.dependencies.payment.setupCustomerPaymentIntent(user.stripeCustomerId)
       }
-      // charge customer,
-      const {authenticated, paymentIntent} = await this.dependencies.payment.chargeCustomer({
+      // create intent customer and charge the customer.
+      let {authenticated, paymentIntent} = await this.dependencies.payment.createIntent(newPurchaseHistory._id, {
         amount: newPurchaseHistory.amount,
         customerId: user.stripeCustomerId,
         paymentMethodId: newPurchaseHistory.paymentMethodId
+      }).catch((err) => {
+        console.log('err :>> ', err);
+        return {
+          authenticated: false,
+          paymentIntent: err.raw.payment_intent
+        }
       })
-      if (authenticated) {
-        // if the payment is authenticated, then set purchase history state to completed.
-        newPurchaseHistory.state = PURCHASE_HISTORY_STATE.COMPLETED
-      }
+      console.log('paymentIntent :>> ', paymentIntent);
       newPurchaseHistory.paymentIntentId = paymentIntent.id
-      // newPurchaseHistory
-      // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
+      // if (!authenticated) {
+      //   paymentIntent = await this.dependencies.payment.retrieveIntent(paymentIntent.id)
+      // }
+      // insert it thru the repo.
       // insert the product details on the user products
-      await this.dependencies.createUserProductsService.createOne({
-        productId: product._id,
-        // contentZip: product.contentZip,
-        // previewVideo: product.previewVideo,
-        // previewImage: product.previewImage,
-        // title: product.title,
-        userId: user._id
-      })
       // add logs
       return {
         authenticated: authenticated,
