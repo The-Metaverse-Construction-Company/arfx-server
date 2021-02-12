@@ -19,15 +19,15 @@ router.route('/')
 //   }
 // )(req, res, next)
     console.log('objectd :>> ');
-    res.end()
     console.log('object :>> ', req.body);
     console.log('objectxxx :>> ', req.files);
-    console.log('object :>> ', req.query);
+    console.log('objectxxxxxxxxxxxxxxxxxxx :>> ', req.query);
+    res.end()
   })
 router.route('/sign-in')
   .get(authAzureAD(),
   (req, res) => {
-    console.log('object :>> ', req.user);
+    console.log('oxxxxbjaaaaaaaaect :>> ', req.user);
     res.end()
   })
 //Routes

@@ -70,14 +70,17 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
 const azureADAuthHandler = async (req: any, done: any = () => null) => {
 
   try {
+    console.log('req :>> ', req);
     const user = await userDetails()
       .findByAzureAdUserId(req.oid)
       .catch(async (err) => {
         if (err.message === 'No data found.') {
+          const email = req.preferred_username ?? req.emails.length >= 1 ? req.emails[0] : ''
+          const fullName = req.name ?? `${req.given_name} ${req.family_name}` 
           const newUser = await createUserService()
             .createOne({
-              name: req.name,
-              email: req.preferred_username,
+              name: fullName,
+              email: email,
               mobileNumber: '',
               password: '',
               azureAdUserId: req.oid,
@@ -119,12 +122,17 @@ const azureADAuthHandler = async (req: any, done: any = () => null) => {
 export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
 export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy({
-  identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
-  clientID: '315c2870-ce96-4824-8512-d608b99b20dd',
-  audience: '315c2870-ce96-4824-8512-d608b99b20dd',
-  validateIssuer: true,
-  passReqToCallback: false,
-  scope: ['access_as_user'],
+  // identityMetadata: 'https://arfxhomedev.b2clogin.com/arfxhomedev.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/oauth2/v2.0/authorize', 
+  // identityMetadata: 'https://login.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6/.well-known/openid-configuration', 
+  identityMetadata: 'https://arfxhomedev.b2clogin.com/arfxhomedev.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration', 
+  // identityMetadata: 'https://login.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6/v2.0/.well-known/openid-configuration', 
+  clientID: '7dad8244-d201-41a9-9fa1-4236025372df',
+  // audience: '7dad8244-d201-41a9-9fa1-4236025372df',
+  validateIssuer: false,
+  // passReqToCallback: false,
+  isB2C: true,
+  policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
+  scope: ['simple-scope', 'offline_access', 'openid'],
   // scope: ['mail.read', 'offline_access', 'openid', 'profile'],
   loggingNoPII: false,
   loggingLevel: 'info'
