@@ -24,8 +24,8 @@ export const ADMIN_JWT_REFRESH_TOKEN_SECRET = process.env.ADMIN_JWT_REFRESH_TOKE
 export const CLIENT_HOST= process.env.CLIENT_HOST || `http://localhost:3001`
 
 /// STRIPE KEYS ////
-export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
-export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''
+export const STRIPE_SECRET_KEY = (NODE_ENV === 'production' ? process.env.STRIPE_SECRET_KEY : process.env.STRIPE_SECRET_KEY_DEV) || ''
+export const STRIPE_PUBLIC_KEY = (NODE_ENV === 'production' ? process.env.STRIPE_PUBLIC_KEY : process.env.STRIPE_PUBLIC_KEY_DEV) || ''
 /// SENDGRID
 export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
 
