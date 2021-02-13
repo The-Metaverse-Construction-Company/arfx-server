@@ -255,8 +255,6 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
     const {blobType = ''} = req.params
     let {h = '', w = ''} = <{h: string, w: string}>req.query
     const product = <IProductEntity>res.locals['productDetails']
-    console.log('req.params :>> ', req.params);
-    console.log('req.params :>> ', product);
     const blobOriginalFilepath = <string>await ((blobType: string) => {
       return new Promise((resolve, reject) => {
         switch (blobType) {
