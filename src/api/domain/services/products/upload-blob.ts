@@ -50,13 +50,11 @@ export class UploadProductBlobService {
         const origFilepath = uploadedBlobURLs.previewImage.originalFilepath.split('.')
         const blobType = origFilepath.pop()
         const 
-          height = 150,
-          width = 150;
-        const newFilepath = `${origFilepath.join('.')}-${width}x${height}.${blobType}`
+          width = 400;
+        const newFilepath = `${origFilepath.join('.')}-w${width}.${blobType}`
         // resize the image preview to 150(h)x150(w)
         await this.dependencies.imageResizer({
           filepath: uploadedBlobURLs.previewImage.originalFilepath,
-          height,
           width,
           newFilepath 
         })

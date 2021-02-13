@@ -6,7 +6,7 @@ const ProductImageResize = async (opt: IImageResizeOption) => {
     const {
       filepath,
       newFilepath,
-      height,
+      height = undefined,
       width
     } = opt
     // const file = fs.readFileSync(filepath, 'base64')

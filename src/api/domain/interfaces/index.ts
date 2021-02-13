@@ -83,6 +83,6 @@ export interface IEmailBody {
 export interface IImageResizeOption {
   filepath: string
   newFilepath: string
-  height: number
   width: number
+  height?: number
 }
