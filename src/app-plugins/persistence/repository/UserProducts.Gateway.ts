@@ -50,9 +50,15 @@ export class UserProductRepository extends GeneralRepository<IUserProductsEntity
                 title: 1,
                 name: 1,
                 description: 1,
-                contentZip: 1,
-                previewImage: 1,
-                previewVideo: 1,
+                contentZip: {
+                  blobURL: 1,
+                },
+                previewImage: {
+                  blobURL: 1
+                },
+                previewVideo: {
+                  blobURL: 1
+                }
               }
             }
           ],

@@ -231,7 +231,6 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
  */
 export const removeProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('object :>> x');
     const {
       productId = ''
     } = req.params
@@ -271,6 +270,68 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
                 filepath: product.previewImage.originalFilepath,
                 height: 150,
                 width: 150
+            })
+            .toFile(newFilepath)
+            .then(() => {
+              resolve(newFilepath)
+              setTimeout(() => {
+                // unlike or remove the newly created image after 1000.
+                fs.unlinkSync(newFilepath)
+              }, 1000)
+            })
+            .catch(reject)
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
+            resolve(product.previewVideo.originalFilepath)
+            break;
+          default:
+            return ''
+        }
+      })
+    })(blobType)
+    if (!blobOriginalFilepath) {
+      throw new Error('Invalid url')
+    }
+    // res.send(blobOriginalFilepath)
+    res.sendFile(blobOriginalFilepath)
+  } catch (error) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
+  }
+};
+/**
+ * @public
+ * product list
+ * @requestParams
+ *  @field -> productId: string
+ */
+export const previewImageWithDiffSizesRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {blobType = ''} = req.params
+    let {h = '', w = ''} = <{h: string, w: string}>req.query
+    const product = <IProductEntity>res.locals['productDetails']
+
+    const blobOriginalFilepath = <string>await ((blobType: string) => {
+      return new Promise((resolve, reject) => {
+        switch (blobType) {
+          case PRODUCT_BLOB_TYPE.CONTENT_ZIP:
+            resolve(product.contentZip.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
+            const orgiFilepath = product.previewImage.originalFilepath.split('.')
+            if (!(h && w)) {
+              throw product.previewImage.originalFilepath
+            }
+            const blobType = orgiFilepath.pop()
+            const 
+              height = h ? Number(h) : 150,
+              width = w ? Number(w) : 150;
+            const newFilepath = `${orgiFilepath.join('.')}-${width}x${height}.${blobType}`
+            ProductImageResize({
+                filepath: product.previewImage.originalFilepath,
+                height,
+                width
             })
             .toFile(newFilepath)
             .then(() => {

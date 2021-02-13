@@ -76,6 +76,19 @@ export class ProductRepository extends GeneralRepository<IProductEntity, IProduc
             userId: "$userId.userId"
           }
         },
+        {
+          $project: {
+            contentZip: {
+              originalFilepath: 0
+            },
+            previewImage: {
+              originalFilepath: 0
+            },
+            previewVideo: {
+              originalFilepath: 0
+            },
+          }
+        }
         // {
         //   $project: {
         //     user_products: 0
