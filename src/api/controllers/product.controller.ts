@@ -193,8 +193,13 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
 };
 export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const product = res.locals['productDetails']
+
+    delete product.previewImage.originalFilepath
+    delete product.previewVideo.originalFilepath
+    delete product.contentZip.originalFilepath
     res.status(httpStatus.OK)
-      .json(successReponse(res.locals['productDetails']))
+      .json(successReponse(product))
   } catch (error) {
     next(error)
   }
