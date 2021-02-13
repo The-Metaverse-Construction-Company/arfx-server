@@ -22,13 +22,6 @@ export default ({
     public readonly productId!: string
     public readonly amount!: number
     public readonly paymentMethodId!: string
-    // public readonly name!: string
-    // public readonly title!: string
-    // public readonly description!: string
-    // public readonly contentZip!: IProductBlobProperties
-    // public readonly previewImage!: IProductBlobProperties
-    // public readonly previewVideo!: IProductBlobProperties
-    
     public paymentIntentId!: string
     public paymentChargeId!: string
     public state!: PURCHASE_HISTORY_STATE
@@ -46,7 +39,9 @@ export default ({
       paymentChargeId = '',
       description = '',
       name = '',
-      contentZip = {blobURL: '', originalFilepath: ''},
+      discountPercentage = 0,
+      price = 0,
+      contentZip = {blobURL: '', originalFilepath: '', version: 0},
       previewImage = {blobURL: '', originalFilepath: ''},
       previewVideo = {blobURL: '', originalFilepath: ''},
       state = PURCHASE_HISTORY_STATE.PENDING,
@@ -58,7 +53,9 @@ export default ({
         description,
         contentZip,
         previewImage,
-        previewVideo
+        previewVideo,
+        discountPercentage,
+        price
       })
       amount = parseFloat(<any>amount)
       if (isNaN(amount)) {

@@ -1,5 +1,5 @@
 import { BACKEND_HOST } from '../../../utils/constants';
-import { IProductBlobProperties, PRODUCT_BLOB_TYPE } from '../../entities/product';
+import { IProductBlobProperties, IProductContentZip, PRODUCT_BLOB_TYPE } from '../../entities/product';
 import {  IUploader } from '../../interfaces';
 interface IUploadProductBlob{
   contentZip: string,
@@ -7,7 +7,7 @@ interface IUploadProductBlob{
   previewVideo: string,
 }
 interface IUploadProductBlobResponse {
-  contentZip: IProductBlobProperties,
+  contentZip: IProductContentZip,
   previewImage: IProductBlobProperties,
   previewVideo: IProductBlobProperties,
 }
@@ -35,10 +35,9 @@ export class UploadProductBlobService {
         // upload to cloud storage provider
         uploadedBlobURLs.contentZip = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
-          originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip)
+          originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip),
+          version: 0
         }
-         // const filePath = file.split(`/usr/src/app`)
-          // blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
       }
       if (previewImage) {
         // upload to cloud storage provider

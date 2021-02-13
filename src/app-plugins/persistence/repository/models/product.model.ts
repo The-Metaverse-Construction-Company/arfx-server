@@ -20,12 +20,7 @@ export const ProductBlobObject = {
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
 }
-// this will automatically error when it have a changes on the product entity interface
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
-  _id: {
-    type: String,
-    default: '',
-  },
+export const ProductCoreRepositotyModelObj = {
   name: {
     type: String,
     default: '',
@@ -38,24 +33,33 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  contentZip: ProductBlobObject,
+  contentZip: {
+    ...ProductBlobObject,
+    version: {
+      type: Number,
+      default: 0
+    }
+  },
   previewImage: ProductBlobObject,
   previewVideo: ProductBlobObject,
-  published: {
-    type: Boolean,
-    default: false
-  },
   price: {
-    type: Number,
-    default: 0,
-  },
-  version: {
     type: Number,
     default: 0,
   },
   discountPercentage: {
     type: Number,
     default: 0,
+  }
+}
+// this will automatically error when it have a changes on the product entity interface
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
+  _id: {
+    type: String,
+    default: '',
+  },
+  published: {
+    type: Boolean,
+    default: false
   },
   adminAccountId: {
     type: String,
@@ -74,6 +78,7 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  ...ProductCoreRepositotyModelObj
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
