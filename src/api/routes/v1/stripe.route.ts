@@ -6,11 +6,12 @@ import {
 import httpStatus from 'http-status';
 import { PURCHASE_HISTORY_STATE } from '../../domain/entities/purchase-history';
 import {updatePurchasePaymentChargeService, updatePurchaseStateService} from '../../service-configurations/purchase-history'
+import { STRIPE_WH_SECRET } from '../../utils/constants';
 
 const app = Router({mergeParams: true})
 const middleware = async (request: Request, response: Response, next: NextFunction) => {
   const sig = request.headers['stripe-signature'] as string
-  const endpointSecret =  process.env.STRIPE_WBS
+  const endpointSecret =  STRIPE_WH_SECRET
   let event;
   try {
     event = stripe.webhooks.constructEvent(request.body.rawBody, sig, endpointSecret)
