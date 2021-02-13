@@ -56,68 +56,6 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
 };
 /**
  * @public
- * create a product
- * @requestBody
- *  @field: title: string
- *  @field: description: string
- *  @field: price: float
- *  @field: name: string
- */
-export const uploadProductImageRoute = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const scene = req.file
-    // const {scene = {}} = <any>(req.files || {})
-    // const busboy = req.app.get('busboy')
-    const {productId = ''} = req.params
-    const {productId: prodId} = req.body
-    // blobStorage.upload(productId, scene).then((result) => {
-    //   console.log('object :>> ', result);
-    // }
-    // )
-    // .catch((err) => {
-    //   console.log('err :>> ', err);
-    // })
-    // const busboy = new Busboy({ headers: req.headers })
-    // // req.pipe(req.busboy); // Pipe it trough busboy
-    // busboy.on('file', (fieldname: string, file: any, filename: string) => {
-    //     console.log(`fieldname '${fieldname}' started`);
-    //     console.log(`Upload of '${filename}' started`);
-    //     file.on('data', function(data: any) {
-    //       console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
-    //     });
-    //     file.on('end', function() {
-    //       console.log('File [' + fieldname + '] Finished');
-    //     });
-    //     // file.pipe(fstream);
-    //     // Create a write stream of the new file
-    //     const fstream = fs.createWriteStream(getFilePath(filename));
-    //     // // Pipe it trough
-    //     file.pipe(fstream);
-    //     fstream.on('finish', (err, file) => {
-    //       console.log('err :>> ', err);
-    //       console.log('file :>> ', file);
-    //     })
-    //     // // On finish of the upload
-    //     fstream.on('close', async () => {
-    //         console.log(`Upload of '${filename}' finished`);
-    //         // console.log('fs.readFileSync(getFilePath(filename)) :>> ', fs.readFileSync(getFilePath(filename), 'base64'));
-    //         // blobStorage.upload(productId, fs.readFileSync(getFilePath(filename), 'base64'))
-    //         // await updateProductURLService()
-    //         //   .updateOne(productId, getFilePath(filename))
-    //         // res.redirect('back');
-    //     });
-    // });
-    // req.pipe(busboy);
-    // const newProduct = await createProduct()
-    //   .createOne(req.body)
-    res.status(httpStatus.CREATED)
-      .json(successReponse(req.body))
-  } catch (error) {
-    next(error)
-  }
-};
-/**
- * @public
  */
 export const upload = async (req: Request, res: Response, next: NextFunction) => {
   // try {

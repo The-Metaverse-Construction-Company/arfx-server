@@ -91,8 +91,6 @@ router.route('/')
     requestValidatorMiddleware,
     controller.productListRoute
   )
-router.route('/upload')
-  .post(uploader.single('scene'), controller.uploadProductImageRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
 /**
  * @swagger
