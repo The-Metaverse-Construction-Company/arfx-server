@@ -1,3 +1,6 @@
+/**
+ * @services
+ */
 import {
   CreateProductService,
   ProductList,
@@ -8,15 +11,21 @@ import {
   // UpdateProductURLService,
   UploadProductBlobService
 } from '../domain/services/products'
-
+/**
+ * @repository
+ */
 import {
   ProductRepository
 } from '../../app-plugins/persistence/repository'
+/**
+ * @helper
+ */
 import BlobStorage from '../helper/blob-storage'
-
+import ProductImageResize from '../helper/image-resize'
 export const uploadProductBlobService = () => (
   new UploadProductBlobService({
-    fileUploader: BlobStorage
+    fileUploader: BlobStorage,
+    imageResizer: ProductImageResize
   })
 )
 

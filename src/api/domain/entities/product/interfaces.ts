@@ -13,6 +13,7 @@ export interface IProductBlob {
   contentZip: IProductContentZip // contentzip of the product,
   previewVideo: IProductBlobProperties // preview clip URL,
   previewImage: IProductBlobProperties // preview image of the product,
+  thumbnail: IProductBlobProperties // preview image of the product,
 }
 export interface IProductParams {
   name: string // some internal name
@@ -21,10 +22,10 @@ export interface IProductParams {
   discountPercentage: number // discount of the scene/product
   price: number // price of the scene. float
 }
-export interface IProdutBody extends IProductParams {
-  published: boolean // toggle if it will show it portal or not.
+export interface IProdutBody extends IProductParams, IProductBlob {
 }
-export interface IProductEntity extends IProdutBody, IProductBlob, IGeneralEntityProperties {
+export interface IProductEntity extends IProdutBody, IGeneralEntityProperties {
+  published: boolean // toggle if it will show it portal or not.
   adminAccountId: string // admin account who added the product
   purchaseCount: number // number of times this product purchased.
 }

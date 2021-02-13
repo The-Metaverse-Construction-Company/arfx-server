@@ -207,11 +207,18 @@ router.route('/:productId/published')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-router.route('/:productId/:blobType.:fileType')
+router.route('/:productId/:blobType\.:fileType')
   .get(
+    authorize(),
     validations.ProductBlobTypeValidationPipeline,
     requestValidatorMiddleware,
     controller.downloadContentZipRoute
     )
+// router.route('/:productId/:blobType')
+//   .get(
+//     validations.ProductBlobTypeValidationPipeline,
+//     requestValidatorMiddleware,
+//     controller.downloadContentZipRoute
+//     )
 
 export default router;

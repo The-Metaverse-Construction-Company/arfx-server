@@ -25,12 +25,14 @@ export class ProductCoreEntity implements IProductParams {
   public contentZip!: IProductContentZip
   public previewVideo!: IProductBlobProperties
   public previewImage!: IProductBlobProperties
+  public thumbnail!: IProductBlobProperties
   constructor ({
     name,
     title,
     description,
     contentZip,
     previewImage,
+    thumbnail,
     previewVideo,
     discountPercentage,
     price
@@ -47,6 +49,7 @@ export class ProductCoreEntity implements IProductParams {
     this.contentZip = contentZip
     this.previewImage = previewImage
     this.previewVideo = previewVideo
+    this.thumbnail = thumbnail
     this.discountPercentage = discountPercentage
     this.price = price
   }
@@ -75,6 +78,7 @@ export default ({
       contentZip = {blobURL: '', originalFilepath: '', version: 0},
       previewVideo = {blobURL: '', originalFilepath: ''},
       previewImage = {blobURL: '', originalFilepath: ''},
+      thumbnail = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
       // stripeCustomerId = '',
@@ -88,6 +92,7 @@ export default ({
         contentZip,
         previewImage,
         previewVideo,
+        thumbnail,
         discountPercentage,
         price
       })

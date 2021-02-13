@@ -258,6 +258,7 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
 export const downloadContentZipRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {blobType = ''} = req.params
+    console.log('req.params :>> ', req.params);
     let {h = '', w = ''} = <{h: string, w: string}>req.query
     const product = <IProductEntity>res.locals['productDetails']
     const blobOriginalFilepath = <string>await ((blobType: string) => {
@@ -267,29 +268,10 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
             resolve(product.contentZip.originalFilepath)
             break;
           case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
-            const origFilepath = product.previewImage.originalFilepath.split('.')
-            if (!(h && w)) {
-              resolve(product.previewImage.originalFilepath)
-              return;
-            }
-            const blobType = origFilepath.pop()
-            const 
-              height = h ? Number(h) : 150,
-              width = w ? Number(w) : 150;
-            const newFilepath = `${origFilepath.join('.')}-${width}x${height}.${blobType}`
-            ProductImageResize({
-                filepath: product.previewImage.originalFilepath,
-                height,
-                width
-            })
-            .toFile(newFilepath)
-            .then(() => {
-              resolve(newFilepath)
-              setTimeout(() => {
-                // unlike or remove the newly created image after 1000.
-                fs.unlinkSync(newFilepath)
-              }, 1000)
-            })
+            resolve(product.previewImage.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.THUMBNAIL:
+            resolve(product.thumbnail.originalFilepath)
             break;
           case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
             resolve(product.previewVideo.originalFilepath)
@@ -302,6 +284,7 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
     if (!blobOriginalFilepath) {
       throw new Error('Invalid url')
     }
+    console.log('blobOriginalFilepath :>> ', blobOriginalFilepath);
     // res.send(blobOriginalFilepath)
     res.sendFile(blobOriginalFilepath)
   } catch (error) {

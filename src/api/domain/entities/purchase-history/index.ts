@@ -44,6 +44,7 @@ export default ({
       contentZip = {blobURL: '', originalFilepath: '', version: 0},
       previewImage = {blobURL: '', originalFilepath: ''},
       previewVideo = {blobURL: '', originalFilepath: ''},
+      thumbnail = {blobURL: '', originalFilepath: ''},
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -54,6 +55,7 @@ export default ({
         contentZip,
         previewImage,
         previewVideo,
+        thumbnail,
         discountPercentage,
         price
       })
@@ -84,13 +86,6 @@ export default ({
       this.userId = userId
       this.amount = amount
       this.state = state
-      // this.title = title
-      // this.name = name
-      // this.description = description
-      // this.contentZip = contentZip
-      // this.previewImage = previewImage
-      // this.previewVideo = previewVideo
-      // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()
       this.createdAt = Date.now()

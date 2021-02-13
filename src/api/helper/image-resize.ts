@@ -1,21 +1,20 @@
 import sharp from 'sharp'
 import fs from 'fs'
-interface IImageOptions {
-  filepath: string
-  height: number
-  width: number
-}
-const ProductImageResize = (opt: IImageOptions) => {
+import { IImageResizeOption } from '../domain/interfaces'
+const ProductImageResize = async (opt: IImageResizeOption) => {
   try {
     const {
       filepath,
+      newFilepath,
       height,
       width
     } = opt
     // const file = fs.readFileSync(filepath, 'base64')
-    return sharp(filepath)
+    await sharp(filepath)
       .resize(width, height)
       .png()
+      .toFile(newFilepath)
+    return newFilepath
   } catch (error) {
     throw error
   }

@@ -1,5 +1,6 @@
 import {
   IProductEntity,
+  IProductParams,
   IProductRepositoryGateway,
   IProdutBody
 } from '../../entities/product'
@@ -9,13 +10,14 @@ import {
 
 import { IGeneralServiceDependencies } from '../../interfaces';
 import { UploadProductBlobService } from './upload-blob';
-export interface IProductParams extends IProdutBody{
+export interface _IProductParams extends IProductParams{
   contentZip: string,
   previewImage: string,
   previewVideo: string,
 }
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
+
 }
 export class UpdateProduct {
   constructor(protected dependencies: IDependencies) {
@@ -24,7 +26,7 @@ export class UpdateProduct {
    * create new product.
    * @param productBody 
    */
-  public updateOne = async (productId: string, productBody: IProductParams) => {
+  public updateOne = async (productId: string, productBody: _IProductParams) => {
     try {
       const {contentZip, previewVideo, previewImage, ..._productBody} = productBody
       // initiate product entity to validate the submitted fields on the business rules.
