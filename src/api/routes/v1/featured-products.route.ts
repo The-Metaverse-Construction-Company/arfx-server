@@ -5,7 +5,7 @@ import {
   authorizeAdminAccount,
   authorize
 } from '../../middlewares/auth'
-import { requestValidatorMiddleware } from '../../validations'
+import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
 const router = express.Router();
 router.route('/')
 /**
@@ -44,7 +44,11 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(authorize(), controller.featuredProductListRoute)
+  .get(
+    authorize(),
+    PaginationQueryPipeline,
+    requestValidatorMiddleware,
+    controller.featuredProductListRoute)
 
 router.route('/:featuredProductId')
 /**
@@ -66,7 +70,7 @@ router.route('/:featuredProductId')
  *          description: "ACCEPTED"
  */
   .patch(authorizeAdminAccount(), controller.updateFeaturedProductRoute)
-/**x
+/**
  * @swagger
  * paths:
  *  /v1/featured-products/{featuredProductId}:

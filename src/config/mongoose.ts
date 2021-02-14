@@ -24,6 +24,7 @@ if (env === 'development') {
  */
 export default {
   connect: () => {
+    console.log('mongo.uri :>> ', mongo.uri);
     mongoose
       .connect(mongo.uri, {
         useCreateIndex: true,
@@ -34,5 +35,9 @@ export default {
       })
       .then(() => console.log('mongoDB connected...'));
     return mongoose.connection;
+  },
+  close: () => {
+    mongoose.connection.close()
+    return true
   }
 }

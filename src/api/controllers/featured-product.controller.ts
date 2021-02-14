@@ -7,9 +7,9 @@ import {
   createFeaturedProductService,
   featuredProductListService,
   updateFeaturedProductService,
-  removeFeaturedProductService
+  removeFeaturedProductService,
 } from '../service-configurations/product-banner'
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
 /**
  * @public
@@ -51,8 +51,8 @@ export const createFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 /**
@@ -78,8 +78,8 @@ export const updateFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };
 /**
@@ -98,7 +98,7 @@ export const removeFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };

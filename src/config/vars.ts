@@ -5,7 +5,6 @@ import path from 'path'
 //   path: path.join(__dirname, '../../.env.local'),
 //   sample: path.join(__dirname, '../../.env.example'),
 // });
-console.log('MONGO_URI :>> ', process.env.MONGO_URI);
 export const env = process.env.NODE_ENV || ''
 export const port =  process.env.PORT || ''
 export const jwtSecret =  process.env.JWT_SECRET || ''

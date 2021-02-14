@@ -22,13 +22,8 @@ export default ({
     public readonly productId!: string
     public readonly amount!: number
     public readonly paymentMethodId!: string
-    // public readonly name!: string
-    // public readonly title!: string
-    // public readonly description!: string
-    // public readonly contentZip!: IProductBlobProperties
-    // public readonly previewImage!: IProductBlobProperties
-    // public readonly previewVideo!: IProductBlobProperties
     public paymentIntentId!: string
+    public paymentChargeId!: string
     public state!: PURCHASE_HISTORY_STATE
     public readonly userId!: string
     public readonly discountPercentage!: number
@@ -38,14 +33,18 @@ export default ({
     constructor ({
       productId = '',
       amount = 0,
-      paymentMethodId = '',
       userId = '',
+      paymentMethodId = '',
       paymentIntentId = '',
+      paymentChargeId = '',
       description = '',
       name = '',
-      contentZip = {blobURL: '', originalFilepath: ''},
+      discountPercentage = 0,
+      price = 0,
+      contentZip = {blobURL: '', originalFilepath: '', version: 0},
       previewImage = {blobURL: '', originalFilepath: ''},
       previewVideo = {blobURL: '', originalFilepath: ''},
+      thumbnail = {blobURL: '', originalFilepath: ''},
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -55,7 +54,10 @@ export default ({
         description,
         contentZip,
         previewImage,
-        previewVideo
+        previewVideo,
+        thumbnail,
+        discountPercentage,
+        price
       })
       amount = parseFloat(<any>amount)
       if (isNaN(amount)) {
@@ -69,9 +71,9 @@ export default ({
       if (!productId) {
         throw new Error('productId must not be null, undefined or empty string.')
       }
-      if (!paymentMethodId) {
-        throw new Error('paymentMethodId must not be null, undefined or empty string.')
-      }
+      // if (!paymentMethodId) {
+      //   throw new Error('paymentMethodId must not be null, undefined or empty string.')
+      // }
       if (!userId) {
         throw new Error('userId must not be null, undefined or empty string.')
       }
@@ -80,16 +82,10 @@ export default ({
       this.productId = productId
       this.paymentMethodId = paymentMethodId
       this.paymentIntentId = paymentIntentId
+      this.paymentChargeId = paymentChargeId
       this.userId = userId
       this.amount = amount
       this.state = state
-      // this.title = title
-      // this.name = name
-      // this.description = description
-      // this.contentZip = contentZip
-      // this.previewImage = previewImage
-      // this.previewVideo = previewVideo
-      // this.discountPercentage = discountPercentage
       this.purchasedAt = Date.now()
       this.updatedAt = Date.now()
       this.createdAt = Date.now()

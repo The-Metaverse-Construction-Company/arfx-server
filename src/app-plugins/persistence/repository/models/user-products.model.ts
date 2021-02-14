@@ -16,33 +16,35 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
     type: String,
     default: '',
   },
-  name: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  title: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  contentZip: ProductBlobObject,
-  previewImage: ProductBlobObject,
-  previewVideo: ProductBlobObject,
-  description: {
-    type: String,
-    default: '',
-    required: true,
-  },
+  // name: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
+  // title: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
+  // contentZip: ProductBlobObject,
+  // previewImage: ProductBlobObject,
+  // previewVideo: ProductBlobObject,
+  // description: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
   productId: {
     type: String,
     default: '',
     required: true,
+    ref: COLLECTION_NAMES.PRODUCT
   },
   userId: {
     type: String,
     default: '',
     required: true,
+    ref: COLLECTION_NAMES.USER
   },
   createdAt: {
     type: Number,

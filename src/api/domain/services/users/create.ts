@@ -40,7 +40,7 @@ export class CreateUserService {
       //add some logs
       return newUser
     } catch (error) {
-      console.log('failed to create new user. \nError: ', error);
+      console.log('failed to create new user. Error: ', error);
       throw error
     }
   }

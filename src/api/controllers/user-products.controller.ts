@@ -8,7 +8,7 @@ import {
   userProductsListService
 } from '../service-configurations/user-products'
 
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
 /**
  * @public
@@ -48,7 +48,8 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.OK)
       .json(successReponse(userProduct))
   } catch (error) {
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .json(errorResponse([error.message]))
   }
 };
 /**
@@ -61,13 +62,13 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
  */
 export const userProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('req.user :>> ', req.user);
     const {_id = ''} = <IUserEntity>req.user
     const userProductList = await userProductsListService()
       .getList(_id, req.query)
     res.status(httpStatus.OK)
       .json(successReponse(userProductList))
   } catch (error) {
-    next(error)
+    res.status(httpStatus.BAD_REQUEST)
+      .json(errorResponse([error.message]))
   }
 };

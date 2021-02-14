@@ -7,16 +7,15 @@ export class UserProductDetailsService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * get user product detail by id
-   * @param userProductId 
+   * 
+   * @param userId 
+   * @param id // can be userProductId productId
    */
-  public getOne = async (userId: string, userProductId: string) => {
+  public getOne = async (userId: string, id: string) => {
     try {
-      const userProductList = await this.dependencies.repositoryGateway.findOne({
-        _id: userProductId
-      })
+      const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
       // add some logs here.
-      return userProductList
+      return userProduct
     } catch (error) {
       console.log('failed to create user product. \nError :>> ', error);
       throw error

@@ -14,10 +14,10 @@ export const requestValidatorMiddleware = (req: Request, res: Response, next: Ne
 export const PaginationQueryPipeline = [
   query('pageNo')
     .optional()
-    .isInt({min: 1, max: 1000})
+    .isInt({min: 0, max: 1000})
     .withMessage('pageNo must be a integer with mininum value of 0 and maximum value of 1000.'),
   query('limit')
-    .isInt({min: 0, max: 100})
+    .isInt({min: 1, max: 100})
     .withMessage('limit must be a integer with mininum value of 0 and maximum value of 100.')
     .optional(),
   query('searchText')

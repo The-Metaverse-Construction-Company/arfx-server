@@ -3,7 +3,7 @@ import {body} from 'express-validator'
 import {
   ALLOWED_USER_ROLE
 } from '../domain/entities/users'
-import { HumanNamePattern } from '../utils/regex-pattern'
+import { EmailAddressPattern, HumanNamePattern } from '../utils/regex-pattern'
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
 // GET /v1/users
 export const listUsers = {
@@ -24,23 +24,27 @@ export const createUser = {
     role: Joi.string().valid(allowed_roles),
   },
 }
-export const createUserPipeline = [
+
+export const UserFormValidationPipeline = [
   body('email')
     .isString()
-    .withMessage('email must be string.')
+    .withMessage('Invalid variable type. must be string.')
     .bail()
-    .isEmail(),
+    .matches(EmailAddressPattern)
+    .withMessage('Invalid email address format.'),
   body('name')
     .isString()
     .matches(HumanNamePattern),
-  body('password')
-    .isString(),
-    // .matches() // enable to if you already have a pattern for the password.
   body('role')
     .isString()
     .isIn(allowed_roles)
     .optional()
-    
+]
+export const createUserPipeline = [
+  ...UserFormValidationPipeline,
+  body('password')
+    .isString(),
+    // .matches() // enable to if you already have a pattern for the password.
 ]
 // PUT /v1/users/:userId
 export const replaceUser = {

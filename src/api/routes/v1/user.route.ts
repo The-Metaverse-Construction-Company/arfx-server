@@ -18,7 +18,7 @@ import {
   createUser,
   replaceUser,
   updateUser,
-  createUserPipeline
+  createUserPipeline, UserFormValidationPipeline
 } from '../../validations/user.validation'
 
 /**
@@ -73,7 +73,11 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .post(authorizeAdminAccount(), createUserPipeline, requestValidatorMiddleware, controller.CreateUserRoute);
+  .post(authorizeAdminAccount(), 
+    createUserPipeline,
+    requestValidatorMiddleware,
+    controller.CreateUserRoute
+    );
 
 router
   .route('/:userId')
@@ -112,7 +116,11 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .patch(authorize(), controller.UpdateUserRoute)
+  .patch(
+    authorize(),
+    UserFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.UpdateUserRoute)
 /**
  * @swagger
  * /v1/users/{userId}:

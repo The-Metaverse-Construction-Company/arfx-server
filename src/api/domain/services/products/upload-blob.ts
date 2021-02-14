@@ -1,18 +1,20 @@
 import { BACKEND_HOST } from '../../../utils/constants';
-import { IProductBlobProperties, PRODUCT_BLOB_TYPE } from '../../entities/product';
-import {  IUploader } from '../../interfaces';
+import { IProductBlobProperties, IProductContentZip, PRODUCT_BLOB_TYPE } from '../../entities/product';
+import {  IImageResizeOption, IUploader } from '../../interfaces';
 interface IUploadProductBlob{
   contentZip: string,
   previewImage: string,
   previewVideo: string,
 }
 interface IUploadProductBlobResponse {
-  contentZip: IProductBlobProperties,
+  contentZip: IProductContentZip,
   previewImage: IProductBlobProperties,
   previewVideo: IProductBlobProperties,
+  thumbnail: IProductBlobProperties,
 }
 interface IDependencies {
   fileUploader: IUploader
+  imageResizer: (option: IImageResizeOption) => Promise<string>
 }
 export class UploadProductBlobService {
   constructor(protected dependencies: IDependencies) {
@@ -35,16 +37,30 @@ export class UploadProductBlobService {
         // upload to cloud storage provider
         uploadedBlobURLs.contentZip = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
-          originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip)
+          originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip),
+          version: 0
         }
-         // const filePath = file.split(`/usr/src/app`)
-          // blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
       }
       if (previewImage) {
         // upload to cloud storage provider
         uploadedBlobURLs.previewImage = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
           originalFilepath: await this.dependencies.fileUploader.upload(productId, previewImage)
+        }
+        const origFilepath = uploadedBlobURLs.previewImage.originalFilepath.split('.')
+        const blobType = origFilepath.pop()
+        const 
+          width = 400;
+        const newFilepath = `${origFilepath.join('.')}-w${width}.${blobType}`
+        // resize the image preview to 150(h)x150(w)
+        await this.dependencies.imageResizer({
+          filepath: uploadedBlobURLs.previewImage.originalFilepath,
+          width,
+          newFilepath 
+        })
+        uploadedBlobURLs.thumbnail = {
+          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
+          originalFilepath: newFilepath
         }
       }
       if (previewVideo) {

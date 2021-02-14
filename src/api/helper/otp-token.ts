@@ -96,7 +96,6 @@ export default abstract class AuthOTPToken {
    */
   public removeOTPToken = async (otpCode: string, tokenType: string) => {
     try {
-      console.log('@@@@@@@@@@@@@@@22revoke shit', this.generateSourceId({code: otpCode, tokenType}));
       this.deps.redisClient.DEL(this.generateSourceId({code: otpCode, tokenType}))
       return true
     } catch (error) {

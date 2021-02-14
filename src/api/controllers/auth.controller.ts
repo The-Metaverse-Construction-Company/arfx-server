@@ -19,7 +19,7 @@ import {
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 // import User from '../models/user.model'
 import * as emailProvider from '../domain/services/emails/emailProvider'
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
 
 const RefreshToken = require('../models/refreshToken.model');
@@ -62,7 +62,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     // const userTransformed = user.transform();
     res.status(httpStatus.OK).send(successReponse(response))
   } catch (error) {
-    return next(error);
+    res.status(httpStatus.BAD_REQUEST).send(errorResponse([error.message]))
   }
 };
 /**

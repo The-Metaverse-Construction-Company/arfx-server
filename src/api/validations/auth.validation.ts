@@ -1,5 +1,19 @@
 import Joi from 'joi'
-
+import {
+  validateUserEmail
+} from '../service-configurations/users'
+import {
+  body
+} from 'express-validator'
+const validateDuplicateEmail = async (value: string) => {
+  try {
+    await validateUserEmail()
+      .validateOne({email: value})
+    return true
+  } catch (error) {
+    throw new Error('Email already exists.')
+  }
+}
   // POST /v1/auth/register
 export const register = {
   body: {
@@ -12,6 +26,21 @@ export const register = {
       .max(128),
   },
 }
+export const signUpValidationPipeline = [
+  body('email')
+    .isEmail()
+    .withMessage('Invalid email format.')
+    .bail()
+    .custom(validateDuplicateEmail),
+  body('password')
+    .isString()
+    .isLength({max: 50, min: 6})
+    .withMessage('password must be greater than 6 characters and maximum 50 characters.'),
+  body('name')
+    .isString()
+    .isLength({max: 50, min: 2})
+    .withMessage('name must be greater than 2 characters and maximum 50 characters.')
+]
   // POST /v1/auth/login
 export const login = {
   body: {

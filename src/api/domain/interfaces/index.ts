@@ -80,3 +80,9 @@ export interface IEmailBody {
   email: string
   url: string
 }
+export interface IImageResizeOption {
+  filepath: string
+  newFilepath: string
+  width: number
+  height?: number
+}

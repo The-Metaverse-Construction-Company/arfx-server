@@ -14,7 +14,8 @@ interface Dependencies extends IGeneralEntityDependencies {
 export default ({
   generateId
 }: Dependencies) => (
-  class UserProductEntity extends ProductCoreEntity implements IUserProductsEntity {
+  class UserProductEntity implements IUserProductsEntity {
+  // class UserProductEntity extends ProductCoreEntity implements IUserProductsEntity {
     public readonly _id!: string
     public readonly userId!: string
     public readonly productId!: string
@@ -22,36 +23,28 @@ export default ({
     public readonly updatedAt!: number
     constructor ({
       _id = '',
-      name = '',
-      description = '',
-      contentZip = {blobURL: '', originalFilepath: ''},
-      previewVideo = {blobURL: '', originalFilepath: ''},
-      previewImage = {blobURL: '', originalFilepath: ''},
+      // name = '',
+      // description = '',
+      // contentZip = {blobURL: '', originalFilepath: ''},
+      // previewVideo = {blobURL: '', originalFilepath: ''},
+      // previewImage = {blobURL: '', originalFilepath: ''},
       productId = '',
       userId = '',
-      title = '',
+      // title = '',
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IUserProductsEntity>) {
-      super({
-        title,
-        name,
-        description,
-        contentZip,
-        previewImage,
-        previewVideo,
-      })
+      // super({
+      //   title,
+      //   name,
+      //   description,
+      //   contentZip,
+      //   previewImage,
+      //   previewVideo,
+      // })
       if (!_id) {
         _id = generateId()
-      }
-      if (!title) {
-        throw new Error('title must not be null, undefined or empty string.')
-      } else if (title.length < 3) {
-        throw new Error('title must atleast 3 characters.')
-      }
-      if (!description) {
-        throw new Error('description must not be null, undefined or empty string.')
       }
       if (!productId) {
         throw new Error('productId must not be null, undefined or empty string.')

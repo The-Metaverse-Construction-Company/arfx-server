@@ -1,6 +1,7 @@
 import {
   IProductBlob,
   IProductBlobProperties,
+  IProductContentZip,
   IProductEntity,
   IProductParams
 } from './interfaces'
@@ -15,27 +16,42 @@ export * from './RepositoryGatewayInterfaces'
 interface Dependencies extends IGeneralEntityDependencies {
   
 }
-export class ProductCoreEntity {
+export class ProductCoreEntity implements IProductParams {
   public readonly name!: string
   public readonly title!: string
   public readonly description!: string
-  public contentZip!: IProductBlobProperties
+  public readonly discountPercentage: number
+  public readonly price: number
+  public contentZip!: IProductContentZip
   public previewVideo!: IProductBlobProperties
   public previewImage!: IProductBlobProperties
+  public thumbnail!: IProductBlobProperties
   constructor ({
     name,
     title,
     description,
     contentZip,
     previewImage,
-    previewVideo
+    thumbnail,
+    previewVideo,
+    discountPercentage,
+    price
   }: IProductParams & IProductBlob) {
+    if (price <= 0) {
+      throw new Error('Price must be larger than 0.')
+    }
+    if (discountPercentage < 0) {
+      throw new Error('discountPercentage must be larger than 0.')
+    }
     this.name = name
     this.title = title
     this.description = description
     this.contentZip = contentZip
     this.previewImage = previewImage
     this.previewVideo = previewVideo
+    this.thumbnail = thumbnail
+    this.discountPercentage = discountPercentage
+    this.price = price
   }
 }
 export default ({
@@ -59,9 +75,10 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentZip = {blobURL: '', originalFilepath: ''},
+      contentZip = {blobURL: '', originalFilepath: '', version: 0},
       previewVideo = {blobURL: '', originalFilepath: ''},
       previewImage = {blobURL: '', originalFilepath: ''},
+      thumbnail = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
       // stripeCustomerId = '',
@@ -75,17 +92,14 @@ export default ({
         contentZip,
         previewImage,
         previewVideo,
+        thumbnail,
+        discountPercentage,
+        price
       })
       price = parseFloat(<any>price)
       discountPercentage = parseFloat(<any>discountPercentage)
       if (!_id) {
         _id = generateId()
-      }
-      if (price <= 0) {
-        throw new Error('Price must be larger than 0.')
-      }
-      if (discountPercentage < 0) {
-        throw new Error('discountPercentage must be larger than 0.')
       }
       if (!title) {
         throw new Error('title must not be null, undefined or empty string.')
@@ -102,7 +116,6 @@ export default ({
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = published
-      // this.stripeCustomerId = stripeCustomerId
       this.updatedAt = updatedAt
       this.createdAt = createdAt
     }

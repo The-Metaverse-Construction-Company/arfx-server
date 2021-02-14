@@ -1,5 +1,6 @@
 import {
   IProductEntity,
+  IProductParams,
   IProductRepositoryGateway,
   IProdutBody
 } from '../../entities/product'
@@ -9,13 +10,14 @@ import {
 
 import { IGeneralServiceDependencies } from '../../interfaces';
 import { UploadProductBlobService } from './upload-blob';
-export interface IProductParams extends IProdutBody{
+export interface _IProductParams extends IProductParams{
   contentZip: string,
   previewImage: string,
   previewVideo: string,
 }
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
+
 }
 export class UpdateProduct {
   constructor(protected dependencies: IDependencies) {
@@ -24,12 +26,16 @@ export class UpdateProduct {
    * create new product.
    * @param productBody 
    */
-  public updateOne = async (productId: string, productBody: IProductParams) => {
+  public updateOne = async (productId: string, productBody: _IProductParams) => {
     try {
       const {contentZip, previewVideo, previewImage, ..._productBody} = productBody
       // initiate product entity to validate the submitted fields on the business rules.
+      const product = await this.dependencies.repositoryGateway.findOne({
+        _id: productId
+      })
       const newProductEntity = new ProductEntity({
         ..._productBody,
+        contentZip: product.contentZip,
         _id: productId,
       })
       const fieldsToUpdate = <Partial<IProductEntity>> {
@@ -46,6 +52,9 @@ export class UpdateProduct {
         previewImage,
         previewVideo
       })
+      if (blobResponse.contentZip) {
+        blobResponse.contentZip.version = newProductEntity.contentZip.version + 1
+      }
       // merge to fieldsToUpload object
       Object.assign(fieldsToUpdate, blobResponse)
       // update to repository

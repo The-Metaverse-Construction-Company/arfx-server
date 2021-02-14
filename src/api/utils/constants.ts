@@ -7,7 +7,10 @@ export const TOKEN_TYPE = {
   SIGN_IN: 'SIGN_IN',
   RESET_PASSWORD: 'RESET_PASSWORD',
 }
-
+export const PAYMENT_GATEWAY_CHARGE_STATUSES = {
+  SUCCEEDED: 'succeeded',
+  FAILED: 'failed',
+}
 export const BACKEND_HOST = process.env.BACKEND_HOST || `http://localhost:3000`
 export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
@@ -26,6 +29,7 @@ export const CLIENT_HOST= process.env.CLIENT_HOST || `http://localhost:3001`
 /// STRIPE KEYS ////
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 export const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY || ''
+export const STRIPE_WH_SECRET = process.env.STRIPE_WH_SECRET || ''
 /// SENDGRID
 export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
 

@@ -2,6 +2,7 @@ import express from 'express'
 import * as controller from '../../controllers/user-products.controller'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users';
 import { authorize } from '../../middlewares/auth';
+import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations';
 
 const router = express.Router();
 
@@ -24,7 +25,11 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responses/UserProducts'
  */
-  .get(controller.userProductListRoute)
+  .get(
+    PaginationQueryPipeline,
+    requestValidatorMiddleware,
+    controller.userProductListRoute
+  )
 router.route('/:userProductId')
 /**
  * @swagger

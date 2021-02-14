@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
 import passport from 'passport'
 import APIError from '../utils/APIError'
-import e, {
+import {
   Request, Response, NextFunction
 } from 'express'
 import { ALLOWED_USER_ROLE, ALLOWED_USER_ROLES } from '../domain/entities/users';
@@ -10,8 +10,6 @@ export const LOGGED_USER = '_loggedUser';
 
 const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
   const error = err || info;
-  console.log('req :>> ', req.body);
-  console.log('req :>> ', req.files);
   //@ts-expect-error
   const logIn = Promise.promisify(req.logIn);
   const apiError = new APIError({
@@ -26,7 +24,6 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
     return next(apiError);
   }
   if (user.isAdmin) {
-    console.log('roles :>> ', roles);
     if (roles && !roles.includes(ALLOWED_USER_ROLE.ADMIN)) {
       // unable to sign in. invalid user role.
       apiError.status = httpStatus.FORBIDDEN;
@@ -34,12 +31,12 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
       return next(apiError);
     }
   } else {
-    if (roles === LOGGED_USER) {
-      // if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
-      //   apiError.status = httpStatus.FORBIDDEN;
-      //   apiError.message = 'Forbidden';
-      //   return next(apiError);
-      // }
+    if (user.role === ALLOWED_USER_ROLE.USER) {
+      if (req.params.userId && req.params.userId !== user._id.toString()) {
+        apiError.status = httpStatus.FORBIDDEN;
+        apiError.message = 'Forbidden';
+        return next(apiError);
+      }
     } else if (!roles.includes(user.role)) {
       apiError.status = httpStatus.FORBIDDEN;
       apiError.message = 'Forbidden';
@@ -48,10 +45,9 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
       return next(apiError);
     }
   }
-
   req.user = user;
-
-  return next();
+  next();
+  return;
 };
 
 // const adminAuthHandler = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
