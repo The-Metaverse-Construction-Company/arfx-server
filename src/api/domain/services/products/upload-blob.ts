@@ -59,7 +59,7 @@ export class UploadProductBlobService {
           newFilepath 
         })
         uploadedBlobURLs.thumbnail = {
-          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
+          blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
           originalFilepath: newFilepath
         }
       }
