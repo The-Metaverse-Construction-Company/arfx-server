@@ -10,6 +10,21 @@ import { COLLECTION_NAMES } from '../constants/collection-names'
 export interface IUserRepository extends Document, IUserEntity {
   _id: any
 }
+const GeneralVerificationProperty = {
+  type: Object,
+  value: {
+    type: String,
+    default: '',
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  verifiedAt: {
+    type: Number,
+    default: 0
+  }
+}
 // this will automatically error when it have a changes on the purchase history entity interface
 const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
   _id: {
@@ -20,35 +35,8 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  email: {
-    value: {
-      type: String,
-      default: '',
-      required: true
-    },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
-    verifiedAt: {
-      type: Number,
-      default: 0
-    }
-  },
-  mobileNumber: {
-    value: {
-      type: String,
-      default: '',
-    },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
-    verifiedAt: {
-      type: Number,
-      default: 0
-    }
-  },
+  email: GeneralVerificationProperty,
+  mobileNumber: GeneralVerificationProperty,
   stripeCustomerId: {
     type: String,
     default: '',
@@ -68,6 +56,7 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
     default: false
   },
   service: {
+    type: Object,
     facebook: {
       type: String,
       default: '',

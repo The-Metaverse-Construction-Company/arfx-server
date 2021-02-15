@@ -1,5 +1,4 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
 import PurchaseRoute from './purchase.route'
@@ -164,7 +163,8 @@ router.route('/:productId')
  */
   .delete(
     authorizeAdminAccount(),
-    validate(validations.RemoveProductValidation),
+    validations.RemoveProductValidation,
+    requestValidatorMiddleware,
     controller.removeProductRoute
   )
 /**
@@ -187,7 +187,8 @@ router.route('/:productId')
 router.route('/:productId/published')
   .patch(
     authorizeAdminAccount(),
-    validate(validations.UpdateProductPublishValidation),
+    validations.UpdateProductPublishValidation,
+    requestValidatorMiddleware,
     controller.updateProductPublishStatusRoute
     )
 /**

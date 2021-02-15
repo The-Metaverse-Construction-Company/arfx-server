@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import {body} from 'express-validator'
 import {adminAccountValidateEmailService} from '../service-configurations/admin-accounts'
 import { EmailAddressPattern, HumanNamePattern } from '../utils/regex-pattern'

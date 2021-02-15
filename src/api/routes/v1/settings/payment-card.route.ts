@@ -1,5 +1,4 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../../controllers/payment-card.controller'
 const router = express.Router({mergeParams: true});
 /**
