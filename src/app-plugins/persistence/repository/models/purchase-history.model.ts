@@ -34,7 +34,7 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
   paymentIntentId: {
     type: String,
     default: '',
-    required: true,
+    // required: true,
   },
   paymentChargeId: {
     type: String,
