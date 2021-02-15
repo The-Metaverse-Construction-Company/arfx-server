@@ -51,12 +51,14 @@ export const mapProductUploadedBlobRoute = async (req: Request, res: Response, n
  */
 export const createProductRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log('object :>> ');
     const {_id} = <IAdminAccountsEntity>req.user
     const newProduct = await createProduct()
       .createOne(req.body, _id)
     res.status(httpStatus.CREATED)
       .json(successReponse(removeProductOriginalFilepath(newProduct)))
   } catch (error) {
+    console.log('eddddddddddddddddddddddddddddddddddddddddrror :>> ', error);
     next(new AppError({
       message: error.message,
       httpStatus: httpStatus.BAD_REQUEST
