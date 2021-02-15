@@ -135,6 +135,7 @@ export const productDetailsRoute = async (req: Request, res: Response, next: Nex
     delete product.previewImage.originalFilepath
     delete product.previewVideo.originalFilepath
     delete product.contentZip.originalFilepath
+    delete product.thumbnail.originalFilepath
     res.status(httpStatus.OK)
       .json(successReponse(product))
   } catch (error) {

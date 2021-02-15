@@ -58,6 +58,9 @@ export class UserProductRepository extends GeneralRepository<IUserProductsEntity
                 },
                 previewVideo: {
                   blobURL: 1
+                },
+                thumbnail: {
+                  blobURL: 1
                 }
               }
             }
