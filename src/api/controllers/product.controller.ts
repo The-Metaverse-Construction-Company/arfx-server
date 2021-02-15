@@ -1,5 +1,4 @@
 import httpStatus from 'http-status'
-import fs from 'fs'
 import {
   Response, Request, NextFunction
 } from 'express'
@@ -15,7 +14,6 @@ import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
 import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
-import ProductImageResize from '../helper/image-resize'
 import AppError from '../utils/response-error'
 
 // readStream.on('data', (chunk) => {
@@ -57,15 +55,6 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
       httpStatus: httpStatus.BAD_REQUEST
     }))
   }
-};
-/**
- * @public
- */
-export const upload = async (req: Request, res: Response, next: NextFunction) => {
-  // try {
-  // } catch (error) {
-  //   next(error)
-  // }
 };
 /**
  * @public

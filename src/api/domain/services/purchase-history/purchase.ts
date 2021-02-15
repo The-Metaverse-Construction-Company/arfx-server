@@ -69,7 +69,6 @@ export class PurchaseProductService {
         previewVideo: product.previewVideo,
         state: PURCHASE_HISTORY_STATE.PENDING,
       })
-      
       let intentSecret = <any>null
       // if keepCardDetails is true, then create a card setup intent
       if (purchaseBody.keepCardDetails) {

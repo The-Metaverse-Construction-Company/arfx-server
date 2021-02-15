@@ -46,14 +46,16 @@ export const converter = (err: any, req: Request, res: Response, next: NextFunct
   //     stack: err.stack,
   //   });
   // }
-  console.log('err :>> ', err);
-  res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
-  res.json({
-    success: false,
-    error: err.errors,
-    result: null
-  });
-  // return requestHandler(convertedError, req, res, next);
+  if (!(err instanceof APIError)) {
+    res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
+    res.json({
+      success: false,
+      error: err.errors,
+      result: null
+    });
+  } else {
+    return requestHandler(convertedError, req, res, next);
+  }
 };
 
 /**
