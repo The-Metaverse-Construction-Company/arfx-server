@@ -70,7 +70,6 @@ describe('@Create Product API', () => {
       .expect(httpStatus.CREATED)
       .then(({body}) => {
         const {success = false, result, errors} = body
-        addedProductResponse = result
         assert.isOk(success)
         assert.isString(result._id, 'product _id must be a string')
         assert.isString(result.name, 'product name must be a string')
