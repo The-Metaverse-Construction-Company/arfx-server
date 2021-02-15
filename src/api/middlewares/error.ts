@@ -3,7 +3,6 @@ import {
 Request, Response
 } from 'express'
 import httpStatus from 'http-status'
-import expressValidation from 'express-validation'
 import APIError from '../utils/APIError'
 import { env } from '../../config/vars'
 

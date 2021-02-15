@@ -28,7 +28,11 @@ describe('@Update Product API', () => {
       .expect(httpStatus.ACCEPTED)
       .then(({body}) => {
         const {success = false, result, errors} = body
-        assert.isOk(success)
+        assert.isTrue(success)
+        assert.isUndefined(result.contentZip.originalFilePath)
+        assert.isUndefined(result.previewImage.originalFilePath)
+        assert.isUndefined(result.previewVideo.originalFilePath)
+        assert.isUndefined(result.thumbnail.originalFilePath)
         done()
       })
       .catch(done)

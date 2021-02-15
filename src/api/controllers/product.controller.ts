@@ -16,6 +16,13 @@ import { IUserEntity } from '../domain/entities/users'
 import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
 import AppError from '../utils/response-error'
 
+const removeProductOriginalFilepath = (product: IProductEntity) => {
+  delete product.previewImage.originalFilepath;
+  delete product.previewVideo.originalFilepath;
+  delete product.contentZip.originalFilepath;
+  delete product.thumbnail.originalFilepath;
+  return product
+}
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
 // })
@@ -48,7 +55,7 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
     const newProduct = await createProduct()
       .createOne(req.body, _id)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newProduct))
+      .json(successReponse(removeProductOriginalFilepath(newProduct)))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -73,7 +80,7 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
     const updatedProduct = await updateProduct()
       .updateOne(productId, req.body)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(updatedProduct))
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -131,12 +138,8 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
 };
 export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const product = res.locals['productDetails']
-    delete product.previewImage.originalFilepath
-    delete product.previewVideo.originalFilepath
-    delete product.contentZip.originalFilepath
     res.status(httpStatus.OK)
-      .json(successReponse(product))
+      .json(successReponse(removeProductOriginalFilepath(res.locals['productDetails'])))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -161,7 +164,7 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
     const product = await updateProductPublishStatus()
       .updateOne(productId, status)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(product))
+      .json(successReponse(removeProductOriginalFilepath(product)))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -183,7 +186,7 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     const product = await removeProduct()
       .removeOne(productId)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(product))
+      .json(successReponse(removeProductOriginalFilepath(product)))
   } catch (error) {
     next(new AppError({
       message: error.message,

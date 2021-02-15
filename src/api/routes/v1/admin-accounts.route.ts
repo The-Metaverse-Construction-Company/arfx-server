@@ -1,5 +1,4 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/admin-account/index.controller'
 import * as authCrontroller from '../../controllers/admin-account/auth.controller'
 import {

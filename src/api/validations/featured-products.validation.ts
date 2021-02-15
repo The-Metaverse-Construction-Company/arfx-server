@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import {body} from 'express-validator'
 import {productDetails} from '../service-configurations/products'
   // POST /v1/auth/register

@@ -12,8 +12,6 @@ export class UpdateProductPublishStatus {
    */
   public updateOne = async (productId: string, status: boolean = true) => {
     try {
-      console.log('statusx :>> ', productId);
-      console.log('statusx :>> ', status);
       // we can also update this to soft delete, or even move it thru archieve.
       const updateProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId

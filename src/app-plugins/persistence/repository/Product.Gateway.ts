@@ -87,6 +87,9 @@ export class ProductRepository extends GeneralRepository<IProductEntity, IProduc
             previewVideo: {
               originalFilepath: 0
             },
+            thumbnail: {
+              originalFilepath: 0
+            },
           }
         }
         // {

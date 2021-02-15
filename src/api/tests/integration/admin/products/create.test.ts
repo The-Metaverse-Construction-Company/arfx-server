@@ -50,12 +50,13 @@ describe('@Create Product API', () => {
         assert.isAbove(result.price, 0, 'product price must be not be lower than 0.')
         assert.isAbove(result.discountPercentage, -1, 'product discountPercentage must be not be lower than 0.')
         assert.isBoolean(result.published, 'product published must be boolean.')
+        assert.isUndefined(result.contentZip.originalFilePath, 'result.contentZip.originalFilePath must not be defined.')
+        assert.isUndefined(result.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
+        assert.isUndefined(result.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
+        assert.isUndefined(result.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')
         done()
       })
-      .catch((err) => {
-        console.log('objxxxxect :>> ', err);
-        done(err)
-      })
+      .catch(done)
   })
   it('should success creating product with discount percentage.', (done) => {
     request
@@ -79,12 +80,13 @@ describe('@Create Product API', () => {
         assert.isAbove(result.price, 0, 'product price must be not be lower than 0.')
         assert.isAbove(result.discountPercentage, -1, 'product discountPercentage must be not be lower than 0.')
         assert.isBoolean(result.published, 'product published must be boolean.')
+        assert.isUndefined(result.contentZip.originalFilePath)
+        assert.isUndefined(result.previewImage.originalFilePath)
+        assert.isUndefined(result.previewVideo.originalFilePath)
+        assert.isUndefined(result.thumbnail.originalFilePath)
         done()
       })
-      .catch((err) => {
-        console.log('objxxxxect :>> ', err);
-        done(err)
-      })
+      .catch(done)
   })
   it('should failed creating product due to incorrect variable types for product price.', (done) => {
     request
