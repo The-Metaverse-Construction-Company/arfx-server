@@ -10,6 +10,7 @@ import {
 
 import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
+import AppError from '../utils/response-error';
 /**
  * @public
  * create user product
@@ -48,8 +49,10 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.OK)
       .json(successReponse(userProduct))
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .json(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -68,7 +71,9 @@ export const userProductListRoute = async (req: Request, res: Response, next: Ne
     res.status(httpStatus.OK)
       .json(successReponse(userProductList))
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .json(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

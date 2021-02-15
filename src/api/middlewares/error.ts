@@ -13,45 +13,47 @@ import { env } from '../../config/vars'
  */
 const requestHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   const response = {
-    code: err.status,
+    code: err.httpStatus ?? err.status,
     message: err.message || httpStatus[err.status],
     errors: err.errors,
     stack: err.stack,
   };
-
   if (env !== 'development') {
     delete response.stack;
   }
-
   res.status(err.status);
   res.json(response);
 };
 export const handler = requestHandler;
-
 /**
  * If error is not an instanceOf APIError, convert it.
  * @public
  */
 export const converter = (err: any, req: Request, res: Response, next: NextFunction) => {
   let convertedError = err;
-
-  if (err instanceof expressValidation.ValidationError) {
-    convertedError = new APIError({
-      message: 'Validation Error',
-      errors: err.errors,
-      status: err.status,
-      //@ts-expect-error
-      stack: err.stack,
-    });
-  } else if (!(err instanceof APIError)) {
-    convertedError = new APIError({
-      message: err.message,
-      status: err.status,
-      stack: err.stack,
-    });
-  }
-
-  return requestHandler(convertedError, req, res, next);
+  // if (err instanceof expressValidation.ValidationError) {
+  //   convertedError = new APIError({
+  //     message: 'Validation Error',
+  //     errors: err.errors,
+  //     status: err.status,
+  //     //@ts-expect-error
+  //     stack: err.stack,
+  //   });
+  // } else if (!(err instanceof APIError)) {
+  //   convertedError = new APIError({
+  //     message: err.message,
+  //     status: err.status,
+  //     stack: err.stack,
+  //   });
+  // }
+  console.log('err :>> ', err);
+  res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
+  res.json({
+    success: false,
+    error: err.errors,
+    result: null
+  });
+  // return requestHandler(convertedError, req, res, next);
 };
 
 /**
