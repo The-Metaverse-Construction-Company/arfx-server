@@ -21,6 +21,7 @@ import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import * as emailProvider from '../domain/services/emails/emailProvider'
 import { errorResponse, successReponse } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
+import AppError from '../utils/response-error'
 
 const RefreshToken = require('../models/refreshToken.model');
 const { jwtExpirationInterval } = require('../../config/vars');
@@ -62,7 +63,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     // const userTransformed = user.transform();
     res.status(httpStatus.OK).send(successReponse(response))
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST).send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -85,7 +89,10 @@ export const userSignOutRoute = async (req: Request, res: Response, next: NextFu
       .signOut(user._id)
     res.status(httpStatus.OK).send(successReponse(response))
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -104,7 +111,10 @@ export const oAuth = async (req: Request, res: Response, next: NextFunction) => 
     const userTransformed = user.transform();
     return res.json({ token, user: userTransformed });
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -124,6 +134,9 @@ export const refresh = async (req: Request, res: Response, next: NextFunction) =
     const response = generateTokenResponse(user, accessToken);
     return res.json(response);
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

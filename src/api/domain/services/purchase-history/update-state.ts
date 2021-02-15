@@ -2,9 +2,11 @@ import {
   IPurchaseHistorryRepositoryGateway, PURCHASE_HISTORY_STATE
 } from '../../entities/purchase-history'
 import { IGeneralServiceDependencies } from '../../interfaces';
+import { UpdateProductPurchaseCountService } from '../products';
 import { CreateUserProductsService } from '../user-products';
 interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
   createUserProductsService: CreateUserProductsService
+  updateProductPurchaseCountService: UpdateProductPurchaseCountService
 }
 export class UpdatePurchaseStateService {
   constructor(protected dependencies: IDependencies) {
@@ -32,6 +34,8 @@ export class UpdatePurchaseStateService {
           productId: updatedPurchase.productId,
           userId: updatedPurchase.userId
         })
+        // update the purchase count of the product.
+        await this.dependencies.updateProductPurchaseCountService.updateOne(updatedPurchase.productId)
       }
       return updatedPurchase
     } catch (error) {

@@ -14,6 +14,7 @@ import {
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
 import { errorResponse, successReponse } from '../helper/http-response'
+import AppError from '../utils/response-error'
 const User = require('../models/user.model');
 
 /**
@@ -90,8 +91,10 @@ export const UpdateUserRoute = (req: Request, res: Response, next: NextFunction)
         .send(successReponse(user))
     })
     .catch((e) => {
-      res.status(httpStatus.BAD_REQUEST)
-        .send(errorResponse([e.message]))
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
     });
 };
 
@@ -112,7 +115,10 @@ export const UserListRoute = async (req: Request, res: Response, next: NextFunct
       })
     res.json(successReponse(users));
   } catch (error) {
-    next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -128,7 +134,12 @@ export const SuspendUserRoute = (req: Request, res: Response, next: NextFunction
   updateUserSuspendStatusService()
     .updateOne(userId, true)
     .then((user) => res.status(httpStatus.ACCEPTED).json(successReponse(user)))
-    .catch((e: Error) => next(e));
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 /**
  * @public
@@ -143,7 +154,12 @@ export const UnsuspendUserRoute = (req: Request, res: Response, next: NextFuncti
     .updateOne(userId, false)
     .then((user) => res.status(httpStatus.ACCEPTED)
       .json(successReponse(user)))
-    .catch((e: Error) => next(e));
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 /**
  * @public
@@ -159,5 +175,10 @@ export const resendAccountVerificationOTPRoute = (req: Request, res: Response, n
     .then((otp) => {
       res.status(httpStatus.OK).send(successReponse({code: otp}))
     })
-    .catch((e: Error) => next(e));
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };

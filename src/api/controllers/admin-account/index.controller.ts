@@ -20,6 +20,7 @@ import {
  * @helpers
  */
 import { errorResponse, successReponse } from '../../helper/http-response'
+import AppError from '../../utils/response-error';
 /**
  * @public
  * create admin account
@@ -38,7 +39,10 @@ export const createAdminAccountRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.CREATED)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -62,7 +66,10 @@ export const updateAdminAccountRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(updatedAdminAccount))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -80,8 +87,10 @@ export const adminAccountDetailsRoute = async (req: Request, res: Response, next
     res.status(httpStatus.OK)
       .json(successReponse(adminAccount))
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .json(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -100,6 +109,9 @@ export const adminAccountListRoute = async (req: Request, res: Response, next: N
     res.status(httpStatus.OK)
       .json(successReponse(adminAccounts))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

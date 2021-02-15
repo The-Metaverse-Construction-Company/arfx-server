@@ -9,7 +9,8 @@ import {
   RemoveProduct,
   UpdateProductPublishStatus,
   // UpdateProductURLService,
-  UploadProductBlobService
+  UploadProductBlobService,
+  UpdateProductPurchaseCountService
 } from '../domain/services/products'
 /**
  * @repository
@@ -58,6 +59,11 @@ export const removeProduct = () => (
 )
 export const updateProductPublishStatus = () => (
   new UpdateProductPublishStatus({
+    repositoryGateway: new ProductRepository()
+  })
+)
+export const updateProductPurchaseCountService = () => (
+  new UpdateProductPurchaseCountService({
     repositoryGateway: new ProductRepository()
   })
 )
