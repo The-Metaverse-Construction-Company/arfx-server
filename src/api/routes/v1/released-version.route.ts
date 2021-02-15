@@ -1,5 +1,4 @@
 import express, {Request, Response} from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/released-version.controller'
 
 const router = express.Router();

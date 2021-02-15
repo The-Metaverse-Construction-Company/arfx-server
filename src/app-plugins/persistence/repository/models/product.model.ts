@@ -1,5 +1,5 @@
 import {
-  model, Document, Schema, SchemaTypeOpts
+  model, Document, Schema, SchemaTypeOpts, SchemaTypeOptions
 } from 'mongoose'
 
 import {
@@ -8,6 +8,7 @@ import {
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export const ProductBlobObject = {
+  type: Object,
   originalFilepath: {
     type: String,
     default: ''
@@ -25,11 +26,11 @@ export const ProductCoreRepositotyModelObj = {
     type: String,
     default: '',
   },
-  description: {
+  title: {
     type: String,
     default: '',
   },
-  title: {
+  description: {
     type: String,
     default: '',
   },
@@ -53,7 +54,7 @@ export const ProductCoreRepositotyModelObj = {
   }
 }
 // this will automatically error when it have a changes on the product entity interface
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<any>>> {
   _id: {
     type: String,
     default: '',

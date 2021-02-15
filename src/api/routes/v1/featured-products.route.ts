@@ -1,5 +1,4 @@
 import express, {Request, Response} from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/featured-product.controller'
 import * as validations from '../../validations/featured-products.validation'
 import {

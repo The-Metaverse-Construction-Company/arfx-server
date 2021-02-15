@@ -1,5 +1,4 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/purchase.controller'
 import { authorize, LOGGED_USER } from '../../middlewares/auth';
 import * as validations from '../../validations/purchase-history.validation'

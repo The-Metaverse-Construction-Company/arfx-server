@@ -1,4 +1,3 @@
-import Joi from 'joi'
 import {param, body} from 'express-validator'
 import {extractValue} from 'ts-enum-extractor'
 import {
@@ -35,30 +34,14 @@ export const ProductFormValidationPipeline = [
     .optional(),
 ]
 export const UpdateProductValidation = ProductFormValidationPipeline
-export const UpdateProductPublishValidation = {
-  body: {
-    status: 
-      Joi.boolean()
-      .required()
-  }
-}
-export const RemoveProductValidation = {
-  params: {
-    productId: 
-      Joi.string()
-      .required()
-  }
-}
-export const ProductListValidation = {
-  query: {
-    searchText:
-      Joi.string(),
-    limitTo:
-      Joi.number(),
-    startAt:
-      Joi.number(),
-  }
-}
+export const UpdateProductPublishValidation = [
+  body('status')
+    .isBoolean()
+]
+export const RemoveProductValidation = [
+  param('productId')
+    .isString()
+]
 export const ProductBlobTypeValidationPipeline = [
   param('blobType')
   .isIn(AvailableBlobType)

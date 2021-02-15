@@ -2,7 +2,6 @@
  * @libraries
  */
 import express from 'express'
-import validate from 'express-validation'
 /**
  * @controllers
  */
@@ -14,11 +13,9 @@ import {
   authorize, ADMIN, LOGGED_USER, authorizeAdminAccount
 } from '../../middlewares/auth'
 import {
-  listUsers,
-  createUser,
-  replaceUser,
-  updateUser,
-  createUserPipeline, UserFormValidationPipeline
+  UserListValidationPipeline,
+  createUserPipeline,
+  UserFormValidationPipeline
 } from '../../validations/user.validation'
 
 /**
@@ -57,7 +54,12 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/List'
  */
-  .get(authorizeAdminAccount(), validate(listUsers), controller.UserListRoute)
+  .get(
+    authorizeAdminAccount(),
+    UserListValidationPipeline,
+    requestValidatorMiddleware,
+    controller.UserListRoute
+  )
 /**
  * @swagger
  * /v1/users:
