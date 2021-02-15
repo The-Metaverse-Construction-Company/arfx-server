@@ -70,7 +70,7 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "@azure/storage-blob": "^12.4.0",
+    "@azure/storage-blob": "^12.4.1",
     "@sendgrid/mail": "^7.4.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/busboy": "^0.2.3",
@@ -93,7 +93,6 @@
     "@types/swagger-jsdoc": "^6.0.0",
     "@types/swagger-ui-express": "^4.1.2",
     "@types/uuid": "^8.3.0",
-    "ts-enum-extractor": "^1.0.4",
     "apidoc": "^0.17.5",
     "chai": "^4.3.0",
     "chai-as-promised": "^7.1.1",
@@ -110,6 +109,7 @@
     "sinon": "^7.5.0",
     "sinon-chai": "^3.0.0",
     "supertest": "^4.0.2",
+    "ts-enum-extractor": "^1.0.4",
     "typescript": "^3.9.6"
   }
 }
