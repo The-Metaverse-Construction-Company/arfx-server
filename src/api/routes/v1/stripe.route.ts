@@ -21,9 +21,6 @@ const middleware = async (request: Request, response: Response, next: NextFuncti
 }
 app.post('/webhook', (request, response) => {
   let event = request.body;
-  let state = -1
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@event.type xxxxxxx:>> ', event.type);
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@event.type xxxxxxx:>> ', event);
   new Promise((resolve, reject) => {
     switch (event.type) {
       case 'payment_intent.failed':
@@ -31,10 +28,6 @@ app.post('/webhook', (request, response) => {
           .updateOne(event.data.object.id, event.data.object.payment_method, PURCHASE_HISTORY_STATE.FAILED))
         break;
       case 'payment_intent.payment_failed':
-        console.log('event.data.object.id :>> ', event.data.object);
-        console.log('event.data.object.id :>> ', event.data.object.id);
-        console.log('event.data.object.id :>> ', event.data.object.status);
-        console.log('event.data.object.last_payment_error.payment_method.id :>> ', event.data.object.last_payment_error.payment_method.id);
         resolve(updatePurchaseStateService()
           .updateOne(event.data.object.id, event.data.object.last_payment_error.payment_method.id, PURCHASE_HISTORY_STATE.FAILED))
         break;
