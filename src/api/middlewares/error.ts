@@ -50,7 +50,7 @@ export const converter = (err: any, req: Request, res: Response, next: NextFunct
     res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
     res.json({
       success: false,
-      error: err.errors,
+      errors: err.errors,
       result: null
     });
   } else {

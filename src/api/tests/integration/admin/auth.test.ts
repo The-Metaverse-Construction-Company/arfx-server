@@ -26,7 +26,7 @@ describe('@Sign In Admin Account Service', () => {
       .then((data) => {
         const {success, result} = data.body
         adminSignInResponse = result
-        assert.equal(success, true)
+        assert.isTrue(success)
         done()
       })
       .catch(done)
@@ -41,6 +41,7 @@ describe('@Sign In Admin Account Service', () => {
       .expect(httpStatus.BAD_REQUEST)
       .then(({body}) => {
         const {success, result, errors = []} = body
+        console.log('body :>> ', body);
         assert.isNotOk(success)
         assert.isAbove(errors.length, 0)
         done()
