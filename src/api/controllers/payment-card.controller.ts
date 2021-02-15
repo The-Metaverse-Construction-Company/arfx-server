@@ -10,6 +10,7 @@ import Stripe from 'stripe'
 import { STRIPE_SECRET_KEY } from '../utils/constants'
 import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
+import AppError from '../utils/response-error'
 const stripe = new Stripe(STRIPE_SECRET_KEY, {typescript: true, apiVersion: "2020-08-27"})
 
 /**
@@ -27,7 +28,10 @@ export const createCustomerIntent = async (req: Request, res: Response, next: Ne
     return
   } catch (error) {
     console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -44,6 +48,9 @@ export const getCustomerPaymentMethods = async (req: Request, res: Response, nex
     return
   } catch (error) {
     console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

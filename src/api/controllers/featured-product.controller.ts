@@ -11,6 +11,7 @@ import {
 } from '../service-configurations/product-banner'
 import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
+import AppError from '../utils/response-error'
 /**
  * @public
  * get the list of the product banner
@@ -27,8 +28,10 @@ export const featuredProductListRoute = async (req: Request, res: Response, next
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -51,8 +54,10 @@ export const createFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -78,8 +83,10 @@ export const updateFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -98,7 +105,9 @@ export const removeFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    res.status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

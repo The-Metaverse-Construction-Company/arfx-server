@@ -16,6 +16,7 @@ import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
 import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
 import ProductImageResize from '../helper/image-resize'
+import AppError from '../utils/response-error'
 
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
@@ -51,7 +52,10 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
     res.status(httpStatus.CREATED)
       .json(successReponse(newProduct))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -82,7 +86,10 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(updatedProduct))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -104,7 +111,10 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -124,22 +134,25 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
     res.locals['productDetails'] = product
     next()
   } catch (error) {
-    res
-      .status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const product = res.locals['productDetails']
-
     delete product.previewImage.originalFilepath
     delete product.previewVideo.originalFilepath
     delete product.contentZip.originalFilepath
     res.status(httpStatus.OK)
       .json(successReponse(product))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -161,9 +174,10 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(product))
   } catch (error) {
-    res
-      .status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -182,9 +196,10 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(product))
   } catch (error) {
-    res
-      .status(httpStatus.BAD_REQUEST)
-      .send(errorResponse([error.message]))
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -196,8 +211,6 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
 export const downloadContentZipRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {blobType = ''} = req.params
-    console.log('req.params :>> ', req.params);
-    let {h = '', w = ''} = <{h: string, w: string}>req.query
     const product = <IProductEntity>res.locals['productDetails']
     const blobOriginalFilepath = <string>await ((blobType: string) => {
       return new Promise((resolve, reject) => {
@@ -222,8 +235,6 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
     if (!blobOriginalFilepath) {
       throw new Error('Invalid url')
     }
-    console.log('blobOriginalFilepath :>> ', blobOriginalFilepath);
-    // res.send(blobOriginalFilepath)
     res.sendFile(blobOriginalFilepath)
   } catch (error) {
     res
