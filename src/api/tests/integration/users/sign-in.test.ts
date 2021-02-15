@@ -29,6 +29,7 @@ describe('@SignIn API', () => {
         userSignInResponse = result
         done()
       })
+      .catch(done)
   })
   it('should sign-in failed due to incorrect email credentials.', (done) => {
     request
@@ -42,9 +43,10 @@ describe('@SignIn API', () => {
         const {success = false, result, errors} = body
         assert.equal(success, false)
         assert.equal(result, null)
-        assert.equal(errors[0], 'Invalid user credentials.')
+        assert.equal(errors[0].msg, 'Invalid user credentials.')
         done()
       })
+      .catch(done)
   })
   it('should sign-in failed due to incorrect password credentials.', (done) => {
     request
@@ -58,8 +60,9 @@ describe('@SignIn API', () => {
         const {success = false, result, errors} = body
         assert.equal(success, false)
         assert.equal(result, null)
-        assert.equal(errors[0], 'Invalid user credentials.')
+        assert.equal(errors[0].msg, 'Invalid user credentials.')
         done()
       })
+      .catch(done)
   })
 })

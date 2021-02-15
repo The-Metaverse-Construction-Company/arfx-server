@@ -49,7 +49,7 @@ after((done) => {
     ProductBannerCollectionModel.deleteMany({}),
     ProductCollectionModel.deleteMany({}),
     PurchaseHistoryCollectionModel.deleteMany({}),
-    // UserCollectionModel.deleteMany({}),
+    UserCollectionModel.deleteMany({}),
     UserProductCollectionModel.deleteMany({})
   ])
   .then(() => {

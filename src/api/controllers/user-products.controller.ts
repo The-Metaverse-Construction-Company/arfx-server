@@ -46,6 +46,9 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
     const {userProductId = ''} = req.params
     const userProduct = await userProductDetailsService()
       .getOne(_id, userProductId)
+    if (!userProduct) {
+      throw new Error('No user product details found.')
+    }
     res.status(httpStatus.OK)
       .json(successReponse(userProduct))
   } catch (error) {
