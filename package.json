@@ -8,7 +8,7 @@
     "yarn": "*"
   },
   "scripts": {
-    "start": "node ./dist/server.js",
+    "start": "pm2-dev start ./dist/server.js",
     "dev": "nodemon -L ./dist/server.js",
     "dev:watch": "tsc -w",
     "build": "tsc -p .",
@@ -29,6 +29,7 @@
     "docker:test:integration": "sudo docker exec $(sudo docker ps -a -q -f name=^backend-service$) npm run test:integration"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.4.1",
     "axios": "^0.19.0",
     "bcryptjs": "2.4.3",
     "bluebird": "^3.5.0",
@@ -59,7 +60,7 @@
     "passport-azure-ad": "^4.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "4.0.0",
-    "pm2": "^4.2.0",
+    "pm2": "^4.5.4",
     "random-number": "0.0.9",
     "redis": "^3.0.2",
     "sharp": "^0.27.1",
@@ -70,7 +71,6 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "@azure/storage-blob": "^12.4.1",
     "@sendgrid/mail": "^7.4.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/busboy": "^0.2.3",
