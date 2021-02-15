@@ -1,5 +1,4 @@
 import {
-  IPurchaseHistoryBody,
   IPurchaseHistorryRepositoryGateway, IPurchaseHistoryParams, PURCHASE_HISTORY_STATE
 } from '../../entities/purchase-history'
 import {
@@ -16,7 +15,6 @@ import {
   UserProductDetailsService
 } from '../user-products'
 import { IGeneralServiceDependencies } from '../../interfaces';
-import { IUserEntity } from '../../entities/users';
 export interface IChargeCustomerPaymentParams {
   customerId: string,
   // paymentMethodId: string,
@@ -45,12 +43,11 @@ export class PurchaseProductService {
    */
   public purchaseOne = async (userId: string, purchaseBody: _IPurchaseHistoryParams) => {
     try {
-      console.log('======================================================================================================================================');
       // check first if the product selected product is already brought by user/customer
-      // const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
-      // if (purchasedProduct) {
-      //   throw new Error('Failed to purchase this product. Product already purchased by this user.')
-      // }
+      const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
+      if (purchasedProduct) {
+        throw new Error('Failed to purchase this product. Product already purchased by this user.')
+      }
       // fetch user data.
       const user = await this.dependencies.userDetailsService.findOne(userId)
       // fetch product data.
@@ -89,10 +86,9 @@ export class PurchaseProductService {
         }
       })
       newPurchaseHistory.paymentIntentId = paymentIntent.id
-      await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
       // insert it thru the repo.
-      // insert the product details on the user products
-      // add logs
+      await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
+      // add some logs
       return {
         authenticated: authenticated,
         payment: paymentIntent,
