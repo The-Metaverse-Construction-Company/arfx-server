@@ -11,7 +11,7 @@ import { STRIPE_WH_SECRET } from '../../utils/constants';
 const app = Router({mergeParams: true})
 const middleware = async (request: Request, response: Response, next: NextFunction) => {
   const sig = request.headers['stripe-signature'] as string
-  const endpointSecret =  STRIPE_WH_SECRET
+  const endpointSecret = STRIPE_WH_SECRET
   let event;
   try {
     event = stripe.webhooks.constructEvent(request.body.rawBody, sig, endpointSecret)
@@ -37,11 +37,11 @@ app.post('/webhook', (request, response) => {
         break;
       case 'charge.succeeded':
         resolve(updatePurchasePaymentChargeService()
-          .updateOne(event.data.object.payment_intent, event.data.object.payment_method, event.data.object.id))
+          .updateOne(event.data.object.payment_intent, event.data.object.id))
         break;
       case 'charge.failed':
-        // resolve(updatePurchaseStateService()
-        //   .updateOne(event.data.payment_intent.id, event.data.payment_method.id, PURCHASE_HISTORY_STATE.FAILED))
+        resolve(updatePurchasePaymentChargeService()
+          .updateOne(event.data.object.payment_intent, event.data.object.id))
         resolve(true)
         break;
       default:

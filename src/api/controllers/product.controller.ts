@@ -228,6 +228,7 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
       throw new Error('Invalid url')
     }
     res.sendFile(blobOriginalFilepath)
+    return;
   } catch (error) {
     res
       .status(httpStatus.BAD_REQUEST)

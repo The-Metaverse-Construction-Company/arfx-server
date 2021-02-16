@@ -73,7 +73,7 @@ export class ProductRepository extends GeneralRepository<IProductEntity, IProduc
         },
         {
           $addFields: {
-            userId: "$userId.userId"
+            userId: "$userId.userId",
           }
         },
         {

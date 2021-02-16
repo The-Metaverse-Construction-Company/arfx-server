@@ -10,10 +10,9 @@ export class UpdatePurchasePaymentChargeService {
   /**
    * update the state of the puchase.
    * @param paymentIntentId // paymentMethodId from the payment gateway.
-   * @param paymentMethodId // payment charge id from the payment gateway.
    * @param paymentChargeId // payment charge id from the payment gateway.
    */
-  public updateOne = async (paymentIntentId: string, paymentMethodId: string, paymentChargeId: string) => {
+  public updateOne = async (paymentIntentId: string, paymentChargeId: string) => {
     try {
       const updatedPurchase = await this.dependencies.repositoryGateway.updateOne({
         paymentIntentId: paymentIntentId,

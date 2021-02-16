@@ -8,7 +8,7 @@ import {
   purchaseHistoryDetails
 } from '../service-configurations/purchase-history'
 
-import { errorResponse, successReponse } from '../helper/http-response'
+import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
 import AppError from '../utils/response-error';
 /**
@@ -42,9 +42,10 @@ export const purchaseProductRoute = async (req: Request, res: Response, next: Ne
 export const purchaseHistoryListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = ''} = <IUserEntity>req.user
+    const {userId = ''} = req.params
     const newPurchaseHistory = await purchaseHistoryList()
-      .getList(_id, req.query)
-    res.status(httpStatus.CREATED)
+      .getList(userId, req.query)
+    res.status(httpStatus.OK)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
     next(new AppError({
@@ -65,7 +66,7 @@ export const purchaseHistoryDetailsRoute = async (req: Request, res: Response, n
     const {purchasedProductId = ''} = req.params
     const newPurchaseHistory = await purchaseHistoryDetails()
       .getOne(_id, purchasedProductId)
-    res.status(httpStatus.CREATED)
+    res.status(httpStatus.OK)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
     next(new AppError({

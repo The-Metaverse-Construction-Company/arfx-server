@@ -45,6 +45,7 @@ export const converter = (err: any, req: Request, res: Response, next: NextFunct
   //     stack: err.stack,
   //   });
   // }
+  console.log('err :>> ', err);
   if (!(err instanceof APIError)) {
     res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
     res.json({
