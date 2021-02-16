@@ -8,6 +8,7 @@ export interface IProductBlobProperties {
 }
 export interface IProductContentZip extends IProductBlobProperties{
   version: number // version of the product. will increase this every time product is updated.
+  hash: string // hash of the content zip that will verify thru the client side. to validate if the content zip that they downloaded is matched thru this file hashed.
 }
 export interface IProductBlob {
   contentZip: IProductContentZip // contentzip of the product,

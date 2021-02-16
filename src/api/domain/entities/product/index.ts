@@ -75,7 +75,7 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentZip = {blobURL: '', originalFilepath: '', version: 0},
+      contentZip = {blobURL: '', originalFilepath: '', version: 0, hash: ''},
       previewVideo = {blobURL: '', originalFilepath: ''},
       previewImage = {blobURL: '', originalFilepath: ''},
       thumbnail = {blobURL: '', originalFilepath: ''},

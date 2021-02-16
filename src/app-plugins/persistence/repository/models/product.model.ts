@@ -39,7 +39,11 @@ export const ProductCoreRepositotyModelObj = {
     version: {
       type: Number,
       default: 0
-    }
+    },
+    hash: {
+      type: Number,
+      default: 0
+    },
   },
   previewImage: ProductBlobObject,
   previewVideo: ProductBlobObject,
@@ -54,7 +58,7 @@ export const ProductCoreRepositotyModelObj = {
   }
 }
 // this will automatically error when it have a changes on the product entity interface
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<any>>> {
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
   _id: {
     type: String,
     default: '',

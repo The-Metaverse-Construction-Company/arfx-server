@@ -41,10 +41,10 @@ export default ({
       name = '',
       discountPercentage = 0,
       price = 0,
-      contentZip = {blobURL: '', originalFilepath: '', version: 0},
-      previewImage = {blobURL: '', originalFilepath: ''},
-      previewVideo = {blobURL: '', originalFilepath: ''},
-      thumbnail = {blobURL: '', originalFilepath: ''},
+      contentZip,
+      previewImage,
+      previewVideo,
+      thumbnail,
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {

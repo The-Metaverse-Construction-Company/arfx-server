@@ -1,6 +1,9 @@
 import { BACKEND_HOST } from '../../../utils/constants';
 import { IProductBlobProperties, IProductContentZip, PRODUCT_BLOB_TYPE } from '../../entities/product';
 import {  IImageResizeOption, IUploader } from '../../interfaces';
+import fs from 'fs'
+import {MD5} from 'crypto-js'
+import md5 from 'md5'
 interface IUploadProductBlob{
   contentZip: string,
   previewImage: string,
@@ -33,12 +36,21 @@ export class UploadProductBlobService {
       const {contentZip, previewVideo, previewImage} = productBody
       const uploadedBlobURLs = <IUploadProductBlobResponse>{}
       if (contentZip) {
-        const blobArr = contentZip.split('.')
+        const originalFilepath = await this.dependencies.fileUploader.upload(productId, contentZip)
+        const hash = <string> await new Promise((resolve) => {
+          // const readStream = fs.createReadStream(originalFilepath)
+          // readStream.on('data', (chunk) => { })
+          const b64 = fs.readFileSync(originalFilepath, {encoding: 'base64'})
+          const h = md5(Buffer.from(b64, 'base64'))
+          resolve(h)
+          return
+        })
         // upload to cloud storage provider
         uploadedBlobURLs.contentZip = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
           originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip),
-          version: 0
+          version: 0,
+          hash
         }
       }
       if (previewImage) {
