@@ -50,26 +50,6 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
   return;
 };
 
-// const adminAuthHandler = (req: Request, res: Response, next: NextFunction, roles: any) => async (err: any, user: any, info: any) => {
-//   const error = err || info;
-//   //@ts-expect-error
-//   const logIn = Promise.promisify(req.logIn);
-//   const apiError = new APIError({
-//     message: error ? error.message : 'Unauthorized',
-//     status: httpStatus.UNAUTHORIZED,
-//     stack: error ? error.stack : undefined,
-//   });
-//   try {
-//     if (error || !user) throw error;
-//     await logIn(user, { session: false });
-//   } catch (e) {
-//     return next(apiError);
-//   }
-//   req.user = user;
-
-//   return next();
-// };
-
 export const authorize = (roles: string|string[] = ALLOWED_USER_ROLES) => (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
     // ['admin-auth'], { session: false },

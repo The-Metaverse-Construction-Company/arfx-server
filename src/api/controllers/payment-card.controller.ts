@@ -27,7 +27,6 @@ export const createCustomerIntent = async (req: Request, res: Response, next: Ne
     res.status(httpStatus.CREATED).send(successReponse(intentSecret.client_secret))
     return
   } catch (error) {
-    console.log('object :>> ', error);
     next(new AppError({
       message: error.message,
       httpStatus: httpStatus.BAD_REQUEST
@@ -47,7 +46,6 @@ export const getCustomerPaymentMethods = async (req: Request, res: Response, nex
     res.status(httpStatus.OK).send(successReponse(paymentMethodList))
     return
   } catch (error) {
-    console.log('object :>> ', error);
     next(new AppError({
       message: error.message,
       httpStatus: httpStatus.BAD_REQUEST
