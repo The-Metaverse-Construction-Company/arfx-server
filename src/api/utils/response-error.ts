@@ -12,9 +12,7 @@ class AppError extends Error {
     super(message);
     this.name = this.constructor.name;
     this.errors = [
-      {
-        msg: message
-      }
+      message
     ]
     // this.status = status;
     this.httpStatus = httpStatus;
