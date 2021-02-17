@@ -191,24 +191,9 @@ router.route('/:productId/published')
     requestValidatorMiddleware,
     controller.updateProductPublishStatusRoute
     )
-/**
- * @swagger
- * /v1/products/{productId}/content-zip:
- *  get:
- *    summary: "get the content zip"
- *    tags:
- *      - "Products"
- *    security:
- *      - adminBearerAuth: []
- *    parameters:
- *      - $ref: '#/components/requestParams/Product/id'
- *    responses:
- *      '200':
- *        $ref: '#/components/schemas/Product'
- */
 router.route('/:productId/:blobType\.:fileType')
   .get(
-    // authorize(),
+    authorize(),
     validations.ProductBlobTypeValidationPipeline,
     requestValidatorMiddleware,
     controller.downloadContentZipRoute
