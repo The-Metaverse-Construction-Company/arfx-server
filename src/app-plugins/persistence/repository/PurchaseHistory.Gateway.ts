@@ -25,6 +25,14 @@ export class PurchaseHistoryRepository extends GeneralRepository<IPurchaseHistor
             userId
           } : {}
         },
+        {
+          $project: {
+            contentZip: 0,
+            "previewImage.originalFilepath": 0,
+            "previewVideo.originalFilepath": 0,
+            "thumbnail.originalFilepath": 0
+          }
+        }
       ], {
         ...filterQuery,
         searchFields: [

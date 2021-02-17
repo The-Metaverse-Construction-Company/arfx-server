@@ -42,6 +42,9 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
               {
                 $project: {
                   contentZip: 0,
+                  'previewImage.originalFilepath': 0,
+                  'previewVideo.originalFilepath': 0,
+                  'thumbnail.originalFilepath': 0,
                 }
               },
               {
