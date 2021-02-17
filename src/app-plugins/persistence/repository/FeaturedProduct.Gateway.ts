@@ -12,7 +12,7 @@ import GeneralRepository from './General.Gateway'
 import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
-export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductEntity, IFeaturedProductRepositoryModel> implements IFeaturedProductRepositoryGateway {
+export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductRepositoryModel, IFeaturedProductEntity> implements IFeaturedProductRepositoryGateway {
   constructor () {
     super(FeaturedProductRepositoryModel)
   }

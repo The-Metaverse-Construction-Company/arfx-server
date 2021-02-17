@@ -43,10 +43,13 @@ export const purchaseHistoryListRoute = async (req: Request, res: Response, next
   try {
     const {_id = ''} = <IUserEntity>req.user
     const {userId = ''} = req.params
-    const newPurchaseHistory = await purchaseHistoryList()
-      .getList(userId, req.query)
+    const paginationList = await purchaseHistoryList()
+      .getList({
+        ...req.query,
+        userId
+      })
     res.status(httpStatus.OK)
-      .json(successReponse(newPurchaseHistory))
+      .json(successReponse(paginationList))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -64,6 +67,8 @@ export const purchaseHistoryDetailsRoute = async (req: Request, res: Response, n
   try {
     const {_id = ''} = <IUserEntity>req.user
     const {purchasedProductId = ''} = req.params
+    console.log('_id :>> ', _id);
+    console.log('purchasedProductId xxx:>> ', purchasedProductId);
     const newPurchaseHistory = await purchaseHistoryDetails()
       .getOne(_id, purchasedProductId)
     res.status(httpStatus.OK)

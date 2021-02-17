@@ -12,7 +12,7 @@ import GeneralRepository from './General.Gateway'
 import { IPaginationParameters, IAggregatePaginationResponse } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
-export class UserProductRepository extends GeneralRepository<IUserProductsEntity, IUserProductsRepositoryModel> implements IUserProductsRepositoryGateway {
+export class UserProductRepository extends GeneralRepository<IUserProductsRepositoryModel, IUserProductsEntity> implements IUserProductsRepositoryGateway {
   constructor () {
     super(UserProductsRepositoryModel)
   }

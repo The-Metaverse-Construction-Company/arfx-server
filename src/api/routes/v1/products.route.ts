@@ -66,7 +66,7 @@ router.route('/')
   controller.mapProductUploadedBlobRoute,
   controller.createProductRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
-/**
+/**x
  * @swagger
  * /v1/products:
  *  get:
@@ -146,7 +146,7 @@ router.route('/:productId')
   requestValidatorMiddleware,
   controller.mapProductUploadedBlobRoute,
   controller.updateProductRoute)
-  /**
+  /**xx
  * @swagger
  * /v1/products/{productId}:
  *  delete:
@@ -195,7 +195,7 @@ router.route('/:productId/published')
  * @swagger
  * /v1/products/{productId}/content-zip:
  *  get:
- *    summary: "Update publish status of selected product/scene."
+ *    summary: "get the content zip"
  *    tags:
  *      - "Products"
  *    security:

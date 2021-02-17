@@ -12,7 +12,7 @@ import GeneralRepository from './General.Gateway'
 import { IPaginationQueryParams } from '../../../api/domain/interfaces/general-repository-gateway'
 import { generateSearchTextFields } from '../../../api/helper/repository'
 
-export class UserRepository extends GeneralRepository<IUserEntity, IUserRepository> implements IUserRepositoryGateway {
+export class UserRepository extends GeneralRepository<IUserRepository, IUserEntity> implements IUserRepositoryGateway {
   constructor () {
     super(UserRepositoryModel)
   }
