@@ -1,5 +1,4 @@
-import express, {Request, Response} from 'express'
-// import { authorize } from '../../middlewares/auth'
+import express from 'express'
 import * as controller from '../../controllers/auth.controller'
 
 import {signInValidationPipeline
@@ -25,7 +24,7 @@ router.route('/login')
   .post(
     signInValidationPipeline,
     requestValidatorMiddleware,
-    controller.login
+    controller.userSignInRoute
   )
 /**
  * @swagger
@@ -48,6 +47,5 @@ router.route('/sign-out')
 //   .post(validate(oAuth), oAuthLogin('facebook'), controller.oAuth);
 // router.route('/google')
 //   .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
-
 
 export default router;

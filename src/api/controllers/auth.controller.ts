@@ -3,7 +3,7 @@
  */
 import httpStatus from 'http-status'
 import moment from 'moment-timezone'
-import express, {
+import {
   Response, Request, NextFunction
 } from 'express'
 
@@ -16,10 +16,8 @@ import {
   userVerifyToken
 } from '../service-configurations/users'
 
-import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 // import User from '../models/user.model'
-import * as emailProvider from '../domain/services/emails/emailProvider'
-import { errorResponse, successReponse } from '../helper/http-response'
+import { successReponse } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
 import AppError from '../utils/response-error'
 
@@ -46,7 +44,7 @@ function generateTokenResponse(user: any, accessToken: string) {
  * Returns jwt token if valid username and password is provided
  * @public
  */
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const userSignInRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       username = '',

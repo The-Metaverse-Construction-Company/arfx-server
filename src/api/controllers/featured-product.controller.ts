@@ -9,7 +9,7 @@ import {
   updateFeaturedProductService,
   removeFeaturedProductService,
 } from '../service-configurations/product-banner'
-import { errorResponse, successReponse } from '../helper/http-response'
+import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
 import AppError from '../utils/response-error'
 /**

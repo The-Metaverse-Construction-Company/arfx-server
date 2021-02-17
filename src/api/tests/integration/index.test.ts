@@ -1,7 +1,6 @@
 /**
  * @lib
  */
-import faker from 'faker'
 import {v4 as uuid} from 'uuid'
 /**
  * @repository_collections
