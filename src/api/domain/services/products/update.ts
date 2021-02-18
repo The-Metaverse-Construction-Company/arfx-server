@@ -8,7 +8,7 @@ import {
   ProductEntity
 } from '../../entities'
 
-import { IGeneralServiceDependencies } from '../../interfaces';
+import { IGeneralServiceDependencies, IValidateProductTotalAmount } from '../../interfaces';
 import { UploadProductBlobService } from './upload-blob';
 export interface _IProductParams extends IProductParams{
   contentZip: string,
@@ -17,7 +17,7 @@ export interface _IProductParams extends IProductParams{
 }
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
-
+  validateProductTotalAmount: IValidateProductTotalAmount
 }
 export class UpdateProduct {
   constructor(protected dependencies: IDependencies) {
@@ -45,6 +45,9 @@ export class UpdateProduct {
         price: newProductEntity.price,
         published: newProductEntity.published,
         updatedAt: newProductEntity.updatedAt,
+      }
+      if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
+        throw new Error('total price must not be below $0.50 usd.')
       }
       // upload to cloud storage provider
       const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {

@@ -18,6 +18,10 @@ components:
           $ref: '#/components/models/Product/description'
         price:
           $ref: '#/components/models/Product/price'
+        discountPercentage:
+          $ref: '#/components/models/Product/discountPercentage'
+        published:
+          $ref: '#/components/models/Product/published'
     Product:
       allOf:
       - $ref: '#/components/schemas/ProductParam'
@@ -25,10 +29,6 @@ components:
         properties:
           _id:
             $ref: '#/components/models/Product/_id'
-          discountPercentage:
-            $ref: '#/components/models/Product/discountPercentage'
-          published:
-            $ref: '#/components/models/Product/published'
           adminAccountId:
             $ref: '#/components/models/Product/adminAccountId'
           purchaseCount:

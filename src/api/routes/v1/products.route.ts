@@ -32,7 +32,6 @@ router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
 router.route('/')
 /**
-/**
  * @swagger
  * /v1/products:
  *  post:

@@ -44,22 +44,21 @@ export class PurchaseProductService {
   public purchaseOne = async (userId: string, purchaseBody: _IPurchaseHistoryParams) => {
     try {
       // check first if the product selected product is already brought by user/customer
-      // const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
-      // if (purchasedProduct) {
-      //   throw new Error('Failed to purchase this product. Product already purchased by this user.')
-      // }
+      const purchasedProduct = await this.dependencies.userProductDetailsService.getOne(userId, purchaseBody.productId)
+      if (purchasedProduct) {
+        throw new Error('Failed to purchase this product. Product already purchased by this user.')
+      }
       // fetch user data.
       const user = await this.dependencies.userDetailsService.findOne(userId)
       // fetch product data.
       const product = await this.dependencies.productDetailsService.findOne(purchaseBody.productId)
       // initialize purchase entity
       const newPurchaseHistory = new PurchaseHistoryEntity({
-        // ...purchaseBody,
-        productId: purchaseBody.productId,
         paymentMethodId: purchaseBody.paymentMethodId,
-        amount: product.price,
+        amount: Number((product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)),
         price: product.price,
         discountPercentage: product.discountPercentage,
+        productId: purchaseBody.productId,
         userId: user._id,
         title: product.title,
         name: product.name,
@@ -67,6 +66,7 @@ export class PurchaseProductService {
         contentZip: product.contentZip,
         previewImage: product.previewImage,
         previewVideo: product.previewVideo,
+        thumbnail: product.thumbnail,
         state: PURCHASE_HISTORY_STATE.PENDING,
       })
       let intentSecret = <any>null
@@ -78,12 +78,8 @@ export class PurchaseProductService {
       let {authenticated, paymentIntent} = await this.dependencies.payment.createIntent(newPurchaseHistory._id, {
         amount: newPurchaseHistory.amount,
         customerId: user.stripeCustomerId
-      }).catch((err) => {
-        return {
-          authenticated: false,
-          paymentIntent: err.raw.payment_intent
-        }
       })
+      console.log('paymentIntent :>> ', paymentIntent);
       newPurchaseHistory.paymentIntentId = paymentIntent.id
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)

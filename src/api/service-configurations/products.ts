@@ -23,6 +23,7 @@ import {
  */
 import BlobStorage from '../helper/blob-storage'
 import ProductImageResize from '../helper/image-resize'
+import { validateProductTotalPrice } from '../helper/validate-product-total-price'
 export const uploadProductBlobService = () => (
   new UploadProductBlobService({
     fileUploader: BlobStorage,
@@ -33,13 +34,15 @@ export const uploadProductBlobService = () => (
 export const createProduct = () => (
   new CreateProductService({
     repositoryGateway: new ProductRepository(),
-    uploadProductBlobService: uploadProductBlobService()
+    uploadProductBlobService: uploadProductBlobService(),
+    validateProductTotalAmount: validateProductTotalPrice
   })
 )
 export const updateProduct = () => (
   new UpdateProduct({
     repositoryGateway: new ProductRepository(),
-    uploadProductBlobService: uploadProductBlobService()
+    uploadProductBlobService: uploadProductBlobService(),
+    validateProductTotalAmount: validateProductTotalPrice
   })
 )
 export const productList = () => (

@@ -26,11 +26,11 @@ export const ProductFormValidationPipeline = [
     .withMessage('published must be boolean.')
     .optional(),
   body('discountPercentage')
-    .isFloat({
+    .isInt({
       min: 0,
-      max: 1
+      max: 100
     })
-    .withMessage('discountPercentage must be numeric with 2 decimal places.')
+    .withMessage('discountPercentage must be integer with the range of 0 to 100 only.')
     .optional(),
 ]
 export const UpdateProductValidation = ProductFormValidationPipeline

@@ -86,3 +86,7 @@ export interface IImageResizeOption {
   width: number
   height?: number
 }
+
+export interface IValidateProductTotalAmount {
+  (price: number, discountPercentage: number): boolean
+}

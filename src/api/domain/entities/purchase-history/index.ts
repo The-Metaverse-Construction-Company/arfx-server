@@ -62,7 +62,7 @@ export default ({
       amount = parseFloat(<any>amount)
       if (isNaN(amount)) {
         throw new Error('Amount must be a numeric with 2 decimal places.')
-      } else if (amount <= 0) {
+      } else if (amount < 0) {
         throw new Error('Amount must be greater than 0.')
       }
       // if (discountPercentage < 0) {

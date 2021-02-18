@@ -34,6 +34,7 @@ components:
         type: number
         default: 0
         description: discount percentage of the product/scene.
+        example: 0.05
       published:
         type: boolean
         default: true

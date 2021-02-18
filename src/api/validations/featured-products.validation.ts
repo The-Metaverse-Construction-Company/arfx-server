@@ -16,6 +16,7 @@ const productIdValidation = async (productId: string, {req}: any) => {
 export const FormPipeline = [
   body('productId')
     .isString()
+    .bail()
     .custom(productIdValidation),
   body('indexNo')
     .isInt({min: 0, max: 50})

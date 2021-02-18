@@ -14,13 +14,13 @@ router.route('/')
     controller.purchaseProductRoute
   )
 
-router.route('/history')
-  .post(
-    authorize(LOGGED_USER),
-    controller.purchaseHistoryListRoute)
+// router.route('/history')
+//   .post(
+//     authorize(LOGGED_USER),
+//     controller.purchaseHistoryListRoute)
 
-router.route('/history/:purchasedProductId')
-  .post(
-    authorize(LOGGED_USER),
-    controller.purchaseHistoryDetailsRoute)
+// router.route('/history/:purchasedProductId')
+//   .post(
+//     authorize(LOGGED_USER),
+    // controller.purchaseHistoryDetailsRoute)
 export default router;
