@@ -4,7 +4,6 @@ import {
 import {
   IUserAuthenticationServices,
   IUserEntity,
-  IUserParams
 } from './interfaces'
 export * from './interfaces'
 export * from './constants'
@@ -13,11 +12,13 @@ export * from './RepositoryGatewayInterfaces'
 const { ALLOWED_USER_ROLE } = require("./constants")
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
 interface IDeps extends IGeneralEntityDependencies {
-  hash(pwd: string): string 
+  hash(pwd: string): string
+  validateEmail(email: string): boolean
 }
 export default ({
   generateId,
-  hash
+  hash,
+  validateEmail
 }: IDeps) => (
   /**
    * _id: user id
@@ -55,6 +56,14 @@ export default ({
       }
       if (!allowed_roles.includes(role)) {
         throw new Error(`Invalid user roles. Valid Roles: ${allowed_roles.join(', ')}.`)
+      }
+      if (!email.value) {
+        throw new Error('email is required to initialize user entity.')
+      } else if (!validateEmail(email.value)) {
+        throw new Error('invalid email address format.')
+      }
+      if (suspended && typeof(suspended) !== 'boolean') {
+        throw new Error(`suspended must be a boolean. found: ${typeof(suspended)}`)
       }
       this._id = _id
       this.email = email

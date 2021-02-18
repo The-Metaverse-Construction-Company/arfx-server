@@ -6,13 +6,18 @@ import PurchaseHistory from './purchase-history'
 import UserProducts from './user-products'
 import AdminAccounts from './admin-accounts'
 import FeaturedProduct from './featured-product'
+import { validateEmailAddress } from '../../helper'
 
 const hash = (pwd: string) => {
   const hashPassword = bcrypt.hashSync(pwd, 10)
   return hashPassword
 }
 
-export const UserEntity = User({generateId: uuidV4, hash: hash})
+export const UserEntity = User({
+  generateId: uuidV4,
+  hash: hash,
+  validateEmail: validateEmailAddress
+})
 export const ProductEntity = Product({generateId: uuidV4})
 export const PurchaseHistoryEntity = PurchaseHistory({generateId: uuidV4})
 export const UserProductsEntity = UserProducts({generateId: uuidV4})

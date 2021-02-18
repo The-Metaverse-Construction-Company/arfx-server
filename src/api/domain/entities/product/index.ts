@@ -37,11 +37,40 @@ export class ProductCoreEntity implements IProductParams {
     discountPercentage,
     price
   }: IProductParams & IProductBlob) {
-    if (price <= 0) {
-      throw new Error('Price must be larger than 0.')
+    if (!title) {
+      throw new Error('title must not be null, undefined or empty string.')
+    } else if (typeof(title) !== 'string') {
+      throw new Error('title must be a string.')
+    } else if (title.length < 3) {
+      throw new Error('title must atleast 3 characters.')
     }
-    if (discountPercentage < 0) {
-      throw new Error('discountPercentage must be larger than 0.')
+    if (!name) {
+      throw new Error('name must not be null, undefined or empty string.')
+    } else if (typeof(name) !== 'string') {
+      throw new Error('name must be a string.')
+    } else if (name.length < 3) {
+      throw new Error('name must atleast 3 characters.')
+    }
+    if (!description) {
+      throw new Error('description must not be null, undefined or empty string.')
+    } else if (typeof(description) !== 'string') {
+      throw new Error('description must be a string.')
+    }
+    if (price === null || price === undefined || isNaN(price)) {
+      throw new Error('price must be a numeric with 2 decimal places.')
+    } else {
+      price = parseFloat(Number(price as any).toString())
+      if (price <= 0) {
+        throw new Error('price must be greater than 0.')
+      }
+    }
+    if (discountPercentage === null || discountPercentage === undefined || isNaN(discountPercentage)) {
+      throw new Error('discountPercentage must be a integer and a whole number.')
+    } else {
+      discountPercentage = parseInt(Number(discountPercentage as any).toString())
+      if (discountPercentage < 0) {
+        throw new Error('discountPercentage must be greater than 0.')
+      }
     }
     this.name = name
     this.title = title
@@ -96,26 +125,23 @@ export default ({
         discountPercentage,
         price
       })
-      price = parseFloat(<any>price)
-      discountPercentage = parseFloat(<any>discountPercentage)
       if (!_id) {
         _id = generateId()
-      }
-      if (!title) {
-        throw new Error('title must not be null, undefined or empty string.')
-      } else if (title.length < 3) {
-        throw new Error('title must atleast 3 characters.')
       }
       if (!description) {
         throw new Error('description must not be null, undefined or empty string.')
       }
-      if (published && typeof(published) === 'string' && (published === 'true' || published === 'false')) {
-        published = JSON.parse(published)
+      if (typeof(published) !== 'boolean') {
+        if (published === 0 || published === 1) {
+          published = !!published
+        } else if (published && (published === 'true' || published === 'false')) {
+          published = JSON.parse(published)
+        } else {
+          throw new Error('published must be a boolean.')
+        }
       }
       // add additional business rules here if needed.
       this._id = _id
-      this.price = price
-      this.discountPercentage = discountPercentage
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = published

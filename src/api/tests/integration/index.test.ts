@@ -18,6 +18,7 @@ import {
  */
 import PaymentGateway from '../../../config/payment-gateway'
 import DB from '../../../config/mongoose'
+import sinon from 'sinon'
 /**
  * @admin_tester
  */
@@ -29,17 +30,18 @@ import './users/index.test'
 before((done) => {
   // overwrite the logger function
   console.log = () => ({})
-  PaymentGateway.paymentIntent = {
-    //@ts-expect-error
-    create: async () => ({}),
-  }
-  PaymentGateway.customer = {
-    create: async () => uuid(),
-    //@ts-expect-error
-    getPaymentMethods: async () => ({}),
-    //@ts-expect-error
-    setupIntents: async () => ({}),
-  }
+  sinon
+    .stub(PaymentGateway.paymentIntent, 'create')
+    .resolves({authenticated: false, paymentIntent: <any>{_id: 'cus_IuC9hvua5AC5gL'}})
+  sinon
+    .stub(PaymentGateway.customer, 'create')
+    .resolves(`cus_IuC9hvua5AC5gL`)
+  sinon
+    .stub(PaymentGateway.customer, 'getPaymentMethods')
+    .resolves([] as any)
+  sinon
+    .stub(PaymentGateway.customer, 'setupIntents')
+    .resolves({} as any)
   done()
 })
 after((done) => {
