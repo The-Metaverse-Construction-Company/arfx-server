@@ -38,6 +38,8 @@ export default ({
       }
       if (!productId) {
         throw new Error('productId must not be null, undefined or empty string.')
+      } else if (typeof(productId) !== 'string') {
+        throw new Error('productId must be a string.')
       }
       // add additional business rules here if needed.
       this._id = _id

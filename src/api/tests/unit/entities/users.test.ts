@@ -18,7 +18,7 @@ describe('@User Entity', () => {
       verifiedAt: 0
     },
     mobileNumber: {
-      value: faker.phone.phoneNumber('+6339#########'),
+      value: faker.phone.phoneNumber('+639#########'),
       verified: false,
       verifiedAt: 0
     },
