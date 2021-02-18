@@ -46,6 +46,9 @@ export class UpdateProduct {
         published: newProductEntity.published,
         updatedAt: newProductEntity.updatedAt,
       }
+      // calculate the total price and validate it if its not below $0.50 usd.
+      // payment gateway provider have a limit of $0.50 as it's minimum amount and with a maximum amount of $999,999.99 for the transaction.
+      // reference link: https://support.chargebee.com/support/solutions/articles/228511-transaction-amount-limit-in-stripe#:~:text=The%20minimum%20amount%20for%20processing,Click%20Here%20for%20other%20currencies.
       if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
         throw new Error('total price must not be below $0.50 usd.')
       }
