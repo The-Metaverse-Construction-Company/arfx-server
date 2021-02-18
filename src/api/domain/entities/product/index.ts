@@ -109,6 +109,9 @@ export default ({
       if (!description) {
         throw new Error('description must not be null, undefined or empty string.')
       }
+      if (published && typeof(published) === 'string' && (published === 'true' || published === 'false')) {
+        published = JSON.parse(published)
+      }
       // add additional business rules here if needed.
       this._id = _id
       this.price = price

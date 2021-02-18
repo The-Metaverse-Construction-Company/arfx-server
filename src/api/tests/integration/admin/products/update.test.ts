@@ -37,36 +37,136 @@ describe('@Update Product API', () => {
       })
       .catch(done)
   })
-  it('should failed creating update due to incorrect variable types for product price.', (done) => {
-    request
-      .patch(`/v1/products/${addedProductResponse._id}`)
-      .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .field('name', title)
-      .field('title', title)
-      .field('description', faker.lorem.sentence())
-      .field('price', 'x12')
-      .expect(httpStatus.BAD_REQUEST)
-      .then(({body}) => {
-        const {success = false, result, errors} = body
-        assert.isNotOk(success)
-        done()
-      })
-      .catch(done)
+  describe('@produce price', () => {
+    it('should failed creating update due to incorrect variable types for product price.', (done) => {
+      request
+        .patch(`/v1/products/${addedProductResponse._id}`)
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 'x12')
+        .expect(httpStatus.BAD_REQUEST)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isNotOk(success)
+          done()
+        })
+        .catch(done)
+    })
+    it('should failed update product due to incorrect negative value for product price.', (done) => {
+      request
+        .patch(`/v1/products/${addedProductResponse._id}`)
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', -15)
+        .expect(httpStatus.BAD_REQUEST)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isNotOk(success)
+          done()
+        })
+        .catch(done)
+    })
   })
-  it('should failed update product due to incorrect negative value for product price.', (done) => {
-    request
-      .patch(`/v1/products/${addedProductResponse._id}`)
-      .set('Authorization', `Bearer ${adminSignInResponse.token}`)
-      .field('name', title)
-      .field('title', title)
-      .field('description', faker.lorem.sentence())
-      .field('price', -15)
-      .expect(httpStatus.BAD_REQUEST)
-      .then(({body}) => {
-        const {success = false, result, errors} = body
-        assert.isNotOk(success)
-        done()
-      })
-      .catch(done)
+  describe('@product discount percentage', () => {
+    it('should failed creating product due to incorrect negative value of discount percentage.', (done) => {
+      request
+        .patch(`/v1/products/${addedProductResponse._id}`)
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 15)
+        .field('discountPercentage', -10)
+        .expect(httpStatus.BAD_REQUEST)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isNotOk(success)
+          done()
+        })
+        .catch(done)
+    })
+    it('should failed creating product due to incorrect value of discount percentage that greater than 100.', (done) => {
+      request
+        .patch(`/v1/products/${addedProductResponse._id}`)
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 15)
+        .field('discountPercentage', 105)
+        .expect(httpStatus.BAD_REQUEST)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isNotOk(success)
+          done()
+        })
+        .catch(done)
+    })
+  })
+  describe('@product published status', () => {
+    it('should success creating product with pusblished status to true', (done) => {
+      request
+        .post('/v1/products')
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 15)
+        .field('discountPercentage', 10)
+        .field('published', true)
+        .expect(httpStatus.CREATED)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          // assert.isTrue(success)
+          console.log('result :>> ', result);
+          assert.isString(result._id, 'product _id must be a string')
+          assert.isTrue(result.published, 'product published status must be a true')
+          // assert.isTrue(result.published, 'product published status must be a true')
+          done()
+        })
+        .catch(done)
+    })
+    it('should success creating product with pusblished status to true', (done) => {
+      request
+        .post('/v1/products')
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 15)
+        .field('discountPercentage', 10)
+        .field('published', false)
+        .expect(httpStatus.CREATED)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isTrue(success)
+          assert.isString(result._id, 'product _id must be a string')
+          assert.isFalse(result.published, 'product published status must be a false')
+          done()
+        })
+        .catch(done)
+    })
+    it('should failed creating product with pusblished status to string value', (done) => {
+      request
+        .post('/v1/products')
+        .set('Authorization', `Bearer ${adminSignInResponse.token}`)
+        .field('name', title)
+        .field('title', title)
+        .field('description', faker.lorem.sentence())
+        .field('price', 15)
+        .field('discountPercentage', 10)
+        .field('published', "simple boolean")
+        .expect(httpStatus.BAD_REQUEST)
+        .then(({body}) => {
+          const {success = false, result, errors} = body
+          assert.isFalse(success)
+          done()
+        })
+        .catch(done)
+    })
   })
 })

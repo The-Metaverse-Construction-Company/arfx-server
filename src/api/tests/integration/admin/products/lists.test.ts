@@ -13,7 +13,7 @@ import App from '../../../../../index'
  */
 import {adminSignInResponse} from '../auth.test'
 const request = supertest(App)
-describe('@Product API', () => {
+describe('@Product List API', () => {
   it('should success fetch product list', (done) => {
     request
       .get('/v1/products')
