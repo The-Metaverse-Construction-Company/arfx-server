@@ -7,7 +7,7 @@ import * as validations from '../../validations/purchase-history.validation'
 const router = express.Router();
 
 router.route('/')
-/**
+/**x
  * @swagger
  * /v1/products/purchase:
  *  post:
@@ -20,7 +20,7 @@ router.route('/')
  *      $ref: '#/components/requestBody/Product/purchase'
  *    responses:
  *      '200':
- *        $ref: '#/components/responseBody/PurchaseHistories'
+ *        $ref: '#/components/responseBody/PurchaseProduct'
  */
   .post(
     authorize(LOGGED_USER),
