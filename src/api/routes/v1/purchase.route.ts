@@ -7,7 +7,7 @@ import * as validations from '../../validations/purchase-history.validation'
 const router = express.Router();
 
 router.route('/')
-/**x
+/**
  * @swagger
  * /v1/products/purchase:
  *  post:
