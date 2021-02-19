@@ -7,20 +7,25 @@ import * as validations from '../../validations/purchase-history.validation'
 const router = express.Router();
 
 router.route('/')
+/**x
+ * @swagger
+ * /v1/products/purchase:
+ *  post:
+ *    summary: "purchase the product"
+ *    tags:
+ *      - "Purchase Product"
+ *    security:
+ *      - userBearerAuth: []
+ *    requestBody:
+ *      $ref: '#/components/requestBody/Product/purchase'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responseBody/PurchaseProduct'
+ */
   .post(
     authorize(LOGGED_USER),
     validations.PurchaseProductValidationPipeline,
     requestValidatorMiddleware,
     controller.purchaseProductRoute
   )
-
-// router.route('/history')
-//   .post(
-//     authorize(LOGGED_USER),
-//     controller.purchaseHistoryListRoute)
-
-// router.route('/history/:purchasedProductId')
-//   .post(
-//     authorize(LOGGED_USER),
-    // controller.purchaseHistoryDetailsRoute)
 export default router;

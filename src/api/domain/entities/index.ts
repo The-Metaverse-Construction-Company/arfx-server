@@ -1,11 +1,12 @@
 import {v4 as uuidV4} from 'uuid'
 import bcrypt from 'bcryptjs'
 import User from './users'
+// import GeneralEntity from './general'
 import Product from './product'
 import PurchaseHistory from './purchase-history'
 import UserProducts from './user-products'
 import AdminAccounts from './admin-accounts'
-import FeaturedProduct from './featured-product'
+import FeaturedProduct from './featured-product/index'
 import { validateEmailAddress } from '../../helper'
 
 const hash = (pwd: string) => {
@@ -22,4 +23,5 @@ export const ProductEntity = Product({generateId: uuidV4})
 export const PurchaseHistoryEntity = PurchaseHistory({generateId: uuidV4})
 export const UserProductsEntity = UserProducts({generateId: uuidV4})
 export const AdminAccountsEntity = AdminAccounts({generateId: uuidV4, hash})
+
 export const FeaturedProductEntity = FeaturedProduct({generateId: uuidV4})

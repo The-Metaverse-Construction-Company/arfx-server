@@ -17,7 +17,7 @@ export interface IAddedBy {
   _id: string
 }
 export interface IGeneralEntityDependencies {
-  generateId: () => string
+  generateId(): string
 }
 export interface IGeneralServiceDependencies<T> {
   repositoryGateway: T

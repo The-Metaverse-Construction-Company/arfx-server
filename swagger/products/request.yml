@@ -35,6 +35,19 @@ components:
                   type: boolean
                   default: false
                   example: true
+      purchase: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  $ref: '#/components/models/Product/_id'
+                keepCardDetails:
+                  type: boolean
+                  default: false
+                  description: status or toggle if will save the card details upon checkout.
+                  example: false
   requestParams:
     Product:
       id:

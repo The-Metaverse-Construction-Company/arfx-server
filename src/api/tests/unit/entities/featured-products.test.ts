@@ -4,9 +4,10 @@ import {expect} from 'chai'
 import FeaturedProduct, { IFeaturedProductEntity } from '../../../domain/entities/featured-product'
 
 export const FeaturedProductEntity = FeaturedProduct({
-  generateId: () => "1"
+  generateId: () => {
+    return '1'
+  }
 })
-
 describe('@Featured Product Entity', () => {
   const userObject = <Partial<IFeaturedProductEntity>>{
     active: true,
@@ -96,7 +97,7 @@ describe('@Featured Product Entity', () => {
           active: true
         })
         expect(featuredProduct.active).to.be.a('boolean')
-        expect(featuredProduct.active).to.be.not.eq(true)
+        expect(featuredProduct.active).to.be.eq(true)
       } catch (error) {
         expect.fail('should not be failed. valid active value.')
       }
@@ -108,18 +109,19 @@ describe('@Featured Product Entity', () => {
           active: false
         })
         expect(featuredProduct.active).to.be.a('boolean')
-        expect(featuredProduct.active).to.be.not.eq(false)
+        expect(featuredProduct.active).to.be.eq(false)
       } catch (error) {
         expect.fail('should not be failed. valid active value.')
       }
     })
-    it('should failed. value is undefined', () => {
+    it('should success. value is undefined', () => {
       try {
         const featuredProduct = new FeaturedProductEntity({
           ...userObject,
-          productId: undefined
+          active: undefined
         })
-        expect.fail('should throw an error.')
+        expect(featuredProduct.active).to.be.a('boolean')
+        expect(featuredProduct.active).to.be.eq(false)
       } catch (error) {
         expect(error.message).to.be.eq('productId must not be null, undefined or empty string.')
       }
@@ -135,17 +137,80 @@ describe('@Featured Product Entity', () => {
         expect(error.message).to.be.eq('productId must not be null, undefined or empty string.')
       }
     })
-    it('should failed. valid value', () => {
+  })
+  describe('@indexNo property', () => {
+    it('should succeed. value is 0', () => {
+      try {
+        const featuredProduct = new FeaturedProductEntity({
+          ...userObject,
+          indexNo: 0
+        })
+        expect(featuredProduct.indexNo).to.be.a('number')
+        expect(featuredProduct.indexNo).to.be.eq(0)
+      } catch (error) {
+        expect.fail(`should not be failed. valid indexNo value. error: ${error.message}`)
+      }
+    })
+    it('should succeed. value is 1', () => {
+      try {
+        const featuredProduct = new FeaturedProductEntity({
+          ...userObject,
+          indexNo: 1
+        })
+        expect(featuredProduct.indexNo).to.be.a('number')
+        expect(featuredProduct.indexNo).to.be.eq(1)
+      } catch (error) {
+        expect.fail(`should not be failed. valid indexNo value. error: ${error.message}`)
+      }
+    })
+    it('should success. value is undefined', () => {
+      try {
+        const featuredProduct = new FeaturedProductEntity({
+          ...userObject,
+          indexNo: undefined
+        })
+        expect(featuredProduct.indexNo).to.be.a('number')
+        expect(featuredProduct.indexNo).to.be.eq(0)
+      } catch (error) {
+        expect.fail(`should not be failed. valid indexNo value. error: ${error.message}`)
+      }
+    })
+    it('should failed. value is null', () => {
+      try {
+        const featuredProduct = new FeaturedProductEntity({
+          ...userObject,
+          indexNo: null
+        })
+        expect.fail(`should failed. indexNo value is null, current value: ${featuredProduct.indexNo}`)
+      } catch (error) {
+        expect(error.message).to.be.eq(`indexNo must be a integer and a whole number.`)
+
+      }
+    })
+    it('should success. value is 123 as string', () => {
       try {
         const featuredProduct = new FeaturedProductEntity({
           ...userObject,
           //@ts-expect-error
-          productId: 123
+          indexNo: "123"
         })
-        expect(featuredProduct.productId).to.be.a('string')
-        expect(featuredProduct.productId).to.be.not.eq('')
+        expect(featuredProduct.indexNo).to.be.a('number')
+        expect(featuredProduct.indexNo).to.be.eq(123)
       } catch (error) {
-        expect(error.message).to.be.eq('productId must be a string.')
+        expect.fail(`should not be failed. valid indexNo value. error: ${error.message}`)
+        // expect(error.message).to.be.eq(`indexNo must be a number.`)
+      }
+    })
+    it('should failed. value is string', () => {
+      try {
+        const featuredProduct = new FeaturedProductEntity({
+          ...userObject,
+          //@ts-expect-error
+          indexNo: "simple index"
+        })
+        expect.fail(`should failed. indexNo value is null, current value: ${featuredProduct.indexNo}`)
+      } catch (error) {
+        expect(error.message).to.be.eq(`indexNo must be a integer and a whole number.`)
       }
     })
   })

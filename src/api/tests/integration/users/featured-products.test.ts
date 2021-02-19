@@ -24,7 +24,7 @@ describe('@Pagination List Featured Product API', () => {
         const {success = false, result, errors} = body
         assert.isOk(success)
         assert.isArray(result.data)
-        // assert.isAbove(result.data.length, 0, 'result.data must not be empty array.')
+        // assert.isAbove(resxult.data.length, 0, 'result.data must not be empty array.')
         // assert.isString(result.data[0]._id)
         done()
       })
