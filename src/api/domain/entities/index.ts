@@ -1,6 +1,7 @@
 import {v4 as uuidV4} from 'uuid'
 import bcrypt from 'bcryptjs'
 import User from './users'
+import generalEntity from './general'
 import Product from './product'
 import PurchaseHistory from './purchase-history'
 import UserProducts from './user-products'
@@ -12,6 +13,7 @@ const hash = (pwd: string) => {
   return hashPassword
 }
 
+export const GeneralEntity = generalEntity({generateId: uuidV4})
 export const UserEntity = User({generateId: uuidV4, hash: hash})
 export const ProductEntity = Product({generateId: uuidV4})
 export const PurchaseHistoryEntity = PurchaseHistory({generateId: uuidV4})
