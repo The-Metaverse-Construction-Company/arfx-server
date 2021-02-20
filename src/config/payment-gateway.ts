@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import { IChargeCustomerPaymentParams } from '../api/domain/services/purchase-history'
 import { STRIPE_SECRET_KEY } from '../api/utils/constants'
+console.log('object :>> ', STRIPE_SECRET_KEY);
 // initiate Stripe API
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {typescript: true, apiVersion: "2020-08-27"})
 export default {

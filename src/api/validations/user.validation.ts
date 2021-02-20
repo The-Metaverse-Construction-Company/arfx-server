@@ -11,6 +11,7 @@ export const UserListValidationPipeline = [
   query('role')
     .isIn(allowed_roles)
     .withMessage(`Invalid role value. is either ${allowed_roles.join(', ')}.`)
+    .optional()
 ]
 export const UserFormValidationPipeline = [
   body('email')
