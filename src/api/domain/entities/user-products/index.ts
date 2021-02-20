@@ -4,18 +4,16 @@ import {
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
-import { IProductBlobProperties, ProductCoreEntity } from '../product'
 
 export * from './interfaces'
 export * from './repository-gateway-interfaces'
-
+import GeneralEntity from '../general'
 interface Dependencies extends IGeneralEntityDependencies {
 }
 export default ({
   generateId
 }: Dependencies) => (
-  class UserProductEntity implements IUserProductsEntity {
-  // class UserProductEntity extends ProductCoreEntity implements IUserProductsEntity {
+  class UserProductEntity extends GeneralEntity({generateId}) implements IUserProductsEntity {
     public readonly _id!: string
     public readonly userId!: string
     public readonly productId!: string
@@ -23,41 +21,24 @@ export default ({
     public readonly updatedAt!: number
     constructor ({
       _id = '',
-      // name = '',
-      // description = '',
-      // contentZip = {blobURL: '', originalFilepath: ''},
-      // previewVideo = {blobURL: '', originalFilepath: ''},
-      // previewImage = {blobURL: '', originalFilepath: ''},
       productId = '',
       userId = '',
-      // title = '',
-      // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IUserProductsEntity>) {
-      // super({
-      //   title,
-      //   name,
-      //   description,
-      //   contentZip,
-      //   previewImage,
-      //   previewVideo,
-      // })
-      if (!_id) {
-        _id = generateId()
+      super({
+        _id,
+        createdAt,
+        updatedAt
+      })
+      if (this.validateString(productId, 'productId')) {
+        // add more business rules validation here if needed.
       }
-      if (!productId) {
-        throw new Error('productId must not be null, undefined or empty string.')
+      if (this.validateString(userId, 'userId')) {
+        // add more business rules validation here if needed.
       }
-      if (!userId) {
-        throw new Error('userId must not be null, undefined or empty string.')
-      }
-      // add additional business rules here if needed.
-      this._id = _id
       this.productId = productId
       this.userId = userId
-      this.updatedAt = updatedAt
-      this.createdAt = createdAt
     }
     
   }
