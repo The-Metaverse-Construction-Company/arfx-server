@@ -13,7 +13,7 @@ export default ({
       _id,
       createdAt = Date.now(),
       updatedAt = Date.now()
-    }: Partial<IGeneralEntityProperties>) {
+    }: Partial<IGeneralEntityProperties> = {}) {
       if (_id) {
         if (typeof(_id) !== 'string') {
           throw new Error('_id must be a string.')
@@ -38,12 +38,12 @@ export default ({
      * @param required boolean, set to false needed to be optional, default: true
      */
     protected validateString (value: string|undefined|null, fieldName: string, required:boolean = true) {
-      if (required && !value) {
+      if ((required && !value)) {
         throw new Error(`${fieldName} must not be null, undefined or empty string.`)
       } else if (value && typeof(value) !== 'string') {
         throw new Error(`${fieldName} must be a string.`)
       }
-      return true
+      return value
     }
     /**
      * validate number variable
@@ -52,7 +52,7 @@ export default ({
      * @param required boolean, set to false needed to be optional, default: true
      */
     protected validateNumber (value: number|undefined|null, fieldName: string, required:boolean = true) {
-      if (value === null || value === undefined || isNaN(value)) {
+      if ((!value && value !== 0) || isNaN(value)) {
         throw new Error(`${fieldName} must be a integer and a whole number.`)
       } else {
         value = Number(value as any)
@@ -60,7 +60,7 @@ export default ({
           throw new Error(`${fieldName} must be greater than 0.`)
         }
       }
-      return true
+      return value
     }
     /**
      * validate boolean variable
@@ -68,9 +68,9 @@ export default ({
      * @param fieldName 
      * @param required boolean, set to false needed to be optional, default: true
      */
-    protected validateBoolean (value: boolean|undefined|null, fieldName: string, required:boolean = true) {
+    protected validateBoolean (value: boolean|undefined|null = false, fieldName: string, required:boolean = true) {
       if (value === null) {
-        throw new Error(`${fieldName} must `)
+        throw new Error(`${fieldName} must be a boolean.`)
       }
       if (typeof(value) !== 'boolean') {
         if (value === 0 || value === 1) {
@@ -81,7 +81,7 @@ export default ({
           throw new Error(`${fieldName} must be a boolean.`)
         }
       }
-      return true
+      return value
     }
   }
 )
