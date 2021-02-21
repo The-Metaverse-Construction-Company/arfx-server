@@ -23,6 +23,8 @@ import './featured-products/lists.test'
  */
 import './users/create.test'
 import './users/update.test'
+import './users/details.test'
+import './users/list.test'
 import './users/update-suspend-status.test'
 /**
  * @auth
