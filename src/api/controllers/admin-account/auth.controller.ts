@@ -34,7 +34,7 @@ export const signInAdminAccountRoute = async (req: Request, res: Response, next:
     const {username = '', password = ''} = req.body
     const response = await adminAccountSignInService(redisClient)
       .signIn(username, password)
-    res.status(httpStatus.CREATED)
+    res.status(httpStatus.OK)
       .json(successReponse(response))
   } catch (error) {
     next(new AppError({

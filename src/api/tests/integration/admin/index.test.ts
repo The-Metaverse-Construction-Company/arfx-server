@@ -1,4 +1,10 @@
 /**
+ * @admin_acounts
+ */
+import './accounts/create.test'
+import './accounts/update.test'
+import './accounts/details.test'
+/**
  * @products
  */
 import './products/create.test'
@@ -19,16 +25,9 @@ import './users/create.test'
 import './users/update.test'
 import './users/update-suspend-status.test'
 /**
- * @admin_acounts
- */
-import './accounts/create.test'
-import './accounts/update.test'
-import './accounts/details.test'
-/**
  * @auth
  */
 import './auth.test'
-
 
 // removing products
 import './products/remove.test'

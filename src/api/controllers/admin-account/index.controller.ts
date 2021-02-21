@@ -34,10 +34,10 @@ import AppError from '../../utils/response-error';
 export const createAdminAccountRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const redisClient = req.app.get('redisPublisher')
-    const newPurchaseHistory = await createAdminAccountService(redisClient)
+    const newAdminAccount = await createAdminAccountService(redisClient)
       .createOne(req.body)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newPurchaseHistory))
+      .json(successReponse(newAdminAccount))
   } catch (error) {
     next(new AppError({
       message: error.message,

@@ -72,7 +72,7 @@ export default ({
       this.firstName = firstName
       this.lastName = lastName
       this.roleLevel = roleLevel
-      this.password = hash(password)
+      this.password = password
     }
   }
 )
