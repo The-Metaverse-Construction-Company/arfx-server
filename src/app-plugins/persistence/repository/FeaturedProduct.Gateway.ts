@@ -1,7 +1,8 @@
 
 import {
   IFeaturedProductEntity,
-  IFeaturedProductRepositoryGateway
+  IFeaturedProductRepositoryGateway,
+  IFeaturedProductsParams
 } from '../../../api/domain/entities/featured-product'
 import {
   default as FeaturedProductRepositoryModel,
@@ -9,7 +10,6 @@ import {
 } from './models/product-banner.model'
 
 import GeneralRepository from './General.Gateway'
-import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
 export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductRepositoryModel, IFeaturedProductEntity> implements IFeaturedProductRepositoryGateway {
@@ -17,7 +17,8 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
     super(FeaturedProductRepositoryModel)
   }
 
-  public getPaginationList = (filterQuery: IPaginationParameters) => {
+  public getPaginationList = (filterQuery: IFeaturedProductsParams) => {
+    const {userId = ''} = filterQuery
     try {
       const response = this.aggregateWithPagination([
         {
@@ -65,6 +66,81 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
         {
           $sort: {
             indexNo: 1
+          }
+        },
+        {
+          $lookup: {
+            from: COLLECTION_NAMES.USER_PRODUCT,
+            let: {
+              prodId: '$productId'
+            },
+            pipeline: [
+              {
+                $match: {
+                  // filter user products loggedIn user
+                  $and: [
+                    {
+                      userId: userId
+                    },
+                    {
+                      $or: [
+                        {
+                          userId: {
+                            $ne: ''
+                          }
+                        },
+                        {
+                          userId: {
+                            $ne: null
+                          }
+                        }
+                      ]
+                    },
+                  ]
+                }
+              },
+              {
+                $match: {
+                  $expr: {
+                    $eq: ['$$prodId', '$productId']
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 0,
+                  userId: 1
+                }
+              }
+            ],
+            as: 'userProducts'
+          }
+        },
+        {
+          $unwind: {
+            preserveNullAndEmptyArrays: true,
+            path: '$userProducts',
+
+          }
+        },
+        {
+          $addFields: {
+            userId: {
+              $ifNull: ["$userProducts.userId", '']
+            },
+          }
+        },
+        {
+          $addFields: {
+            hasOwned: {
+              $cond: [{$ne: ['$userId', '']}, true, false]
+            },
+          }
+        },
+        {
+          $project: {
+            userProducts: 0,
+            userId: 0
           }
         }
       ], {

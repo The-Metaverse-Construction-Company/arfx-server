@@ -61,20 +61,20 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
                 }
               }
             ],
-            as: 'userId'
+            as: 'userProducts'
           }
         },
         {
           $unwind: {
             preserveNullAndEmptyArrays: true,
-            path: '$userId',
+            path: '$userProducts',
 
           }
         },
         {
           $addFields: {
             userId: {
-              $ifNull: ["$userId.userId", '']
+              $ifNull: ["$userProducts.userId", '']
             },
           }
         },
@@ -88,9 +88,8 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         {
           $project: {
             userId: 0,
-            contentZip: {
-              originalFilepath: 0
-            },
+            userProducts: 0,
+            contentZip: 0,
             previewImage: {
               originalFilepath: 0
             },
@@ -102,11 +101,6 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
             },
           }
         }
-        // {
-        //   $project: {
-        //     user_products: 0
-        //   }
-        // }
       ], {
         ...filterQuery,
       })

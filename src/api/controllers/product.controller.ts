@@ -98,11 +98,11 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
  */
 export const productListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {_id = ''} = <IUserEntity>req.user
+    const {_id = '', isAdmin = false} = <any>req.user
     const newProduct = await productList()
       .getList({
         ...req.query,
-        userId: _id,
+        userId: !isAdmin ? _id : '',
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))
