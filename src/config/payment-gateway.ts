@@ -47,6 +47,9 @@ export default {
           amount: data.amount * 100, //
           currency: "usd",
           customer: data.customerId,
+          metadata: {
+            purchaseHistoryId,
+          },
           // payment_method: data.paymentMethodId,
           // off_session: true,
           // confirm: true,

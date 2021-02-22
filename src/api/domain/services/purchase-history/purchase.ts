@@ -15,10 +15,12 @@ import {
   UserProductDetailsService
 } from '../user-products'
 import { IGeneralServiceDependencies } from '../../interfaces';
+import { IUserEntity } from '../../entities/users'
 export interface IChargeCustomerPaymentParams {
   customerId: string,
   // paymentMethodId: string,
   amount: number
+  user: IUserEntity
 }
 interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
   payment: {
@@ -54,7 +56,6 @@ export class PurchaseProductService {
       const product = await this.dependencies.productDetailsService.findOne(purchaseBody.productId)
       // initialize purchase entity
       const newPurchaseHistory = new PurchaseHistoryEntity({
-        paymentMethodId: purchaseBody.paymentMethodId,
         amount: Number((product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)),
         price: product.price,
         discountPercentage: product.discountPercentage,
@@ -77,7 +78,8 @@ export class PurchaseProductService {
       // create intent customer and charge the customer.
       let {authenticated, paymentIntent} = await this.dependencies.payment.createIntent(newPurchaseHistory._id, {
         amount: newPurchaseHistory.amount,
-        customerId: user.stripeCustomerId
+        customerId: user.stripeCustomerId,
+        user
       })
       newPurchaseHistory.paymentIntentId = paymentIntent.id
       // insert it thru the repo.

@@ -5,9 +5,11 @@ import {productDetails} from '../service-configurations/products'
 const productIdValidation = async (productId: string, {req}: any) => {
   try {
     // validate productId
-    await productDetails().findOne(productId).catch(() => {
-      throw new Error('No product found on given productId.')
-    })
+    await productDetails()
+      .findOne(productId)
+      .catch(() => {
+        throw new Error('No product found on given productId.')
+      })
     return true
   } catch (error) {
     throw error

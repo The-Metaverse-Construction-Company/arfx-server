@@ -4,7 +4,7 @@ import authRoutes from './auth.route'
 import ResetPasswordRoute from './reset-password.route'
 import SignUpRoute from './sign-up.route'
 import ProductsRoute from './products.route'
-import StripeRoute from './stripe.route'
+import PaymentGatewayRoute from './payment-gateway.route'
 import AdminAccountsRoute from './admin-accounts.route'
 import FeaturedProductRoute from './featured-products.route'
 import ReleasedVersionRoute from './released-version.route'
@@ -15,15 +15,11 @@ const router = express.Router();
  * GET v1/status
  */
 router.get('/status', (req: Request, res: Response) => res.send('OK'));
-     
-/**
- * GET v1/docs
- */
-router.use('/docs', express.static('docs'));
+ 
 /**
  * @expose_routes
  */
-router.use('/payment-gateway', StripeRoute)
+router.use('/payment-gateway', PaymentGatewayRoute)
 router.use('/electron-released-version', ReleasedVersionRoute);
 router.use('/admin-accounts', AdminAccountsRoute);
 router.use('/users', userRoutes);
