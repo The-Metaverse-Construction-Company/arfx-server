@@ -86,9 +86,9 @@ export class PurchaseProductService {
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
       // add some logs
       return {
-        authenticated: authenticated,
+        // authenticated: authenticated,
         payment: paymentIntent,
-        purchaseDetails: newPurchaseHistory,
+        // purchaseDetails: newPurchaseHistory,
         intentSecret
       }
     } catch (error) {
