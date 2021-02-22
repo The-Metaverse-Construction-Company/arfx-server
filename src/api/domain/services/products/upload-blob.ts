@@ -1,8 +1,8 @@
-import { BACKEND_HOST } from '../../../utils/constants';
+import { AZURE_BLOB_SAS_TOKEN, BACKEND_HOST, NODE_ENV } from '../../../utils/constants';
 import { IProductBlobProperties, IProductContentZip, PRODUCT_BLOB_TYPE } from '../../entities/product';
 import {  IImageResizeOption, IUploader } from '../../interfaces';
+import http from 'axios'
 import fs from 'fs'
-import {MD5} from 'crypto-js'
 import md5 from 'md5'
 interface IUploadProductBlob{
   contentZip: string,
@@ -37,10 +37,18 @@ export class UploadProductBlobService {
       const uploadedBlobURLs = <IUploadProductBlobResponse>{}
       if (contentZip) {
         const originalFilepath = await this.dependencies.fileUploader.upload(productId, contentZip)
-        const hash = <string> await new Promise((resolve) => {
-          // const readStream = fs.createReadStream(originalFilepath)
-          // readStream.on('data', (chunk) => { })
-          const b64 = fs.readFileSync(originalFilepath, {encoding: 'base64'})
+        const hash = <string> await new Promise(async (resolve) => {
+          console.log('originxxalFilepath :>> ', `${originalFilepath}${AZURE_BLOB_SAS_TOKEN}`);
+          let b64
+          // if (NODE_ENV === 'production') {
+            const {data} = await http({
+              method: "GET",
+              url: `${originalFilepath}${AZURE_BLOB_SAS_TOKEN}`
+            })
+            b64 = data
+          // } else {
+          //   b64 = fs.readFileSync(originalFilepath, {encoding: 'base64'})
+          // }
           const h = md5(Buffer.from(b64, 'base64'))
           resolve(h)
           return

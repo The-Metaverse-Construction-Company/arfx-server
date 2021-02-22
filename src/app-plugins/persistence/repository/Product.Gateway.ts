@@ -73,11 +73,21 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         },
         {
           $addFields: {
-            userId: "$userId.userId",
+            userId: {
+              $ifNull: ["$userId.userId", '']
+            },
+          }
+        },
+        {
+          $addFields: {
+            hasOwned: {
+              $cond: [{$ne: ['$userId', '']}, true, false]
+            },
           }
         },
         {
           $project: {
+            userId: 0,
             contentZip: {
               originalFilepath: 0
             },
