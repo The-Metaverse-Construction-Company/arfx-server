@@ -49,7 +49,7 @@ router.route('/')
   .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.fields([
     {
       name: 'previewImage',
-      maxCount: 1,
+      maxCount: 1
     },
     {
       name: 'previewVideo',

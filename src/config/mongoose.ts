@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 const logger = require('./../config/logger');
 const { mongo, env } = require('./vars');
+import CosmosConfig from './azure-cosmos'
 // set mongoose Promise to Bluebird
 //@ts-ignore
 mongoose.Promise = Promise;

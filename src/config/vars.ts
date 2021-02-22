@@ -1,17 +1,28 @@
 import path from 'path'
-
+import AZURE_COSMOS_CONFIG from './azure-cosmos'
 // import .env variables
 // require('dotenv-safe').load({
 //   path: path.join(__dirname, '../../.env.local'),
 //   sample: path.join(__dirname, '../../.env.example'),
 // });
+const getMongoDBURI = (NODE_ENV: string) => {
+  switch(NODE_ENV) {
+    case 'test':
+      return process.env.MONGO_URI_TESTS
+    case 'production':
+      return `mongodb://${AZURE_COSMOS_CONFIG.accountName}:${AZURE_COSMOS_CONFIG.key}@${AZURE_COSMOS_CONFIG.accountName}.documents.azure.com:${AZURE_COSMOS_CONFIG.port}/${AZURE_COSMOS_CONFIG.databaseName}?ssl=true`
+    default:
+      return process.env.MONGO_URI
+  }
+}
 export const env = process.env.NODE_ENV || ''
 export const port =  process.env.PORT || ''
 export const jwtSecret =  process.env.JWT_SECRET || ''
 export const jwtExpirationInterval =  process.env.JWT_EXPIRATION_MINUTES ? parseInt(process.env.JWT_EXPIRATION_MINUTES) : 60
 export const mongo =  {
-  uri: process.env.NODE_ENV === 'test' ? process.env.MONGO_URI_TESTS : process.env.MONGO_URI,
+  uri: getMongoDBURI(env)
 }
+export const AZURE_COSMOS_KEY = process.env.AZURE_COSMOS_KEY || ''
 export const logs = process.env.NODE_ENV === 'production' ? 'combined' : 'dev'
 export const emailConfig = {
   host: process.env.EMAIL_HOST,
