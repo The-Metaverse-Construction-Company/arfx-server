@@ -42,7 +42,21 @@ export const createCustomerIntent = async (req: Request, res: Response, next: Ne
 export const getCustomerPaymentMethods = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {stripeCustomerId = ''} = <IUserEntity>req.user
-    const paymentMethodList = await PaymentGateway.customer.getPaymentMethods(stripeCustomerId)
+    const paymentMethodList = await PaymentGateway.customer.paymentMethod.list(stripeCustomerId)
+    res.status(httpStatus.OK).send(successReponse(paymentMethodList))
+    return
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+export const detachPaymentMethodToCustomer = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {stripeCustomerId = ''} = <IUserEntity>req.user
+    const { paymentMethodId = '' } = req.params 
+    const paymentMethodList = await PaymentGateway.customer.paymentMethod.detach(paymentMethodId)
     res.status(httpStatus.OK).send(successReponse(paymentMethodList))
     return
   } catch (error) {

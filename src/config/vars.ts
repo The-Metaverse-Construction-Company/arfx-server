@@ -1,15 +1,17 @@
 import path from 'path'
+import { NODE_ENVIRONMENTS } from '../api/utils/constants'
 import AZURE_COSMOS_CONFIG from './azure-cosmos'
 // import .env variables
 // require('dotenv-safe').load({
 //   path: path.join(__dirname, '../../.env.local'),
 //   sample: path.join(__dirname, '../../.env.example'),
 // });
+
 const getMongoDBURI = (NODE_ENV: string) => {
   switch(NODE_ENV) {
-    case 'test':
+    case NODE_ENVIRONMENTS.TEST:
       return process.env.MONGO_URI_TESTS
-    case 'production':
+    case NODE_ENVIRONMENTS.PRODUCTION:
       return `mongodb://${AZURE_COSMOS_CONFIG.accountName}:${AZURE_COSMOS_CONFIG.key}@${AZURE_COSMOS_CONFIG.accountName}.documents.azure.com:${AZURE_COSMOS_CONFIG.port}/${AZURE_COSMOS_CONFIG.databaseName}?ssl=true`
     default:
       return process.env.MONGO_URI

@@ -1,8 +1,8 @@
 import {
-  IFeaturedProductRepositoryGateway
+  IFeaturedProductRepositoryGateway, IFeaturedProductsParams
 } from '../../entities/featured-product'
 import {
-  IGeneralServiceDependencies
+  IGeneralServiceDependencies,
 } from '../../interfaces'
 import { IPaginationParameters } from '../../interfaces/general-repository-gateway'
 interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProductRepositoryGateway>{
@@ -10,7 +10,7 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProd
 export class FeaturedProductListService {
   constructor (protected deps: IServiceDependencies) {
   }
-  public getList = async (filterQuery: IPaginationParameters) => {
+  public getList = async (filterQuery: IFeaturedProductsParams) => {
     try {
       // remove the product banner on the repository.
       const paginationList = await this.deps.repositoryGateway.getPaginationList(filterQuery)

@@ -27,7 +27,8 @@ import { validateProductTotalPrice } from '../helper/validate-product-total-pric
 export const uploadProductBlobService = () => (
   new UploadProductBlobService({
     fileUploader: BlobStorage,
-    imageResizer: ProductImageResize
+    imageResizer: ProductImageResize,
+    repositoryGateway: new ProductRepository(),
   })
 )
 

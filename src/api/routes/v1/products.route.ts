@@ -1,6 +1,7 @@
 import express from 'express'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
+import BlobStorage from '../../helper/blob-storage'
 import PurchaseRoute from './purchase.route'
 import {v4 as uuidV4} from 'uuid'
 import path from 'path'
@@ -27,7 +28,20 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
+import { AZURE_BLOB_CONTAINER_NAME } from '../../utils/constants'
 
+router.route('/simple-content-zip')
+  .get((req, res) => {
+    res.end()
+    BlobStorage
+      .download(`a209bded-4bc0-4a3e-bd12-120049d24e36-content-zip.png`, AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB)
+      .then((response) => {
+        console.log('response :>> ', response);
+      })
+      .catch(err => {
+        console.log('err :>> ', err);
+      })
+  })
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
 router.route('/')
@@ -192,7 +206,7 @@ router.route('/:productId/published')
     )
 router.route('/:productId/:blobType\.:fileType')
   .get(
-    authorize(),
+    // authorize(),
     validations.ProductBlobTypeValidationPipeline,
     requestValidatorMiddleware,
     controller.downloadContentZipRoute

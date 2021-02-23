@@ -22,8 +22,12 @@ import AppError from '../utils/response-error'
  */
 export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const {_id = '', isAdmin = false} = <any> req.user
     const featuredProduct = await featuredProductListService()
-      .getList(req.query)
+      .getList({
+        ...req.query,
+        userId: !isAdmin ? _id : ''
+      })
     res.status(httpStatus.OK)
       .json(successReponse(featuredProduct))
     return

@@ -37,7 +37,7 @@ before((done) => {
     .stub(PaymentGateway.customer, 'create')
     .resolves(`cus_IuC9hvua5AC5gL`)
   sinon
-    .stub(PaymentGateway.customer, 'getPaymentMethods')
+    .stub(PaymentGateway.customer.paymentMethod, 'list')
     .resolves([] as any)
   sinon
     .stub(PaymentGateway.customer, 'setupIntents')

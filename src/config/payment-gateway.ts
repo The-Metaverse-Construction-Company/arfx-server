@@ -18,12 +18,28 @@ export default {
       })
       return intentSecret
     },
-    getPaymentMethods: async (stripeCustomerId: string) => {
-      const paymentMethodList = await stripe.paymentMethods.list({
-        customer: stripeCustomerId,
-        type: "card"
-      })
-      return paymentMethodList
+    paymentMethod: {
+      detach: async (pmId: string) => {
+        try {
+          const paymentMethod = await stripe.paymentMethods.detach(pmId);
+        } catch (error) {
+          console.log('failed to detach payment method ', error.message);
+          throw error
+        }
+      },
+      list: async (stripeCustomerId: string) => {
+        try {
+          const paymentMethodList = await stripe.paymentMethods.list({
+            customer: stripeCustomerId,
+            type: "card"
+          })
+          return paymentMethodList
+        } catch (error) {
+          console.log('failed to detach payment method ', error.message);
+          throw error
+        }
+      },
+
     }
   },
   paymentIntent: {

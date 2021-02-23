@@ -26,7 +26,6 @@ describe('@Product List API', () => {
         assert.isNumber(result.total)
         assert.isArray(result.data)
         assert.isAbove(result.data.length, 0)
-        assert.isUndefined(result.data[0].contentZip.originalFilePath)
         assert.isUndefined(result.data[0].previewImage.originalFilePath)
         assert.isUndefined(result.data[0].previewVideo.originalFilePath)
         assert.isUndefined(result.data[0].thumbnail.originalFilePath)

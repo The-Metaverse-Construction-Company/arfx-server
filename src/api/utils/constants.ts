@@ -11,6 +11,11 @@ export const PAYMENT_GATEWAY_CHARGE_STATUSES = {
   SUCCEEDED: 'succeeded',
   FAILED: 'failed',
 }
+export const NODE_ENVIRONMENTS = {
+  PRODUCTION: 'production',
+  TEST: 'test',
+  DEVELOPMENT: 'development',
+}
 export const BACKEND_HOST = process.env.BACKEND_HOST || `http://localhost:3000`
 export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
@@ -27,8 +32,8 @@ export const ADMIN_JWT_REFRESH_TOKEN_SECRET = process.env.ADMIN_JWT_REFRESH_TOKE
 export const CLIENT_HOST= process.env.CLIENT_HOST || `http://localhost:3001`
 
 /// STRIPE KEYS ////
-export const STRIPE_SECRET_KEY = NODE_ENV === 'production' ? (process.env.STRIPE_SECRET_KEY || '') : (process.env.STRIPE_SECRET_KEY_DEV || '')
-export const STRIPE_PUBLIC_KEY = NODE_ENV === 'production' ? (process.env.STRIPE_PUBLIC_KEY || '') : (process.env.STRIPE_PUBLIC_KEY_DEV || '')
+export const STRIPE_SECRET_KEY = NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? (process.env.STRIPE_SECRET_KEY || '') : (process.env.STRIPE_SECRET_KEY_DEV || '')
+export const STRIPE_PUBLIC_KEY = NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? (process.env.STRIPE_PUBLIC_KEY || '') : (process.env.STRIPE_PUBLIC_KEY_DEV || '')
 export const STRIPE_WH_SECRET = process.env.STRIPE_WH_SECRET || ''
 /// SENDGRID
 export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
@@ -36,5 +41,11 @@ export const SENDGRID_SECRET_KEY = process.env.SENDGRID_SECRET_KEY || ''
 // AZURE CONFIGS ///
 export const AZURE_CONNSTRING = process.env.AZURE_CONNSTRING || ''
 export const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || ''
+export const AZURE_BLOB_SAS_TOKEN = process.env.AZURE_BLOB_SAS_TOKEN || ''
 export const AZURE_BLOB_SAS_URL = process.env.AZURE_BLOB_SAS_URL || ''
-export const AZURE_BLOB_CONTAINER_NAME = process.env.AZURE_BLOB_CONTAINER_NAME || ''
+export const AZURE_BLOB_KEY = process.env.AZURE_BLOB_KEY || ''
+export const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || ''
+export const AZURE_BLOB_CONTAINER_NAME = {
+  PRIVATE_BLOB: 'private-blob',
+  PUBLIC_BLOB: 'public-blob',
+}

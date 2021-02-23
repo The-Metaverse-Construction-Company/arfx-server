@@ -8,7 +8,7 @@
     "yarn": "*"
   },
   "scripts": {
-    "start": "cross-env pm2-dev start ./dist/server.js",
+    "start": "cross-env NODE_ENV=production pm2-dev start ./dist/server.js",
     "dev": "nodemon -L ./dist/server.js",
     "dev:watch": "tsc -w",
     "build": "tsc .",
