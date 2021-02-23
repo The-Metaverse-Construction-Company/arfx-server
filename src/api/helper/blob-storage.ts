@@ -32,7 +32,7 @@ const blobStorage = {
             bbc
               .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5)
               .catch((err) => {
-                console.log('@@@@@@@@@@@@@22 FUCKING ERROR ON UPLOADING :>> ', err.message);
+                console.log('Failed to upload blob.', err.message);
                 // throw err
               })
               .finally(() => {
@@ -70,8 +70,9 @@ const blobStorage = {
         blobName,
         permissions: BlobSASPermissions.parse('r'),
         startsOn: new Date((Date.now() - ((60 * 1000) * 10))), // 10 minutes,
-        expiresOn: new Date((Date.now() + ((60 * 1000) * 10))) // 10 minutes,
-      }, new StorageSharedKeyCredential(AZURE_ACCOUNT_NAME, AZURE_BLOB_KEY)).toString()
+        expiresOn: new Date((Date.now() + ((60 * 1000) * 50))) // 50 minutes,
+      }, new StorageSharedKeyCredential(AZURE_ACCOUNT_NAME, AZURE_BLOB_KEY))
+        .toString()
   }
 }
 
