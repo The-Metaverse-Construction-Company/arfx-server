@@ -44,7 +44,7 @@ export class UploadProductBlobService {
             const hash = <string> await new Promise((resolve) => {
               new Promise(async (resolve) => {
                 let b64 = ''
-                if (NODE_ENV === 'production') {
+                if (NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION) {
                   try {
                     b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
                     resolve(b64)

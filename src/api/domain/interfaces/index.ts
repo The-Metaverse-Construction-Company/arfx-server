@@ -46,6 +46,9 @@ export interface IUploader {
   upload: (newFilename: string, filePath: string, containerName?: string, callback?: (blobUrl: string) => void) => Promise<any>
   download: (containerName: string, blobName: string) =>  Promise<any>
 }
+export interface IBlobStorage extends IUploader {
+  generateSASToken(containerName: string, blobName: string): string
+}
 export interface IGenerateShortUrl {
   (uri: string,data: any): Promise<string>
 }

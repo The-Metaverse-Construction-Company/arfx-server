@@ -1,8 +1,12 @@
+import { AZURE_BLOB_CONTAINER_NAME } from '../../../utils/constants';
+import { IProductEntity } from '../../entities/product';
 import {
   IUserProductsRepositoryGateway,
 } from '../../entities/user-products'
-import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IUserProductsRepositoryGateway> {}
+import { IBlobStorage, IGeneralServiceDependencies } from '../../interfaces';
+interface IDependencies extends IGeneralServiceDependencies<IUserProductsRepositoryGateway> {
+  blobStorage: IBlobStorage
+}
 export class UserProductDetailsService {
   constructor(protected dependencies: IDependencies) {
   }
@@ -13,7 +17,10 @@ export class UserProductDetailsService {
    */
   public getOne = async (userId: string, id: string) => {
     try {
-      const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
+      const userProduct:IProductEntity = <any> await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
+      const blobName = userProduct.contentZip.blobURL.split('/').pop()
+      const sasToken = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+      userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${sasToken}`
       // add some logs here.
       return userProduct
     } catch (error) {

@@ -50,9 +50,6 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
                 title: 1,
                 name: 1,
                 description: 1,
-                contentZip: {
-                  blobURL: 1,
-                },
                 previewImage: {
                   blobURL: 1
                 },
@@ -81,9 +78,9 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
           title: "$product.title",
           name: "$product.name",
           description: "$product.description",
-          contentZip: "$product.contentZip",
           previewImage: "$product.previewImage",
           previewVideo: "$product.previewVideo",
+          thumbnail: "$product.thumbnail",
           createdAt: 1,
           updatedAt: 1,
         }
