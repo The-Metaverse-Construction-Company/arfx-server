@@ -36,7 +36,7 @@ export class UploadProductBlobService {
       const {contentZip, previewVideo, previewImage} = productBody
       const uploadedBlobURLs = <IUploadProductBlobResponse>{}
       if (contentZip) {
-        const originalFilepath = await this.dependencies.fileUploader.upload(productId, contentZip)
+        const originalFilepath = await this.dependencies.fileUploader.upload(productId, contentZip, 'private-blobs')
         const hash = <string> await new Promise(async (resolve) => {
           console.log('originxxalFilepath :>> ', `${originalFilepath}${AZURE_BLOB_SAS_TOKEN}`);
           let b64
@@ -56,7 +56,7 @@ export class UploadProductBlobService {
         // upload to cloud storage provider
         uploadedBlobURLs.contentZip = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
-          originalFilepath: await this.dependencies.fileUploader.upload(productId, contentZip),
+          originalFilepath: originalFilepath,
           version: 0,
           hash
         }
@@ -65,7 +65,7 @@ export class UploadProductBlobService {
         // upload to cloud storage provider
         uploadedBlobURLs.previewImage = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
-          originalFilepath: await this.dependencies.fileUploader.upload(productId, previewImage)
+          originalFilepath: await this.dependencies.fileUploader.upload(productId, previewImage, `public-blobs`)
         }
         const origFilepath = uploadedBlobURLs.previewImage.originalFilepath.split('.')
         const blobType = origFilepath.pop()
@@ -87,7 +87,7 @@ export class UploadProductBlobService {
         // upload to cloud storage provider
         uploadedBlobURLs.previewVideo = {
           blobURL: `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
-          originalFilepath: await this.dependencies.fileUploader.upload(productId, previewVideo)
+          originalFilepath: await this.dependencies.fileUploader.upload(productId, previewVideo, `public-blobs`)
         }
       }
       // add logs

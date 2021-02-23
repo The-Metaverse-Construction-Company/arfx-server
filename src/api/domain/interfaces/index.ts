@@ -43,7 +43,7 @@ export interface IUploaderResponse {
   imageUrl: string
 }
 export interface IUploader {
-  upload: (newFilename: string, filePath: string) => Promise<any>
+  upload: (newFilename: string, filePath: string, containerName?: string) => Promise<any>
   download: (path: string) =>  Promise<any>
 }
 export interface IGenerateShortUrl {
