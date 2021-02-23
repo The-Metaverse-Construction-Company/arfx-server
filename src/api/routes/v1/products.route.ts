@@ -30,18 +30,6 @@ import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
 import { AZURE_BLOB_CONTAINER_NAME } from '../../utils/constants'
 
-router.route('/simple-content-zip')
-  .get((req, res) => {
-    res.end()
-    BlobStorage
-      .download(`a209bded-4bc0-4a3e-bd12-120049d24e36-content-zip.png`, AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB)
-      .then((response) => {
-        console.log('response :>> ', response);
-      })
-      .catch(err => {
-        console.log('err :>> ', err);
-      })
-  })
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
 router.route('/')

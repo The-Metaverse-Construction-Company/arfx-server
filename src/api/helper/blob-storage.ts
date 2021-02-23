@@ -11,16 +11,11 @@ import { AZURE_BLOB_SAS_URL,
   AZURE_BLOB_CONTAINER_NAME,
   NODE_ENV,
   AZURE_BLOB_KEY,
-  AZURE_ACCOUNT_NAME
+  AZURE_ACCOUNT_NAME,
+  NODE_ENVIRONMENTS
 } from '../utils/constants';
 const containerName = AZURE_BLOB_CONTAINER_NAME;
 const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
-// const SASQueryParams = generateBlobSASQueryParameters({
-//   containerName: 'private-blob',
-//   permissions: BlobSASPermissions.parse('r'),
-//   startsOn: new Date((Date.now() - ((60 * 1000) * 10))), // 10 minutes,
-//   expiresOn: new Date((Date.now() + ((60 * 1000) * 10))) // 10 minutes,
-// }, new StorageSharedKeyCredential(AZURE_ACCOUNT_NAME, AZURE_BLOB_KEY))
 const blobStorage = {
   upload: (blobName: string, file: string, blobContainerName: string, callback = (url: string) => {}) => {
     return new Promise(async (resolve, reject) => {
@@ -30,14 +25,15 @@ const blobStorage = {
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
         try {
-          if (NODE_ENV === 'production') {
+          if ((NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION)) {
             // uploading the file thru cloud
             // upload the file and run it thru background.
             const fileReadStream = fs.createReadStream(file)
             bbc
               .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5)
               .catch((err) => {
-                throw err
+                console.log('@@@@@@@@@@@@@22 FUCKING ERROR ON UPLOADING :>> ', err.message);
+                // throw err
               })
               .finally(() => {
                 callback(bbc.url)
@@ -67,6 +63,15 @@ const blobStorage = {
     const blobBuffer = await bbc.downloadToBuffer()
     console.log('fetched blob buffer.');
     return blobBuffer
+  },
+  generateSASToken: (contanerName: string, blobName: string) => {
+    return generateBlobSASQueryParameters({
+        containerName: contanerName,
+        blobName,
+        permissions: BlobSASPermissions.parse('r'),
+        startsOn: new Date((Date.now() - ((60 * 1000) * 10))), // 10 minutes,
+        expiresOn: new Date((Date.now() + ((60 * 1000) * 10))) // 10 minutes,
+      }, new StorageSharedKeyCredential(AZURE_ACCOUNT_NAME, AZURE_BLOB_KEY)).toString()
   }
 }
 
