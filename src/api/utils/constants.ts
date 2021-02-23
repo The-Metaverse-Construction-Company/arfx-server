@@ -38,6 +38,9 @@ export const AZURE_CONNSTRING = process.env.AZURE_CONNSTRING || ''
 export const AZURE_CONNECTION_STRING = process.env.AZURE_CONNECTION_STRING || ''
 export const AZURE_BLOB_SAS_TOKEN = process.env.AZURE_BLOB_SAS_TOKEN || ''
 export const AZURE_BLOB_SAS_URL = process.env.AZURE_BLOB_SAS_URL || ''
-export const AZURE_BLOB_CONTAINER_NAME = process.env.AZURE_BLOB_CONTAINER_NAME || ''
 export const AZURE_BLOB_KEY = process.env.AZURE_BLOB_KEY || ''
 export const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || ''
+export const AZURE_BLOB_CONTAINER_NAME = {
+  PRIVATE_BLOB: 'private-blob',
+  PUBLIC_BLOB: 'public-blob',
+}
