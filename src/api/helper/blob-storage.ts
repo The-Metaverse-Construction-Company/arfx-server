@@ -6,16 +6,13 @@ import {
   BlobSASPermissions,
   StorageSharedKeyCredential 
 } from '@azure/storage-blob';
-import { AZURE_BLOB_SAS_URL,
+import {
   AZURE_CONNECTION_STRING,
-  AZURE_BLOB_CONTAINER_NAME,
   NODE_ENV,
   AZURE_BLOB_KEY,
   AZURE_ACCOUNT_NAME,
   NODE_ENVIRONMENTS
 } from '../utils/constants';
-const containerName = AZURE_BLOB_CONTAINER_NAME;
-const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
 const blobStorage = {
   upload: (blobName: string, file: string, blobContainerName: string, callback = (url: string) => {}) => {
     return new Promise(async (resolve, reject) => {
