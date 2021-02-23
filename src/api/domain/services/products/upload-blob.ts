@@ -1,4 +1,4 @@
-import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME } from '../../../utils/constants';
+import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST, NODE_ENVIRONMENTS } from '../../../utils/constants';
 import { IProductBlobProperties, IProductContentZip, IProductRepositoryGateway, PRODUCT_BLOB_TYPE } from '../../entities/product';
 import {  IGeneralServiceDependencies, IImageResizeOption, IUploader } from '../../interfaces';
 import fs from 'fs'
@@ -40,39 +40,34 @@ export class UploadProductBlobService {
           blobName,
           contentZip, 
           AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB,
-          true
-        )
-        .then(async (origFilepath) => {
-          console.log('o@@@@@@@@@@@@@@@@@@@@@@@@@@@@@222rigFilepath :>> ', origFilepath);
-          console.log('o@@@@@@@@@@@@@@@@@@@@@@@@@@@@rigFilepath :>> ', blobName);
-          const hash = <string> await new Promise(async (resolve) => {
-            let b64 = ''
-            // if (NODE_ENV === 'production') {
-              try {
-                b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
-              } catch (error) {
-                console.log('fucking error: ', error);
+          async (origFilepath) => {
+            const hash = <string> await new Promise(async (resolve) => {
+              let b64 = ''
+              if (NODE_ENV === 'production') {
+                try {
+                  b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+                } catch (error) {
+                  console.log('failed to get data: ', error);
+                }
+              } else {
+                b64 = fs.readFileSync(contentZip, {encoding: 'base64'})
               }
-                
-            // } else {
-            //   b64 = fs.readFileSync(origFilepath, {encoding: 'base64'})
-            // }
-            const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
-            resolve(h)
-            return
+              const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
+              resolve(h)
+              return
+            })
+            this.dependencies.repositoryGateway.updateOne({
+              _id: productId
+            }, {
+              contentZip: {
+                blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
+                // blobURL: origFilepath,
+                originalFilepath: origFilepath,
+                version: 0,
+                hash
+              }
+            })
           })
-          this.dependencies.repositoryGateway.updateOne({
-            _id: productId
-          }, {
-            contentZip: {
-              // blobURL: NODE_ENV === 'PROD' ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(contentZip)}`,
-              blobURL: origFilepath,
-              originalFilepath: origFilepath,
-              version: 0,
-              hash
-            }
-          })
-        })
       }
       if (previewImage) {
         const origFilepath = await this.dependencies.fileUploader.upload(
@@ -82,8 +77,8 @@ export class UploadProductBlobService {
           )
         // upload to cloud storage provider
         uploadedBlobURLs.previewImage = {
-          // blobURL: NODE_ENV === 'PROD' ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
-          blobURL: origFilepath,
+          blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${this.getBlobExtension(previewImage)}`,
+          // blobURL: origFilepath,
           originalFilepath: origFilepath
         }
         const origPreviewImage = previewImage.split('.')
@@ -98,20 +93,17 @@ export class UploadProductBlobService {
           newFilepath 
         })
         let thumbnailOrigFilepath = newFilepath
-        // if (NODE_ENV === 'PROD') {
+        if (NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION) {
+          // upload it thru storage cloud provider
           thumbnailOrigFilepath = await this.dependencies.fileUploader.upload(
             `${productId}-${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
             newFilepath,
             AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
           )
-          setTimeout(() => {
-            // unlink or remove the newly generated thumbnail file on the file system.
-            fs.unlinkSync(newFilepath)
-          }, 2500)
-        // }
+        }
         uploadedBlobURLs.thumbnail = {
-          // blobURL: NODE_ENV === 'PROD' ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
-          blobURL: thumbnailOrigFilepath,
+          blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
+          // blobURL: thumbnailOrigFilepath,
           originalFilepath: thumbnailOrigFilepath
         }
       }
@@ -123,7 +115,7 @@ export class UploadProductBlobService {
           )
         // upload to cloud storage provider
         uploadedBlobURLs.previewVideo = {
-          // blobURL: NODE_ENV === 'PROD' ? origFilePath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
+          // blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilePath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
           blobURL: origFilepath,
           originalFilepath: origFilepath 
         }

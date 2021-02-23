@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { NODE_ENVIRONMENTS } from '../api/utils/constants';
 const logger = require('./../config/logger');
 const { mongo, env } = require('./vars');
 import CosmosConfig from './azure-cosmos'
@@ -13,7 +14,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 // print mongoose logs in dev env
-if (env === 'development') {
+if (env === NODE_ENVIRONMENTS.DEVELOPMENT) {
   mongoose.set('debug', true);
 }
 
