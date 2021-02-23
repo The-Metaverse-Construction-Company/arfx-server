@@ -1,9 +1,16 @@
 
-FROM node:12-alpine
+FROM node:12-alpine as BUILDER
 WORKDIR /usr/src/app
 COPY package.json .
 COPY . .
-RUN npm install
-# COPY .env.example .env.example
-# COPY .env.local .env.local
-CMD ["npm", "run", "dev"]
+RUN npm install \
+	&& npm run build
+FROM node:12-alpine
+WORKDIR /usr/src/app
+COPY --from=BUILDER /usr/src/app/dist /usr/src/app/dist
+COPY --from=BUILDER /usr/src/app/swagger /usr/src/app/swagger
+COPY --from=BUILDER /usr/src/app/package.json /usr/src/app/
+COPY --from=BUILDER /usr/src/app/package-lock.json /usr/src/app/
+RUN npm ci --production
+#RUN rm -R src/
+CMD ["npm", "run", "start"]
