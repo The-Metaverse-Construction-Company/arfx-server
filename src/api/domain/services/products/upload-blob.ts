@@ -41,19 +41,31 @@ export class UploadProductBlobService {
           contentZip, 
           AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB,
           async (origFilepath) => {
-            const hash = <string> await new Promise(async (resolve) => {
-              let b64 = ''
-              if (NODE_ENV === 'production') {
-                try {
-                  b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
-                } catch (error) {
-                  console.log('failed to get data: ', error);
+            const hash = <string> await new Promise((resolve) => {
+              new Promise(async (resolve) => {
+                let b64 = ''
+                if (NODE_ENV === 'production') {
+                  try {
+                    b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+                    resolve(b64)
+                  } catch (error) {
+                    console.log('failed to get data: ', error);
+                    throw error
+                  }
+                } else {
+                  b64 = fs.readFileSync(contentZip, {encoding: 'base64'})
+                  // ### DEVNOTE ###
+                  // just added 1 second delay here because on local, the uploading of file is too fast.
+                  // and uploading finish first instead of saving or insert the product data.
+                  setTimeout(() => {
+                    resolve(b64)
+                  }, 1000)
                 }
-              } else {
-                b64 = fs.readFileSync(contentZip, {encoding: 'base64'})
-              }
-              const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
-              resolve(h)
+              })
+              .then((b64: string) => {
+                const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
+                resolve(h)
+              })
               return
             })
             this.dependencies.repositoryGateway.updateOne({
@@ -115,8 +127,8 @@ export class UploadProductBlobService {
           )
         // upload to cloud storage provider
         uploadedBlobURLs.previewVideo = {
-          // blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilePath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
-          blobURL: origFilepath,
+          blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_VIDEO}.${this.getBlobExtension(previewVideo)}`,
+          // blobURL: origFilepath,
           originalFilepath: origFilepath 
         }
       }

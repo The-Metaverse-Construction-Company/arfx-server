@@ -45,6 +45,8 @@ const blobStorage = {
                 fs.unlinkSync(file)
               })
             blobLoc = bbc.url
+          } else {
+            callback(blobLoc)
           }
           resolve(blobLoc)
         } catch (error) {
