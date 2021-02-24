@@ -19,7 +19,7 @@
     "postdocs": "open-cli docs/index.html",
     "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/index.js",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
-    "docker:build": "sudo npm run docker:test:integration && (cd ../composer && sudo docker-compose up -d --build backend)",
+    "docker:build": "(cd ../composer && sudo docker-compose up -d --build backend)",
     "docker:deploy": "sudo sh ./deploy.sh",
     "docker:dev": "sudo docker exec $(sudo docker ps -a -q -f name=^backend-service$) npm run dev:watch",
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit",
