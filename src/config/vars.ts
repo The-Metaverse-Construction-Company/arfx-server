@@ -1,4 +1,3 @@
-import path from 'path'
 import { NODE_ENVIRONMENTS } from '../api/utils/constants'
 import AZURE_COSMOS_CONFIG from './azure-cosmos'
 // import .env variables

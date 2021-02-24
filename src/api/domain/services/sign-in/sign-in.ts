@@ -37,9 +37,8 @@ export class UserSignInService {
       const token = await this.deps.generateToken({
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN
-      })
+      }, 60 * 8) // 8 hrs token duration
       // removing password field on responsing user data
-      //@ts-ignore
       delete user.password
       // add some logs or notification.
       return {
