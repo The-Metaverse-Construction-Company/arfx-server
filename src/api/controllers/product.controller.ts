@@ -10,19 +10,28 @@ import {
   removeProduct,
   updateProductPublishStatus
 } from '../service-configurations/products'
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
 import { IUserEntity } from '../domain/entities/users'
+import { IProductEntity, PRODUCT_BLOB_TYPE } from '../domain/entities/product'
+import AppError from '../utils/response-error'
 
+const removeProductOriginalFilepath = (product: IProductEntity) => {
+  delete product.previewImage.originalFilepath;
+  delete product.previewVideo.originalFilepath;
+  delete product.contentZip;
+  delete product.thumbnail.originalFilepath;
+  return product
+}
 // readStream.on('data', (chunk) => {
 //   console.log('chunk :>> ', chunk);
 // })
 export const mapProductUploadedBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {previewVideo = [], previewImage = [], contentZip = []} = <any> req.files || {};
-    res.locals['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0].path : undefined
-    res.locals['previewImage'] = previewImage.length >= 1 ? previewImage[0].path : undefined
-    res.locals['contentZip'] = contentZip.length >= 1 ? contentZip[0].path : undefined
+    req.body['previewVideo'] = previewVideo.length >= 1 ? previewVideo[0].path : undefined
+    req.body['previewImage'] = previewImage.length >= 1 ? previewImage[0].path : undefined
+    req.body['contentZip'] = contentZip.length >= 1 ? contentZip[0].path : undefined
     next()
   } catch (error) {
     next(error)
@@ -44,88 +53,15 @@ export const createProductRoute = async (req: Request, res: Response, next: Next
   try {
     const {_id} = <IAdminAccountsEntity>req.user
     const newProduct = await createProduct()
-      .createOne({
-        ...req.body,
-        previewImage: res.locals['previewImage'],
-        previewVideo: res.locals['previewVideo'],
-        contentZip: res.locals['contentZip']
-      }, _id)
+      .createOne(req.body, _id)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newProduct))
+      .json(successReponse(removeProductOriginalFilepath(newProduct)))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
-};
-/**
- * @public
- * create a product
- * @requestBody
- *  @field: title: string
- *  @field: description: string
- *  @field: price: float
- *  @field: name: string
- */
-export const uploadProductImageRoute = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const scene = req.file
-    // const {scene = {}} = <any>(req.files || {})
-    // const busboy = req.app.get('busboy')
-    const {productId = ''} = req.params
-    const {productId: prodId} = req.body
-    // blobStorage.upload(productId, scene).then((result) => {
-    //   console.log('object :>> ', result);
-    // }
-    // )
-    // .catch((err) => {
-    //   console.log('err :>> ', err);
-    // })
-    // const busboy = new Busboy({ headers: req.headers })
-    // // req.pipe(req.busboy); // Pipe it trough busboy
-    // busboy.on('file', (fieldname: string, file: any, filename: string) => {
-    //     console.log(`fieldname '${fieldname}' started`);
-    //     console.log(`Upload of '${filename}' started`);
-    //     file.on('data', function(data: any) {
-    //       console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
-    //     });
-    //     file.on('end', function() {
-    //       console.log('File [' + fieldname + '] Finished');
-    //     });
-    //     // file.pipe(fstream);
-    //     // Create a write stream of the new file
-    //     const fstream = fs.createWriteStream(getFilePath(filename));
-    //     // // Pipe it trough
-    //     file.pipe(fstream);
-    //     fstream.on('finish', (err, file) => {
-    //       console.log('err :>> ', err);
-    //       console.log('file :>> ', file);
-    //     })
-    //     // // On finish of the upload
-    //     fstream.on('close', async () => {
-    //         console.log(`Upload of '${filename}' finished`);
-    //         // console.log('fs.readFileSync(getFilePath(filename)) :>> ', fs.readFileSync(getFilePath(filename), 'base64'));
-    //         // blobStorage.upload(productId, fs.readFileSync(getFilePath(filename), 'base64'))
-    //         // await updateProductURLService()
-    //         //   .updateOne(productId, getFilePath(filename))
-    //         // res.redirect('back');
-    //     });
-    // });
-    // req.pipe(busboy);
-    // const newProduct = await createProduct()
-    //   .createOne(req.body)
-    res.status(httpStatus.CREATED)
-      .json(successReponse(req.body))
-  } catch (error) {
-    next(error)
-  }
-};
-/**
- * @public
- */
-export const upload = async (req: Request, res: Response, next: NextFunction) => {
-  // try {
-  // } catch (error) {
-  //   next(error)
-  // }
 };
 /**
  * @public
@@ -144,9 +80,12 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
     const updatedProduct = await updateProduct()
       .updateOne(productId, req.body)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(updatedProduct))
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -159,16 +98,19 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
  */
 export const productListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {_id = ''} = <IUserEntity>req.user
+    const {_id = '', isAdmin = false} = <any>req.user
     const newProduct = await productList()
       .getList({
         ...req.query,
-        userId: _id,
+        userId: !isAdmin ? _id : '',
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -177,17 +119,32 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
  * @requestParams
  *  @field -> productId: string
  */
-export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const productDetailsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       productId = ''
     } = req.params
     const product = await productDetails()
       .findOne(productId)
-    res.status(httpStatus.OK)
-      .json(successReponse(product))
+      // set productDetails on the response locals to access other routes.
+    res.locals['productDetails'] = product
+    next()
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+export const productDetailsRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.status(httpStatus.OK)
+      .json(successReponse(removeProductOriginalFilepath(res.locals['productDetails'])))
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -207,9 +164,12 @@ export const updateProductPublishStatusRoute = async (req: Request, res: Respons
     const product = await updateProductPublishStatus()
       .updateOne(productId, status)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(product))
+      .json(successReponse(removeProductOriginalFilepath(product)))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -226,8 +186,52 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     const product = await removeProduct()
       .removeOne(productId)
     res.status(httpStatus.ACCEPTED)
-      .json(successReponse(product))
+      .json(successReponse(removeProductOriginalFilepath(product)))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+/**
+ * @public
+ * product list
+ * @requestParams
+ *  @field -> productId: string
+ */
+export const downloadContentZipRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {blobType = ''} = req.params
+    const product = <IProductEntity>res.locals['productDetails']
+    const blobOriginalFilepath = <string>await ((blobType: string) => {
+      return new Promise((resolve, reject) => {
+        switch (blobType) {
+          case PRODUCT_BLOB_TYPE.CONTENT_ZIP:
+            resolve(product.contentZip.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_IMAGE:
+            resolve(product.previewImage.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.THUMBNAIL:
+            resolve(product.thumbnail.originalFilepath)
+            break;
+          case PRODUCT_BLOB_TYPE.PREVIEW_VIDEO:
+            resolve(product.previewVideo.originalFilepath)
+            break;
+          default:
+            return ''
+        }
+      })
+    })(blobType)
+    if (!blobOriginalFilepath) {
+      throw new Error('Invalid url')
+    }
+    res.sendFile(blobOriginalFilepath)
+    return;
+  } catch (error) {
+    res
+      .status(httpStatus.BAD_REQUEST)
+      .send(errorResponse([error.message]))
   }
 };

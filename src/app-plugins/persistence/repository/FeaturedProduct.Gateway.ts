@@ -1,7 +1,8 @@
 
 import {
   IFeaturedProductEntity,
-  IFeaturedProductRepositoryGateway
+  IFeaturedProductRepositoryGateway,
+  IFeaturedProductsParams
 } from '../../../api/domain/entities/featured-product'
 import {
   default as FeaturedProductRepositoryModel,
@@ -9,15 +10,15 @@ import {
 } from './models/product-banner.model'
 
 import GeneralRepository from './General.Gateway'
-import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
-export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductEntity, IFeaturedProductRepositoryModel> implements IFeaturedProductRepositoryGateway {
+export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductRepositoryModel, IFeaturedProductEntity> implements IFeaturedProductRepositoryGateway {
   constructor () {
     super(FeaturedProductRepositoryModel)
   }
 
-  public getPaginationList = (filterQuery: IPaginationParameters) => {
+  public getPaginationList = (filterQuery: IFeaturedProductsParams) => {
+    const {userId = ''} = filterQuery
     try {
       const response = this.aggregateWithPagination([
         {
@@ -28,32 +29,33 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
         {
           $lookup: {
             from : COLLECTION_NAMES.PRODUCT,
-            let: {
-              prodId: '$productId'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ['$$prodId', '$_id']
-                  }
-                }
-              },
-              {
-                $project: {
-                  name: 1,
-                  title: 1,
-                  description: 1,
-                  previewImageURL: 1,
-                  previewVideoURL: 1,
-                }
-              },
-              {
-                $sort: {
-                  _id: 1
-                }
-              }
-            ],
+            localField: "productId",
+            foreignField: "_id",
+            // let: {
+            //   prodId: '$productId'
+            // },
+            // pipeline: [
+            //   {
+            //     $match: {
+            //       $expr: {
+            //         $eq: ['$$prodId', '$_id']
+            //       }
+            //     }
+            //   },
+            //   {
+            //     $project: {
+            //       contentZip: 0,
+            //       'previewImage.originalFilepath': 0,
+            //       'previewVideo.originalFilepath': 0,
+            //       'thumbnail.originalFilepath': 0,
+            //     }
+            //   },
+            //   {
+            //     $sort: {
+            //       _id: 1
+            //     }
+            //   }
+            // ],
             as: "products"
           }
         },
@@ -64,8 +66,105 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
           }
         },
         {
+          $project: {
+            "products.contentZip": 0,
+            "products.previewImage.originalFilepath": 0,
+            "products.previewVideo.originalFilepath": 0,
+            "products.thumbnail.originalFilepath": 0,
+          }
+        },
+        {
           $sort: {
             indexNo: 1
+          }
+        },
+        {
+          $lookup: {
+            from: COLLECTION_NAMES.USER_PRODUCT,
+            localField: "productId",
+            foreignField: "productId",
+            // let: {
+            //   prodId: '$productId'
+            // },
+            // pipeline: [
+            //   {
+            //     $match: {
+            //       // filter user products loggedIn user
+            //       $and: [
+            //         {
+            //           userId: userId
+            //         },
+            //         {
+            //           $or: [
+            //             {
+            //               userId: {
+            //                 $ne: ''
+            //               }
+            //             },
+            //             {
+            //               userId: {
+            //                 $ne: null
+            //               }
+            //             }
+            //           ]
+            //         },
+            //       ]
+            //     }
+            //   },
+            //   {
+            //     $match: {
+            //       $expr: {
+            //         $eq: ['$$prodId', '$productId']
+            //       }
+            //     }
+            //   },
+            //   {
+            //     $project: {
+            //       _id: 0,
+            //       userId: 1
+            //     }
+            //   }
+            // ],
+            as: 'userProduct'
+          }
+        },
+        {
+          $unwind: {
+            preserveNullAndEmptyArrays: true,
+            path: '$userProduct',
+
+          }
+        },
+        {
+          $group: {
+            _id: "$_id",
+            root: {
+              $first: {
+                $mergeObjects: ["$$ROOT", {
+                  userId: {
+                   $ifNull: ["$userProduct.userId", '']
+                  }
+                }]
+              }
+            }
+          }
+        },
+        {
+          $replaceRoot:{
+            newRoot: "$root"
+          }
+        },
+        {
+          $addFields: {
+            hasOwned: {
+              $cond: [{$ne: ['$userId', '']}, true, false]
+            },
+          }
+        },
+        {
+          $project: {
+            userProduct: 0,
+            userId: 0
           }
         }
       ], {

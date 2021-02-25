@@ -1,0 +1,57 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  models:
+    PurchaseHistory:
+      _id:
+        $ref: '#/components/schemas/FieldId'
+      name:
+        $ref: '#/components/models/Product/name'
+      title:
+        $ref: '#/components/models/Product/title'
+      description:
+        $ref: '#/components/models/Product/description'
+      price:
+        $ref: '#/components/models/Product/price'
+      discountPercentage:
+        $ref: '#/components/models/Product/discountPercentage'
+      productId:
+        $ref: '#/components/models/Product/_id'
+      amount:
+        $ref: '#/components/models/Product/amount'
+      userId:
+        $ref: '#/components/models/User/_id'
+      paymentMethodId:
+        type: string
+        default: ''
+        description: methodId from the payment gateway provider.
+        example: 'pm_1IJTjYFg6sgpRYiy1t7Z3uW5'
+      paymentIntentId:
+        type: string
+        default: ''
+        description: intentId from the payment gateway provider.
+        example: 'pi_1IJTjZFg6sgpRYiyD4jZdIg6'
+      paymentChargeId:
+        type: string
+        default: ''
+        description: chargeId from the payment gateway provider.
+        example: 'ch_1IJTjZFg6sgpRYiy8oYqcb0T'
+      state:
+        type: number
+        default: 0
+        description: state of the purchase. 1 - success, 2 - pending, 4 - failed.
+        example: 1
+      purchasedAt:
+        type: number
+        default: 0
+        description: exact purchase date.
+        example: 1613521577731
+      createdAt:
+        $ref: '#/components/schemas/FieldCreatedAt'
+      updatedAt:
+        $ref: '#/components/schemas/FieldUpdatedAt'

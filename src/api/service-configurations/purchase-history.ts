@@ -3,16 +3,19 @@ import {
   PurchaseProductService,
   PurchaseHistoryDetails,
   PurchaseHistoryList,
-  UpdatePurchaseStateService
+  UpdatePurchaseStateService,
+  UpdatePurchasePaymentChargeService
 } from '../domain/services/purchase-history'
 import {
-  productDetails
+  productDetails,
+  updateProductPurchaseCountService
 } from './products'
 import {
   userDetails
 } from './users'
 import {
-  createUserProductsService
+  createUserProductsService,
+  userProductDetailsService
 } from './user-products'
 
 import {
@@ -25,14 +28,23 @@ export const purchaseProductService = () => (
     productDetailsService: productDetails(),
     userDetailsService: userDetails(),
     createUserProductsService: createUserProductsService(),
+    userProductDetailsService: userProductDetailsService(),
     payment: {
-      chargeCustomer: PaymentGateway.customer.charge,
+      createIntent: PaymentGateway.paymentIntent.create,
+      retrieveIntent: PaymentGateway.paymentIntent.retrieve,
       setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents
     }
   })
 )
 export const updatePurchaseStateService = () => (
   new UpdatePurchaseStateService({
+    repositoryGateway: new PurchaseHistoryRepository(),
+    createUserProductsService: createUserProductsService(),
+    updateProductPurchaseCountService: updateProductPurchaseCountService()
+  })
+)
+export const updatePurchasePaymentChargeService = () => (
+  new UpdatePurchasePaymentChargeService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )

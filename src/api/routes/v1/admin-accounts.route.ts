@@ -1,5 +1,4 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/admin-account/index.controller'
 import * as authCrontroller from '../../controllers/admin-account/auth.controller'
 import {
@@ -39,7 +38,11 @@ router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRo
  *          description: "OK"
  */
 router.route('/auth/sign-in')
-  .post(authCrontroller.signInAdminAccountRoute)
+  .post(
+    adminValidations.SignInFormValidationPipeline,
+    requestValidatorMiddleware,
+    authCrontroller.signInAdminAccountRoute
+  )
 // router.use('/', authorizeAdminAccount()) // disable this to create the first admin acct.
 router.route('/')
 /**
@@ -56,7 +59,11 @@ router.route('/')
  *        '201':
  *          description: "OK"
  */
-  .post(adminValidations.FormPipeline, requestValidatorMiddleware, controller.createAdminAccountRoute)
+  .post(
+    adminValidations.FormPipeline,
+    requestValidatorMiddleware,
+    controller.createAdminAccountRoute
+  )
 /**
  * @swagger
  * paths:
@@ -75,7 +82,11 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(authorizeAdminAccount(), PaginationQueryPipeline, requestValidatorMiddleware, controller.adminAccountListRoute)
+  .get(authorizeAdminAccount(),
+    PaginationQueryPipeline,
+    requestValidatorMiddleware,
+    controller.adminAccountListRoute
+    )
 router.route('/:adminAccountId')
 /**
  * @swagger
@@ -95,7 +106,12 @@ router.route('/:adminAccountId')
  *        '202':
  *          description: "OK"
  */
-  .patch(authorizeAdminAccount(), adminValidations.FormPipeline, requestValidatorMiddleware, controller.updateAdminAccountRoute)
+  .patch(
+    authorizeAdminAccount(),
+    adminValidations.FormPipeline,
+    requestValidatorMiddleware,
+    controller.updateAdminAccountRoute
+  )
 /**
  * @swagger
  * paths:
@@ -112,6 +128,9 @@ router.route('/:adminAccountId')
  *        '200':
  *          description: "OK"
  */
-  .get(authorizeAdminAccount(), controller.adminAccountDetailsRoute)
+  .get(
+    authorizeAdminAccount(),
+    controller.adminAccountDetailsRoute
+  )
 
 export default router;

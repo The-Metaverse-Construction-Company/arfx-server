@@ -7,10 +7,11 @@ import {
   createFeaturedProductService,
   featuredProductListService,
   updateFeaturedProductService,
-  removeFeaturedProductService
+  removeFeaturedProductService,
 } from '../service-configurations/product-banner'
 import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users'
+import AppError from '../utils/response-error'
 /**
  * @public
  * get the list of the product banner
@@ -21,14 +22,20 @@ import { IUserEntity } from '../domain/entities/users'
  */
 export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const {_id = '', isAdmin = false} = <any> req.user
     const featuredProduct = await featuredProductListService()
-      .getList(req.query)
+      .getList({
+        ...req.query,
+        userId: !isAdmin ? _id : ''
+      })
     res.status(httpStatus.OK)
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -51,8 +58,10 @@ export const createFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -78,8 +87,10 @@ export const updateFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -98,7 +109,9 @@ export const removeFeaturedProductRoute = async (req: Request, res: Response, ne
       .json(successReponse(featuredProduct))
     return
   } catch (error) {
-    console.log('object :>> ', error);
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

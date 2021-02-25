@@ -6,7 +6,7 @@ import {
   IPurchaseHistoryEntity, PURCHASE_HISTORY_STATE
 } from '../../../../api/domain/entities/purchase-history'
 import { COLLECTION_NAMES } from '../constants/collection-names'
-
+import {ProductBlobObject, ProductCoreRepositotyModelObj} from './product.model'
 export interface IPurchaseHistoryRepository extends Document, IPurchaseHistoryEntity {
   _id: any
 }
@@ -26,51 +26,24 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     default: '',
     required: true,
   },
-  title: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  name: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  description: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  contentURL: {
-    type: String,
-    default: '',
-  },
-  previewImageURL: {
-    type: String,
-    default: '',
-  },
-  previewVideoURL: {
-    type: String,
-    default: '',
-  },
   paymentMethodId: {
     type: String,
     default: '',
-    required: true,
+    // required: true,
   },
   paymentIntentId: {
     type: String,
     default: '',
-    required: true,
+    // required: true,
+  },
+  paymentChargeId: {
+    type: String,
+    default: '',
   },
   amount: {
     type: Number,
     default: 0,
     required: true
-  },
-  discountPercentage: {
-    type: Number,
-    default: 0,
   },
   state: {
     type: Number,
@@ -88,7 +61,11 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
     type: Number,
     default: 0,
   },
+  ...ProductCoreRepositotyModelObj
 }
 
 const RepositorySchema = new Schema<IPurchaseHistoryRepository>(RepositoryModel)
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IPurchaseHistoryRepository>(COLLECTION_NAMES.PURCHASE_HISTORY, RepositorySchema)

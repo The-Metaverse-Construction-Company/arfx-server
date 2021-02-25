@@ -8,6 +8,7 @@ import {
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 
 import { successReponse } from '../helper/http-response'
+import AppError from '../utils/response-error'
 /**
  * Returns jwt token if registration was successful
  * @public
@@ -21,7 +22,10 @@ export const verifyTokenMiddleware = async (req: Request, res: Response, next: N
     res.locals.signUpVerifiedTokenResponse = newUser
     next()
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -41,7 +45,10 @@ export const signUpRoute = async (req: Request, res: Response, next: NextFunctio
     delete newUser.password
     res.status(httpStatus.CREATED).json(successReponse(newUser))
   } catch (error) {
-    next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }));
   }
 };
 /**
@@ -58,7 +65,10 @@ export const verifyUserRoute = async (req: Request, res: Response, next: NextFun
     delete newUser.password
     res.status(httpStatus.OK).json(successReponse(newUser))
   } catch (error) {
-    next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }));
   }
 };
 /**
@@ -69,6 +79,9 @@ export const verifyTokenRoute = async (req: Request, res: Response, next: NextFu
   try {
     res.status(httpStatus.OK).json(successReponse(res.locals.signUpVerifiedTokenResponse))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

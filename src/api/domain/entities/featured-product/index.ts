@@ -2,25 +2,24 @@ import {
   IFeaturedProductEntity
 } from './interfaces'
 import {
-  IGeneralEntityDependencies
-} from '../../interfaces/index'
-
+} from '../../interfaces/general-repository-gateway'
 export * from './interfaces'
 export * from './repository-gateway-interfaces'
-
-interface Dependencies extends IGeneralEntityDependencies {
+import GeneralEntity from '../general'
+import { IGeneralEntityDependencies } from '../../interfaces'
+interface IDependenciesEntity extends IGeneralEntityDependencies {
 }
 export default ({
   generateId
-}: Dependencies) => (
-  class FeaturedProductEntity implements IFeaturedProductEntity {
-    public readonly _id!: string
+}: IDependenciesEntity) => (
+  class FeaturedProductEntity extends GeneralEntity({generateId}) implements IFeaturedProductEntity {
+    protected generateId(): string {
+      return generateId()
+    }
     public readonly adminAccountId!: string
     public readonly active: boolean = false
     public readonly indexNo: number = 0
     public readonly productId!: string
-    public readonly createdAt!: number
-    public readonly updatedAt!: number
     constructor ({
       _id = '',
       productId = '',
@@ -30,24 +29,29 @@ export default ({
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IFeaturedProductEntity>) {
-      if (!_id) {
-        _id = generateId()
+      super({
+        _id,
+        createdAt,
+        updatedAt
+      })
+      if (this.validateString(adminAccountId, 'adminAccountId')) {
+        // add more validations here.
       }
-      if (!adminAccountId) {
-        throw new Error('adminAccountId must not be null, undefined or empty string.')
+      if (this.validateString(productId, 'productId')) {
+        // add more validations here.
       }
-      if (!productId) {
-        throw new Error('productId must not be null, undefined or empty string.')
+      if (this.validateBoolean(active, 'active', false)) {
+        // add more validations here.
+      }
+      if (this.validateNumber(indexNo, 'indexNo', false)) {
+        // check if the indexNo is null, then if not, parse the value to number else set a default value to 0
+        indexNo = indexNo ? Number(indexNo) : 0
       }
       // add additional business rules here if needed.
-      this._id = _id
       this.productId = productId
       this.adminAccountId = adminAccountId
       this.active = active
       this.indexNo = indexNo
-      this.updatedAt = updatedAt
-      this.createdAt = createdAt
     }
-    
   }
 )

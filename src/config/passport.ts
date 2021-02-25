@@ -79,8 +79,7 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
 };
 const azureADAuthHandler = async (req: any, done: any = () => null) => {
   try {
-    console.log('req :>> ', req);
-    if (!req.iod) {
+    if (!req.oid) {
       throw new Error('No user auth found.')
     }
     const user = await userDetails()

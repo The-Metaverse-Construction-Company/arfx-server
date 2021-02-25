@@ -24,7 +24,10 @@ export class UserSignInService {
       const user = await this.deps.repositoryGateway.findOne({
         //@ts-expect-error
         "email.value": username
-      })
+      }).catch(() => null)
+      if (!user) {
+        throw new Error('Invalid user credentials.')
+      }
       // validate account password
       await this.deps.validateUserPasswordService.validateOne(user._id, password)
       // if pass, then validate email if verified.
@@ -34,9 +37,8 @@ export class UserSignInService {
       const token = await this.deps.generateToken({
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN
-      })
+      }, 60 * 8) // 8 hrs token duration
       // removing password field on responsing user data
-      //@ts-ignore
       delete user.password
       // add some logs or notification.
       return {
@@ -44,7 +46,7 @@ export class UserSignInService {
         token
       }
     } catch (error) {
-      console.log('error :>> ', error);
+      console.log('error on sign-in user:>> ', error.message);
       throw error
     }
   }

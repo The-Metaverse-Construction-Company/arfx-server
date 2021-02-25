@@ -39,14 +39,13 @@ export class ValidateDuplicateEmailService {
             location: 'body',
             messages: ['"email" already exists'],
           }],
-          status: httpStatus.CONFLICT,
+          status: httpStatus.BAD_REQUEST,
           isPublic: true
         });
       }
       //add some logs
       return true
     } catch (error) {
-      console.log('error :>> ', error);
       throw error
     }
   }

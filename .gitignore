@@ -3,7 +3,7 @@ dist
 package-lock.json
 # uploaded product content
 uploaded
-public/uploaded
+public
 # Environment variables
 .env
 .env.local

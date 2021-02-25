@@ -68,7 +68,8 @@ export const userVerifyOTPToken = (redis: RedisClient) => (
 export const sendUserOTPService = (redis: RedisClient) => (
   new SendUserOTPService({
     generateToken: (new OTPToken({redisClient: redis})).generateOTPToken,
-    sendEmail: sendVerificationEmail().sendOne
+    sendEmail: async () => true
+    // sendEmail: sendVerificationEmail().sendOne
   })
 )
 export const updateUserPasswordService = () => (

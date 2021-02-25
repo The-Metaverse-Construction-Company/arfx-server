@@ -47,11 +47,13 @@ export class CreateUserService {
       await this.deps.validateEmail({email: newUser.email.value})
       // insert user to the repository.
       await this.deps.repositoryGateway.insertOne(newUser)
+      //remove password property on the entity so it will not display on the response.
+      delete newUser.password
       //add some logs
       console.log('User created.');
       return newUser
     } catch (error) {
-      console.log('failed to create new user. \nError: ', error);
+      console.log('failed to create new user. Error: ', error);
       throw error
     }
   }

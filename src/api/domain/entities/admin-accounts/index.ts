@@ -5,13 +5,16 @@ import {
   IAdminAccountsEntity
 } from './interfaces'
 import {
-  ADMIN_ROLE_LEVEL
+  ADMIN_ROLE_LEVEL,
+  ALLOWED_ADMIN_ROLE_LEVEL
 } from './constants'
 
 export * from './interfaces'
 export * from './constants'
 export * from './repository-gateway-interfaces'
 
+import GeneralEntity from '../general'
+import e from 'express'
 interface IDeps extends IGeneralEntityDependencies {
   hash(pwd: string): string 
 }
@@ -28,16 +31,12 @@ export default ({
    * mobileNumber: mobileNumber
    * avatarUrl: profileUrl or avatar of the user
    */
-  class AdminAccountsEntity implements IAdminAccountsEntity {
-    public readonly _id: string = '';
-    
+  class AdminAccountsEntity extends GeneralEntity({generateId}) implements IAdminAccountsEntity {
     public readonly firstName!: string
     public readonly lastName!: string
     public readonly roleLevel!: number
     public email!: IGeneralVerificationEntityProperties
     public password: string = '';
-    public readonly createdAt: number = 0;
-    public readonly updatedAt: number = 0;
     constructor ({
       _id = '',
       firstName = '',
@@ -46,32 +45,34 @@ export default ({
       email = {value: '', verified: false, verifiedAt: 0},
       password = '',
     }: Partial<IAdminAccountsEntity>) {
-      if (!_id) {
-        _id = generateId()
+      super()
+      if (this.validateString(firstName, 'firstName')) {
+      // add more business rule validation here.
       }
-      if (!firstName) {
-        throw new Error('firstName must not be null, undefined or empty string.')
+      if (this.validateString(lastName, 'lastName')) {
+      // add more business rule validation here.
       }
-      if (!lastName) {
-        throw new Error('lastName must not be null, undefined or empty string.')
+      if (this.validateString(password, 'password')) {
+      // add more validation like the format of it.
+        password = hash(password)
       }
-      if (!email) {
-        throw new Error('email must not be null, undefined or empty string.')
+      email.value = this.validateString(email.value, 'email.value')
+        // add more business rule validation here.
+        // add more validation like the format of it.
+      email.verified = this.validateBoolean(email.verified, 'email.verified')
+        // add more business rule validation here.
+      email.verifiedAt = this.validateNumber(email.verifiedAt, 'email.verifiedAt')
+        // add more business rule validation here.
+      roleLevel = this.validateNumber(roleLevel, 'roleLevel')
+      if (!ALLOWED_ADMIN_ROLE_LEVEL.includes(roleLevel)) {
+        throw new Error(`Invalid role level. allowed roleLevel are ${ALLOWED_ADMIN_ROLE_LEVEL.join(', ')}. found: ${roleLevel}`)
       }
-      // add more validation for email liek the format of it.
-      if (!password) {
-        throw new Error('password must not be null, undefined or empty string.')
-      }
-      // add more validation on password like the format of it.
-      this._id = _id
+        // add more business rule validation here.
       this.email = email
       this.firstName = firstName
       this.lastName = lastName
       this.roleLevel = roleLevel
-      this.password = hash(password)
-      // this.avatarUrl = avatarUrl
-      this.createdAt = Date.now()
-      this.updatedAt = Date.now()
+      this.password = password
     }
   }
 )

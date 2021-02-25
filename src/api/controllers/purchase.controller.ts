@@ -10,6 +10,7 @@ import {
 
 import { successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
+import AppError from '../utils/response-error';
 /**
  * @public
  * purchase product
@@ -26,7 +27,10 @@ export const purchaseProductRoute = async (req: Request, res: Response, next: Ne
     res.status(httpStatus.CREATED)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -38,12 +42,19 @@ export const purchaseProductRoute = async (req: Request, res: Response, next: Ne
 export const purchaseHistoryListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = ''} = <IUserEntity>req.user
-    const newPurchaseHistory = await purchaseHistoryList()
-      .getList(_id, req.query)
-    res.status(httpStatus.CREATED)
-      .json(successReponse(newPurchaseHistory))
+    const {userId = ''} = req.params
+    const paginationList = await purchaseHistoryList()
+      .getList({
+        ...req.query,
+        userId
+      })
+    res.status(httpStatus.OK)
+      .json(successReponse(paginationList))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -56,11 +67,16 @@ export const purchaseHistoryDetailsRoute = async (req: Request, res: Response, n
   try {
     const {_id = ''} = <IUserEntity>req.user
     const {purchasedProductId = ''} = req.params
+    console.log('_id :>> ', _id);
+    console.log('purchasedProductId xxx:>> ', purchasedProductId);
     const newPurchaseHistory = await purchaseHistoryDetails()
       .getOne(_id, purchasedProductId)
-    res.status(httpStatus.CREATED)
+    res.status(httpStatus.OK)
       .json(successReponse(newPurchaseHistory))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

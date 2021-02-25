@@ -1,3 +1,6 @@
+/**
+ * @services
+ */
 import {
   CreateProductService,
   ProductList,
@@ -5,31 +8,42 @@ import {
   ProductDetails,
   RemoveProduct,
   UpdateProductPublishStatus,
-  UpdateProductURLService,
-  UploadProductBlobService
+  // UpdateProductURLService,
+  UploadProductBlobService,
+  UpdateProductPurchaseCountService
 } from '../domain/services/products'
-
+/**
+ * @repository
+ */
 import {
   ProductRepository
 } from '../../app-plugins/persistence/repository'
+/**
+ * @helper
+ */
 import BlobStorage from '../helper/blob-storage'
-
+import ProductImageResize from '../helper/image-resize'
+import { validateProductTotalPrice } from '../helper/validate-product-total-price'
 export const uploadProductBlobService = () => (
   new UploadProductBlobService({
-    fileUploader: BlobStorage
+    fileUploader: BlobStorage,
+    imageResizer: ProductImageResize,
+    repositoryGateway: new ProductRepository(),
   })
 )
 
 export const createProduct = () => (
   new CreateProductService({
     repositoryGateway: new ProductRepository(),
-    uploadProductBlobService: uploadProductBlobService()
+    uploadProductBlobService: uploadProductBlobService(),
+    validateProductTotalAmount: validateProductTotalPrice
   })
 )
 export const updateProduct = () => (
   new UpdateProduct({
     repositoryGateway: new ProductRepository(),
-    uploadProductBlobService: uploadProductBlobService()
+    uploadProductBlobService: uploadProductBlobService(),
+    validateProductTotalAmount: validateProductTotalPrice
   })
 )
 export const productList = () => (
@@ -52,8 +66,13 @@ export const updateProductPublishStatus = () => (
     repositoryGateway: new ProductRepository()
   })
 )
-export const updateProductURLService = () => (
-  new UpdateProductURLService({
+export const updateProductPurchaseCountService = () => (
+  new UpdateProductPurchaseCountService({
     repositoryGateway: new ProductRepository()
   })
 )
+// export const updateProductURLService = () => (
+//   new UpdateProductURLService({
+//     repositoryGateway: new ProductRepository()
+//   })
+// )

@@ -8,7 +8,7 @@ export const successReponse = (data: any) => {
 
 export const errorResponse = (error: any) => {
   return {
-    success: true,
+    success: false,
     result: null,
     errors: error
   }

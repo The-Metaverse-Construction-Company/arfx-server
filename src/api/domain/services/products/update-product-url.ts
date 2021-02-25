@@ -18,13 +18,14 @@ export class UpdateProductURLService {
    */
   public updateOne = async (productId: string, contentURL: string) => {
     try {
-      const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
-        _id: productId
-      }, {
-        contentURL: contentURL,
-      })
+      // const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
+      //   _id: productId
+      // }, {
+      //   contentZip: {blobURL: '', originalFilepath: },
+      // })
       // add logs
-      return updatedProduct
+      // return updatedProduct
+      return true
     } catch (error) {
       console.log('failed to update product. \nError :>> ', error);
       throw error

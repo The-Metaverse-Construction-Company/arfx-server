@@ -1,16 +1,31 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/purchase.controller'
 import { authorize, LOGGED_USER } from '../../middlewares/auth';
+import { requestValidatorMiddleware } from '../../validations';
 import * as validations from '../../validations/purchase-history.validation'
 
 const router = express.Router();
 
 router.route('/')
-  .post(authorize(LOGGED_USER), validate(validations.PurchaseValidation), controller.purchaseProductRoute)
-
-router.route('/history')
-  .post(authorize(LOGGED_USER), validate(validations.PurchaseValidation), controller.purchaseHistoryListRoute)
-router.route('/history/:purchasedProductId')
-  .post(authorize(LOGGED_USER), validate(validations.PurchaseValidation), controller.purchaseHistoryDetailsRoute)
+/**x
+ * @swagger
+ * /v1/products/purchase:
+ *  post:
+ *    summary: "purchase the product"
+ *    tags:
+ *      - "Purchase Product"
+ *    security:
+ *      - userBearerAuth: []
+ *    requestBody:
+ *      $ref: '#/components/requestBody/Product/purchase'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/responseBody/PurchaseProduct'
+ */
+  .post(
+    authorize(LOGGED_USER),
+    validations.PurchaseProductValidationPipeline,
+    requestValidatorMiddleware,
+    controller.purchaseProductRoute
+  )
 export default router;

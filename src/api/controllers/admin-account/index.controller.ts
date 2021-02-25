@@ -19,7 +19,8 @@ import {
 /**
  * @helpers
  */
-import { successReponse } from '../../helper/http-response'
+import { errorResponse, successReponse } from '../../helper/http-response'
+import AppError from '../../utils/response-error';
 /**
  * @public
  * create admin account
@@ -33,12 +34,15 @@ import { successReponse } from '../../helper/http-response'
 export const createAdminAccountRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const redisClient = req.app.get('redisPublisher')
-    const newPurchaseHistory = await createAdminAccountService(redisClient)
+    const newAdminAccount = await createAdminAccountService(redisClient)
       .createOne(req.body)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newPurchaseHistory))
+      .json(successReponse(newAdminAccount))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -62,7 +66,10 @@ export const updateAdminAccountRoute = async (req: Request, res: Response, next:
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(updatedAdminAccount))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -80,7 +87,10 @@ export const adminAccountDetailsRoute = async (req: Request, res: Response, next
     res.status(httpStatus.OK)
       .json(successReponse(adminAccount))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -99,6 +109,9 @@ export const adminAccountListRoute = async (req: Request, res: Response, next: N
     res.status(httpStatus.OK)
       .json(successReponse(adminAccounts))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

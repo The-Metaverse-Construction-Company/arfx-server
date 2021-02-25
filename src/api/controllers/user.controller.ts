@@ -13,7 +13,8 @@ import {
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
+import AppError from '../utils/response-error'
 const User = require('../models/user.model');
 
 /**
@@ -22,14 +23,16 @@ const User = require('../models/user.model');
  * @requestParams
  *  @field -> userId: string
  */
-export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: any) => {
+export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: string) => {
   try {
     const user = await userDetails()
       .findOne(id);
     res.locals['user'] = user
-    return next();
+    next()
+    return;
   } catch (error) {
-    return next(error);
+    res.status(httpStatus.BAD_REQUEST)
+        .send(errorResponse([error.message]))
   }
 };
 
@@ -38,7 +41,8 @@ export const UserDetailsMiddleware = async (req: Request, res: Response, next: N
  * Get customer/user detail based on the requestParams.userId
  */
 export const UserDetailsRoute = (req: Request, res: Response) => {
-  res.json(res.locals['user']);
+  res.status(httpStatus.OK)
+     .send(successReponse(res.locals['user']))
 }
 
 /**
@@ -58,10 +62,13 @@ export const CreateUserRoute = async (req: Request, res: Response, next: NextFun
       })
     // const user = new User(req.body);
     // const savedUser = await user.save();
-    res.status(httpStatus.CREATED).json(newUser);
+    res.
+      status(httpStatus.CREATED).
+      send(successReponse(newUser));
   } catch (error) {
-    console.log('error :>> ', error);
-    next(User.checkDuplicateEmail(error));
+    res.
+      status(httpStatus.BAD_REQUEST).
+      send(errorResponse([error.message]));
   }
 };
 
@@ -80,8 +87,16 @@ export const UpdateUserRoute = (req: Request, res: Response, next: NextFunction)
   const {userId = ''} = req.params
   updateUserService()
     .updateOne(userId, req.body)
-    .then((user: any) => res.json(successReponse(user)))
-    .catch((e: Error) => next(e));
+    .then((user) => {
+      res.status(httpStatus.ACCEPTED)
+        .send(successReponse(user))
+    })
+    .catch((e) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 
 
@@ -101,7 +116,10 @@ export const UserListRoute = async (req: Request, res: Response, next: NextFunct
       })
     res.json(successReponse(users));
   } catch (error) {
-    next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -116,8 +134,13 @@ export const SuspendUserRoute = (req: Request, res: Response, next: NextFunction
   const {userId = ''} = req.params
   updateUserSuspendStatusService()
     .updateOne(userId, true)
-    .then((user) => res.status(httpStatus.OK).json(successReponse(user)))
-    .catch((e: Error) => next(e));
+    .then((user) => res.status(httpStatus.ACCEPTED).json(successReponse(user)))
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 /**
  * @public
@@ -130,8 +153,14 @@ export const UnsuspendUserRoute = (req: Request, res: Response, next: NextFuncti
   const {userId = ''} = req.params
   updateUserSuspendStatusService()
     .updateOne(userId, false)
-    .then((user) => res.status(httpStatus.OK).json(successReponse(user)))
-    .catch((e: Error) => next(e));
+    .then((user) => res.status(httpStatus.ACCEPTED)
+      .json(successReponse(user)))
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 /**
  * @public
@@ -147,5 +176,10 @@ export const resendAccountVerificationOTPRoute = (req: Request, res: Response, n
     .then((otp) => {
       res.status(httpStatus.OK).send(successReponse({code: otp}))
     })
-    .catch((e: Error) => next(e));
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };

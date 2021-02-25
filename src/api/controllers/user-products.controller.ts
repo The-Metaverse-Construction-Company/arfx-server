@@ -8,8 +8,9 @@ import {
   userProductsListService
 } from '../service-configurations/user-products'
 
-import { successReponse } from '../helper/http-response'
+import { errorResponse, successReponse } from '../helper/http-response'
 import { IUserEntity } from '../domain/entities/users';
+import AppError from '../utils/response-error';
 /**
  * @public
  * create user product
@@ -45,10 +46,16 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
     const {userProductId = ''} = req.params
     const userProduct = await userProductDetailsService()
       .getOne(_id, userProductId)
+    if (!userProduct) {
+      throw new Error('No user product details found.')
+    }
     res.status(httpStatus.OK)
       .json(successReponse(userProduct))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 /**
@@ -61,13 +68,15 @@ export const userProductDetailsRoute = async (req: Request, res: Response, next:
  */
 export const userProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('req.user :>> ', req.user);
     const {_id = ''} = <IUserEntity>req.user
     const userProductList = await userProductsListService()
       .getList(_id, req.query)
     res.status(httpStatus.OK)
       .json(successReponse(userProductList))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

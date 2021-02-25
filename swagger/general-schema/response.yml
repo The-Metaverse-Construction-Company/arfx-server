@@ -10,6 +10,15 @@ components:
           error:
             type: any
             default: null
+      paginationList:
+        type: object
+        properties:
+          page:
+            type: number
+            default: 0
+          total:
+            type: number
+            default: 0
       failed:
         type: object
         properties:

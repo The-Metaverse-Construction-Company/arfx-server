@@ -2,7 +2,6 @@
  * @libraries
  */
 import express from 'express'
-import validate from 'express-validation'
 /**
  * @controllers
  */
@@ -14,11 +13,9 @@ import {
   authorize, ADMIN, LOGGED_USER, authorizeAdminAccount
 } from '../../middlewares/auth'
 import {
-  listUsers,
-  createUser,
-  replaceUser,
-  updateUser,
-  createUserPipeline
+  UserListValidationPipeline,
+  createUserPipeline,
+  UserFormValidationPipeline
 } from '../../validations/user.validation'
 
 /**
@@ -57,7 +54,12 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/List'
  */
-  .get(authorizeAdminAccount(), validate(listUsers), controller.UserListRoute)
+  .get(
+    authorizeAdminAccount(),
+    UserListValidationPipeline,
+    requestValidatorMiddleware,
+    controller.UserListRoute
+  )
 /**
  * @swagger
  * /v1/users:
@@ -73,7 +75,11 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .post(authorizeAdminAccount(), createUserPipeline, requestValidatorMiddleware, controller.CreateUserRoute);
+  .post(authorizeAdminAccount(), 
+    createUserPipeline,
+    requestValidatorMiddleware,
+    controller.CreateUserRoute
+    );
 
 router
   .route('/:userId')
@@ -112,7 +118,11 @@ router
  *      '200':
  *        $ref: '#/components/responses/User/Detail'
  */
-  .patch(authorize(), controller.UpdateUserRoute)
+  .patch(
+    authorize(),
+    UserFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.UpdateUserRoute)
 /**
  * @swagger
  * /v1/users/{userId}:

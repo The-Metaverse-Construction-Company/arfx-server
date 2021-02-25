@@ -1,5 +1,5 @@
 import {
-  model, Document, Schema, SchemaTypeOpts
+  model, Document, Schema, SchemaTypeOpts, SchemaTypeOptions
 } from 'mongoose'
 
 import {
@@ -7,20 +7,22 @@ import {
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
+export const ProductBlobObject = {
+  type: Object,
+  originalFilepath: {
+    type: String,
+    default: ''
+  },
+  blobURL: {
+    type: String,
+    default: ''
+  },
+}
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
 }
-// this will automatically error when it have a changes on the product entity interface
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
-  _id: {
-    type: String,
-    default: '',
-  },
+export const ProductCoreRepositotyModelObj = {
   name: {
-    type: String,
-    default: '',
-  },
-  description: {
     type: String,
     default: '',
   },
@@ -28,22 +30,24 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  contentURL: {
+  description: {
     type: String,
     default: '',
   },
-  previewImageURL: {
-    type: String,
-    default: '',
+  contentZip: {
+    ...ProductBlobObject,
+    version: {
+      type: Number,
+      default: 0
+    },
+    hash: {
+      type: Number,
+      default: 0
+    },
   },
-  previewVideoURL: {
-    type: String,
-    default: '',
-  },
-  published: {
-    type: Boolean,
-    default: false
-  },
+  previewImage: ProductBlobObject,
+  previewVideo: ProductBlobObject,
+  thumbnail: ProductBlobObject,
   price: {
     type: Number,
     default: 0,
@@ -51,6 +55,17 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
   discountPercentage: {
     type: Number,
     default: 0,
+  }
+}
+// this will automatically error when it have a changes on the product entity interface
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
+  _id: {
+    type: String,
+    default: '',
+  },
+  published: {
+    type: Boolean,
+    default: false
   },
   adminAccountId: {
     type: String,
@@ -69,7 +84,12 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  ...ProductCoreRepositotyModelObj
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IProductRepository>(COLLECTION_NAMES.PRODUCT, RepositorySchema)

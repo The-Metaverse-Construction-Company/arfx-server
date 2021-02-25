@@ -193,9 +193,10 @@ export default abstract class GeneralDBCommands<T, K> {
         firstPipeline.splice(ind ,1)
       }
     }
+    const searchTextReg = new RegExp(searchText, 'i')
     // @ts-expect-error
     const q = (searchFields.length >= 1 ? searchFields : []).map((field: string) => ({[field]: {
-      $regex: new RegExp(searchText, 'gi')
+      $regex: searchTextReg
     }}))
     const paginationQuery = pipeline.concat([
       {
