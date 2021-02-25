@@ -31,37 +31,39 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
       {
         $lookup: {
           from: COLLECTION_NAMES.PRODUCT,
-          let: {
-            prodId: '$productId'
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $eq: ['$$prodId', '$_id']
-                }
-              }
-            },
-            {
-              $limit: 1
-            },
-            {
-              $project: {
-                title: 1,
-                name: 1,
-                description: 1,
-                previewImage: {
-                  blobURL: 1
-                },
-                previewVideo: {
-                  blobURL: 1
-                },
-                thumbnail: {
-                  blobURL: 1
-                }
-              }
-            }
-          ],
+          localField: "productId",
+          foreignField: "_id",
+          // let: {
+          //   prodId: '$productId'
+          // },
+          // pipeline: [
+          //   {
+          //     $match: {
+          //       $expr: {
+          //         $eq: ['$$prodId', '$_id']
+          //       }
+          //     }
+          //   },
+          //   {
+          //     $limit: 1
+          //   },
+          //   {
+          //     $project: {
+          //       title: 1,
+          //       name: 1,
+          //       description: 1,
+          //       previewImage: {
+          //         blobURL: 1
+          //       },
+          //       previewVideo: {
+          //         blobURL: 1
+          //       },
+          //       thumbnail: {
+          //         blobURL: 1
+          //       }
+          //     }
+          //   }
+          // ],
           as: "product"
         }
       },
@@ -72,19 +74,55 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
         }
       },
       {
+        $group: {
+          _id: '$_id',
+          root: {
+            $first: {
+              $mergeObjects: [
+                "$$ROOT",
+                {
+                  title: "$product.title",
+                  name: "$product.name",
+                  description: "$product.description",
+                  previewImage: {
+                    blobURL: "$product.previewImage.blobURL"
+                  },
+                  previewVideo: {
+                    blobURL: "$product.previewVideo.blobURL"
+                  },
+                  thumbnail: {
+                    blobURL: "$product.thumbnail.blobURL"
+                  },
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$root"
+        }
+      },
+      {
         $project: {
-          userId: 1,
-          productId: 1,
-          title: "$product.title",
-          name: "$product.name",
-          description: "$product.description",
-          previewImage: "$product.previewImage",
-          previewVideo: "$product.previewVideo",
-          thumbnail: "$product.thumbnail",
-          createdAt: 1,
-          updatedAt: 1,
+          product: 0
         }
       }
+      // {
+      //   $project: {
+      //     userId: 1,
+      //     productId: 1,
+      //     title: "$product.title",
+      //     name: "$product.name",
+      //     description: "$product.description",
+      //     previewImage: "$product.previewImage",
+      //     previewVideo: "$product.previewVideo",
+      //     thumbnail: "$product.thumbnail",
+      //     createdAt: 1,
+      //     updatedAt: 1,
+      //   }
+      // }
     ], filterQuery)
   }
   /**
