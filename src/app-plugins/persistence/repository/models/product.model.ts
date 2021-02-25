@@ -3,7 +3,7 @@ import {
 } from 'mongoose'
 
 import {
-  IProductEntity
+  IProductEntity, PRODUCT_STATES
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
@@ -75,6 +75,10 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
   purchaseCount: {
     type: Number,
     default: 0
+  },
+  state: {
+    type: Number,
+    default: PRODUCT_STATES.PENDING
   },
   createdAt: {
     type: Number,

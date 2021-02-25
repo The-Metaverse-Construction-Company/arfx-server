@@ -4,3 +4,8 @@ export enum PRODUCT_BLOB_TYPE {
   THUMBNAIL = 'thumbnail',
   PREVIEW_VIDEO = 'preview-video',
 }
+export enum PRODUCT_STATES {
+  COMPLETED = 1,
+  PENDING = 2,
+  FAILED = 3
+}

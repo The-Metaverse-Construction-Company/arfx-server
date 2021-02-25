@@ -10,6 +10,7 @@ import {
 } from '../../interfaces/index'
 
 import GeneralEntity from '../general'
+import { PRODUCT_STATES } from './constants'
 
 export * from './constants'
 export * from './interfaces'
@@ -104,6 +105,8 @@ export default ({
     public readonly discountPercentage!: number
     public readonly createdAt!: number
     public readonly updatedAt!: number
+    public readonly state!: number
+
     constructor ({
       _id = '',
       name = '',
@@ -118,6 +121,7 @@ export default ({
       thumbnail = {blobURL: '', originalFilepath: ''},
       title = '',
       published = true,
+      state = PRODUCT_STATES.PENDING,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
@@ -137,6 +141,7 @@ export default ({
         price
       })
       // add additional business rules here if needed.
+      this.state = state
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = this.validateBoolean(published, 'published')

@@ -1,6 +1,7 @@
 import {
   IGeneralEntityProperties
 } from '../../interfaces/index'
+import { PRODUCT_STATES } from './constants';
 
 export interface IProductBlobProperties {
   originalFilepath: string
@@ -27,6 +28,7 @@ export interface IProdutBody extends IProductParams, IProductBlob {
 }
 export interface IProductEntity extends IProdutBody, IGeneralEntityProperties {
   published: boolean // toggle if it will show it portal or not.
+  state: PRODUCT_STATES
   adminAccountId: string // admin account who added the product
   purchaseCount: number // number of times this product purchased.
 }

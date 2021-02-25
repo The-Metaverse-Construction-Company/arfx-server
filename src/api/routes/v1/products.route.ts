@@ -147,7 +147,7 @@ router.route('/:productId')
   requestValidatorMiddleware,
   controller.mapProductUploadedBlobRoute,
   controller.updateProductRoute)
-  /**xx
+  /**
  * @swagger
  * /v1/products/{productId}:
  *  delete:
@@ -192,6 +192,31 @@ router.route('/:productId/published')
     requestValidatorMiddleware,
     controller.updateProductPublishStatusRoute
     )
+/**
+ * @swagger
+ * /v1/products/{productId}/{blobType}:
+ *  patch:
+ *    summary: "Update the selected product/screen."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - adminBearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/Product/id'
+ *      - $ref: '#/components/requestParams/Product/blobType'
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/blobUploader'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/schemas/Product'
+ */
+router.post('/:productId/:blobType',
+  authorizeAdminAccount(),
+  uploader.single('blob'), 
+  validations.ProductBlobTypeValidationPipeline,
+  requestValidatorMiddleware,
+  controller.uploadProductBlobRoute
+)
 router.route('/:productId/:blobType\.:fileType')
   .get(
     // authorize(),

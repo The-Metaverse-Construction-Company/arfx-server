@@ -10,7 +10,8 @@ import {
   UpdateProductPublishStatus,
   // UpdateProductURLService,
   UploadProductBlobService,
-  UpdateProductPurchaseCountService
+  UpdateProductPurchaseCountService,
+  UpdateProductBlobService
 } from '../domain/services/products'
 /**
  * @repository
@@ -28,6 +29,12 @@ export const uploadProductBlobService = () => (
   new UploadProductBlobService({
     fileUploader: BlobStorage,
     imageResizer: ProductImageResize,
+    repositoryGateway: new ProductRepository(),
+  })
+)
+export const updateProductBlobService = () => (
+  new UpdateProductBlobService({
+    uploadProductBlobService: uploadProductBlobService(),
     repositoryGateway: new ProductRepository(),
   })
 )
