@@ -6,6 +6,7 @@ import App from '../../../../index'
 const request = supertest(App)
 import {userSignInResponse} from './sign-in.test'
 import httpStatus from 'http-status'
+import {addedProductResponse} from '../admin/products/create.test'
 describe('@User Product API', () => {
   describe('@Lists', () => {
     it('should success fetch product list', (done) => {
@@ -107,10 +108,19 @@ describe('@User Product API', () => {
     //     .expect(httpStatus.OK)
     //     .then((response) => {
     //       const {success = false, result} = response.body
-    //       assert.isOk(success)
-    //       assert.isNumber(result.pages)
-    //       assert.isNumber(result.total)
-    //       assert.isArray(result.data)
+    //       assert.isTrue(success)
+    //       assert.isString(result._id, 'product _id must be a string')
+    //       assert.isString(result.name, 'product name must be a string')
+    //       assert.isString(result.title, 'product title must be a string')
+    //       assert.isString(result.description, 'product description must be a string')
+    //       assert.isNumber(result.price, 'product price must be a numeric.')
+    //       assert.isAbove(result.price, 0, 'product price must be not be lower than 0.')
+    //       assert.isAbove(result.discountPercentage, -1, 'product discountPercentage must be not be lower than 0.')
+    //       assert.isBoolean(result.published, 'product published must be boolean.')
+    //       assert.isUndefined(result.contentZip, 'result.contentZip must not be defined.')
+    //       assert.isUndefined(result.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
+    //       assert.isUndefined(result.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
+    //       assert.isUndefined(result.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')
     //       done()
     //     })
     //     .catch(done)
