@@ -114,7 +114,7 @@ export class UploadProductBlobService {
           )
         }
         uploadedBlobURLs.thumbnail = {
-          blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? origFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
+          blobURL: NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? thumbnailOrigFilepath : `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${this.getBlobExtension(previewImage)}`,
           // blobURL: thumbnailOrigFilepath,
           originalFilepath: thumbnailOrigFilepath
         }
