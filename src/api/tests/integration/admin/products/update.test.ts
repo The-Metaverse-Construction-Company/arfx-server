@@ -29,7 +29,7 @@ describe('@Update Product API', () => {
       .then(({body}) => {
         const {success = false, result, errors} = body
         assert.isTrue(success)
-        assert.isUndefined(result.contentZip, 'result.contentZip must not be defined.')
+        assert.isUndefined(result.contentZip.originalFilePath, 'result.contentZip.originalFilePath must not be defined.')
         assert.isUndefined(result.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
         assert.isUndefined(result.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
         assert.isUndefined(result.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')

@@ -24,8 +24,11 @@ describe('@Pagination List Featured Product API', () => {
         const {success = false, result, errors} = body
         assert.isOk(success)
         assert.isArray(result.data)
-        // assert.isAbove(resxult.data.length, 0, 'result.data must not be empty array.')
-        // assert.isString(result.data[0]._id)
+        assert.isAbove(result.data.length, 0, 'result.data must not be empty array.')
+        assert.isUndefined(result.data[0].products.contentZip.originalFilePath, 'result.contentZip.originalFilePath must not be defined.')
+        assert.isUndefined(result.data[0].products.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
+        assert.isUndefined(result.data[0].products.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
+        assert.isUndefined(result.data[0].products.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')
         done()
       })
       .catch(done)
