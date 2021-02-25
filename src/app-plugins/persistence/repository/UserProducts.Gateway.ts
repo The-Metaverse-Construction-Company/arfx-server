@@ -158,15 +158,11 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
         responseData = {
           ..._productDetails,
           //@ts-expect-error
-          contentZip: {blobURL: _productDetails.productId.contentZip.blobURL, hash: _productDetails.productId.contentZip.hash, version: _productDetails.productId.contentZip.version},
-          //@ts-expect-error
-          previewImage: {blobURL: _productDetails.productId.previewImage.blobURL},
-          //@ts-expect-error
-          previewVideo: {blobURL: _productDetails.productId.previewVideo.blobURL},
-          //@ts-expect-error
-          thumbnail: {blobURL: _productDetails.productId.thumbnail.blobURL},
-          //@ts-expect-error
           ..._productDetails.productId,
+          contentZip: {blobURL: _productDetails.productId.contentZip.blobURL, hash: _productDetails.productId.contentZip.hash, version: _productDetails.productId.contentZip.version},
+          previewImage: {blobURL: _productDetails.productId.previewImage.blobURL},
+          previewVideo: {blobURL: _productDetails.productId.previewVideo.blobURL},
+          thumbnail: {blobURL: _productDetails.productId.thumbnail.blobURL},
           _id: _productDetails._id,
           productId: _productDetails.productId._id
         }

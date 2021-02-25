@@ -44,13 +44,13 @@ export class CreateProductService {
         throw new Error('total price must not be below $0.50 usd.')
       }
       // upload to cloud storage provider
-      const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
-        contentZip,
-        previewImage,
-        previewVideo
-      })
+      // const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
+      //   contentZip,
+      //   previewImage,
+      //   previewVideo
+      // })
       // merge to newProductEntity object to blob response
-      Object.assign(newProductEntity, blobResponse)
+      // Object.assign(newProductEntity, blobResponse)
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs

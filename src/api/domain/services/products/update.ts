@@ -53,16 +53,16 @@ export class UpdateProduct {
         throw new Error('total price must not be below $0.50 usd.')
       }
       // upload to cloud storage provider
-      const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
-        contentZip,
-        previewImage,
-        previewVideo
-      })
-      if (blobResponse.contentZip) {
-        blobResponse.contentZip.version = newProductEntity.contentZip.version + 1
-      }
+      // const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
+      //   contentZip,
+      //   previewImage,
+      //   previewVideo
+      // })
+      // if (blobResponse.contentZip) {
+      //   blobResponse.contentZip.version = newProductEntity.contentZip.version + 1
+      // }
       // merge to fieldsToUpload object
-      Object.assign(fieldsToUpdate, blobResponse)
+      // Object.assign(fieldsToUpdate, blobResponse)
       // update to repository
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: newProductEntity._id

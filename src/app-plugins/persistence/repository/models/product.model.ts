@@ -3,11 +3,12 @@ import {
 } from 'mongoose'
 
 import {
-  IProductEntity
+  IProductEntity, PRODUCT_STATES, IProductBlobProperties, PRODUCT_UPLOAD_BLOB_STATES
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
 export const ProductBlobObject = {
+// export const ProductBlobObject = <Record<keyof IProductBlobProperties, SchemaTypeOpts<Object>>> {
   type: Object,
   originalFilepath: {
     type: String,
@@ -16,6 +17,10 @@ export const ProductBlobObject = {
   blobURL: {
     type: String,
     default: ''
+  },
+  state: {
+    type: Number,
+    default: PRODUCT_UPLOAD_BLOB_STATES.PENDING
   },
 }
 export interface IProductRepository extends Document, IProductEntity {
@@ -76,6 +81,10 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0
   },
+  state: {
+    type: Number,
+    default: PRODUCT_STATES.PENDING
+  },
   createdAt: {
     type: Number,
     default: 0,
@@ -84,6 +93,7 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  
   ...ProductCoreRepositotyModelObj
 }
 

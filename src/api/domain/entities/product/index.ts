@@ -10,6 +10,7 @@ import {
 } from '../../interfaces/index'
 
 import GeneralEntity from '../general'
+import { PRODUCT_STATES, PRODUCT_UPLOAD_BLOB_STATES } from './constants'
 
 export * from './constants'
 export * from './interfaces'
@@ -104,6 +105,8 @@ export default ({
     public readonly discountPercentage!: number
     public readonly createdAt!: number
     public readonly updatedAt!: number
+    public readonly state!: number
+
     constructor ({
       _id = '',
       name = '',
@@ -112,12 +115,13 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentZip = {blobURL: '', originalFilepath: '', version: 0, hash: ''},
-      previewVideo = {blobURL: '', originalFilepath: ''},
-      previewImage = {blobURL: '', originalFilepath: ''},
-      thumbnail = {blobURL: '', originalFilepath: ''},
+      contentZip = {blobURL: '', originalFilepath: '', version: 0, hash: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      previewVideo = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      previewImage = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      thumbnail = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       title = '',
       published = true,
+      state = PRODUCT_STATES.PENDING,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
@@ -137,6 +141,7 @@ export default ({
         price
       })
       // add additional business rules here if needed.
+      this.state = state
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = this.validateBoolean(published, 'published')

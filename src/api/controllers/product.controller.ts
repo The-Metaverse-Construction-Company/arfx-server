@@ -8,7 +8,8 @@ import {
   updateProduct,
   productDetails,
   removeProduct,
-  updateProductPublishStatus
+  updateProductPublishStatus,
+  updateProductBlobService
 } from '../service-configurations/products'
 import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
@@ -81,6 +82,39 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
       .updateOne(productId, req.body)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+
+export const uploadCreatedProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
+    const file = <any> req.file || {};
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file.path)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    res.end()
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+export const uploadUpdateProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
+    const file = <any> req.file || {};
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file.path, true)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    res.end()
   } catch (error) {
     next(new AppError({
       message: error.message,
