@@ -19,7 +19,7 @@ import AppError from '../utils/response-error'
 const removeProductOriginalFilepath = (product: IProductEntity) => {
   delete product.previewImage.originalFilepath;
   delete product.previewVideo.originalFilepath;
-  delete product.contentZip.originalFilepath;
+  delete product.contentZip;
   delete product.thumbnail.originalFilepath;
   return product
 }
