@@ -1,11 +1,22 @@
 import express from 'express'
 import * as controller from '../../controllers/auth.controller'
-
+import { authAzureAD, authorize } from '../../middlewares/auth'
 import {signInValidationPipeline
 } from '../../validations/auth.validation'
 import { requestValidatorMiddleware } from '../../validations'
+import httpStatus from 'http-status'
+import { successReponse } from '../../helper/http-response'
 
 const router = express.Router();
+router.route('/')
+  .get(authorize(), (req, res, next) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
+router.route('/sign-in')
+  .get(authAzureAD(),
+  (req, res) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
 //Routes
 /**
  * @swagger

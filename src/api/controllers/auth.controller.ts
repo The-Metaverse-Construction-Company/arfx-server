@@ -2,7 +2,6 @@
  * @libraries
  */
 import httpStatus from 'http-status'
-import moment from 'moment-timezone'
 import {
   Response, Request, NextFunction
 } from 'express'

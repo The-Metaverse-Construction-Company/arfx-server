@@ -18,6 +18,7 @@ export type IUserEntityBody = Omit<IUserParams, 'email' | 'mobileNumber'> & {
 export interface IUserAuthenticationServices {
   facebook: string
   google: string
+  azureAd: string
 }
 export interface IUserEntity extends IUserEntityBody, IGeneralEntityProperties {
   service: IUserAuthenticationServices

@@ -8,9 +8,30 @@ export class UserDetailsService {
   }
   public findOne = async (userId: string, projection: Partial<Record<keyof IUserEntity, 1|0>> = {}) => {
     try {
-      // initiate user entity to run the validation for business rules.
       const user = await this.dependencies.repositoryGateway.findOne({
         _id: userId,
+      }, {
+        ...projection,
+        password: 0
+      })
+      if (!user) {
+        throw new Error('No User found.')
+      }
+      return user
+    } catch (error) {
+      throw error
+    }
+  }
+  /**
+   * get user details by azureAd
+   * @param azureAdUserId 
+   * @param projection 
+   */
+  public findByAzureAdUserId = async (azureAdUserId: string, projection: Partial<Record<keyof IUserEntity, 1|0>> = {}) => {
+    try {
+      const user = await this.dependencies.repositoryGateway.findOne({
+        //@ts-expect-error
+        'service.azureAd': azureAdUserId,
       }, {
         ...projection,
         password: 0
