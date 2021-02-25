@@ -24,11 +24,11 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
   public getPaginationList = async (userId: string, filterQuery: IPaginationParameters) => {
     try {
       const response = await this.aggregateWithPagination([
-        // {
-        //   $match: {
-        //     published: true
-        //   }
-        // },
+        {
+          $match: {
+            published: true
+          }
+        },
         {
           $sort: {
             createdAt: -1
@@ -37,45 +37,58 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         {
           $lookup: {
             from: COLLECTION_NAMES.USER_PRODUCT,
-            let: {
-              productId: '$_id'
-            },
-            pipeline: [
-              {
-                $match: {
-                  // filter user products loggedIn user
-                  userId: userId
-                }
-              },
-              {
-                $match: {
-                  $expr: {
-                    $eq: ['$$productId', '$productId']
-                  }
-                }
-              },
-              {
-                $project: {
-                  _id: 0,
-                  userId: 1
-                }
-              }
-            ],
-            as: 'userProducts'
+            localField: "_id",
+            foreignField: "productId",
+            // let: {
+            //   productId: '$_id'
+            // },
+            // pipeline: [
+            //   {
+            //     $match: {
+            //       // filter user products loggedIn user
+            //       userId: userId
+            //     }
+            //   },
+            //   {
+            //     $match: {
+            //       $expr: {
+            //         $eq: ['$$productId', '$productId']
+            //       }
+            //     }
+            //   },
+            //   {
+            //     $project: {
+            //       _id: 0,
+            //       userId: 1
+            //     }
+            //   }
+            // ],
+            as: 'userProduct'
           }
         },
         {
           $unwind: {
             preserveNullAndEmptyArrays: true,
-            path: '$userProducts',
-
+            path: '$userProduct',
           }
         },
         {
-          $addFields: {
-            userId: {
-              $ifNull: ["$userProducts.userId", '']
-            },
+          $group: {
+            _id: "$_id",
+            product: {
+              $first: {
+                $mergeObjects: ["$$ROOT", {
+                  userId: {
+                   $ifNull: ["$userProduct.userId", '']
+                  }
+                }]
+              }
+            }
+          }
+        },
+        {
+          $replaceRoot:{
+            newRoot: "$product"
           }
         },
         {
@@ -88,7 +101,7 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         {
           $project: {
             userId: 0,
-            userProducts: 0,
+            userProduct: 0,
             contentZip: 0,
             previewImage: {
               originalFilepath: 0

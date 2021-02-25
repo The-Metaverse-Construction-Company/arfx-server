@@ -32,7 +32,7 @@ export default {
         // keepAlive: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        // useFindAndModify: false,
+        useFindAndModify: false,
       })
       .then(() => console.log('mongoDB connected...'))
       .catch((err) => {

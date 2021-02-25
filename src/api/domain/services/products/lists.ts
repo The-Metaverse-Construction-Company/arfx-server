@@ -16,7 +16,7 @@ export class ProductList {
       const productList = await this.dependencies.repositoryGateway.getPaginationList(queryParams.userId, queryParams)
       return productList
     } catch (error) {
-      console.log('failed to create product. \nError :>> ', error);
+      console.log('failed to get product list. \nError :>> ', error);
       throw error
     }
   }

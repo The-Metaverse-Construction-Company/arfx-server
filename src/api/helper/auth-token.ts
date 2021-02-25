@@ -107,7 +107,7 @@ export default abstract class AuthToken {
           return resolve(data)
         }
         try {
-          // if no token found on redis, generate new token with 15 minutes expiration
+          // if no token found on redis, generate new token with 2 hrs expiration
           const {expiration, token} = this.AccessToken.generate({...tokenData}, duration)
           // expiration return the current date plus the value on the token(by minute)
           this.deps.redisClient.SET(authKey, token, 'EX', (expiration - Date.now()) / 1000)
