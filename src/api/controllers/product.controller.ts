@@ -90,17 +90,30 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
   }
 };
 
-export const uploadProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+export const uploadCreatedProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {productId = '', blobType = ''} = req.params
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
     const file = <any> req.file || {};
-    console.log('fixle :>> ', file);
-    // updateProductBlobService()
-    //   .updateOne(productId, blobType, )
-    // const updatedProduct = await updateProduct()
-    //   .updateOne(productId, req.body)
-    // res.status(httpStatus.ACCEPTED)
-    //   .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file.path)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    res.end()
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+export const uploadUpdateProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
+    const file = <any> req.file || {};
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file.path, true)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
     res.end()
   } catch (error) {
     next(new AppError({

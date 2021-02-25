@@ -3,6 +3,7 @@ import {expect} from 'chai'
 // import {v4} from 'uuid'
 import PurchaseHistory, { ALLOWED_PURCHASE_HISTORY_STATES, IPurchaseHistoryEntity, PURCHASE_HISTORY_STATE } from '../../../domain/entities/purchase-history'
 import { validateNumeric, validateString } from '../general'
+import { PRODUCT_UPLOAD_BLOB_STATES } from '../../../domain/entities/product'
 
 export const Entity = PurchaseHistory({
   generateId: () => {
@@ -20,19 +21,23 @@ describe('@Purchase History Entity', () => {
       blobURL: faker.image.abstract(),
       hash: '',
       originalFilepath: '',
-      version: 1
+      version: 1,
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
     },
     previewImage: {
       blobURL: faker.image.abstract(),
-      originalFilepath: ''
+      originalFilepath: '',
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
     },
     previewVideo: {
       blobURL: '',
-      originalFilepath: ''
+      originalFilepath: '',
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
     },
     thumbnail: {
       blobURL: faker.image.abstract(),
-      originalFilepath: ''
+      originalFilepath: '',
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
     },
     amount: parseInt(faker.finance.amount(0, 100)),
     productId: "1",

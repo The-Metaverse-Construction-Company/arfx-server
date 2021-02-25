@@ -10,7 +10,7 @@ import {
 } from '../../interfaces/index'
 
 import GeneralEntity from '../general'
-import { PRODUCT_STATES } from './constants'
+import { PRODUCT_STATES, PRODUCT_UPLOAD_BLOB_STATES } from './constants'
 
 export * from './constants'
 export * from './interfaces'
@@ -115,10 +115,10 @@ export default ({
       discountPercentage = 0,
       adminAccountId = '',
       purchaseCount = 0,
-      contentZip = {blobURL: '', originalFilepath: '', version: 0, hash: ''},
-      previewVideo = {blobURL: '', originalFilepath: ''},
-      previewImage = {blobURL: '', originalFilepath: ''},
-      thumbnail = {blobURL: '', originalFilepath: ''},
+      contentZip = {blobURL: '', originalFilepath: '', version: 0, hash: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      previewVideo = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      previewImage = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      thumbnail = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       title = '',
       published = true,
       state = PRODUCT_STATES.PENDING,

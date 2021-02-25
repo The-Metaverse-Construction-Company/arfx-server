@@ -14,7 +14,7 @@ import {
   NODE_ENVIRONMENTS
 } from '../utils/constants';
 const blobStorage = {
-  upload: (blobName: string, file: string, blobContainerName: string, callback = (url: string) => {}) => {
+  upload: (blobName: string, file: string, blobContainerName: string, callback = (url: string) => {}): Promise<string> => {
     return new Promise(async (resolve, reject) => {
       try {
         let blobLoc = file
@@ -34,14 +34,15 @@ const blobStorage = {
               })
               .finally(() => {
                 callback(bbc.url)
+                resolve(bbc.url)
                 console.log('Removing blob file.');
-                fs.unlinkSync(file)
               })
             blobLoc = bbc.url
           } else {
             callback(blobLoc)
+            resolve(blobLoc)
           }
-          resolve(blobLoc)
+          // resolve(blobLoc)
         } catch (error) {
           console.log('failed to upload. Error: ', error);
           throw error

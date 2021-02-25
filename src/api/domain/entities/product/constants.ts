@@ -9,3 +9,8 @@ export enum PRODUCT_STATES {
   PENDING = 2,
   FAILED = 3
 }
+export enum PRODUCT_UPLOAD_BLOB_STATES {
+  COMPLETED = 1,
+  PENDING = 2,
+  FAILED = 3
+}

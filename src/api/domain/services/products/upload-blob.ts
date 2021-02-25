@@ -1,9 +1,6 @@
 import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST, NODE_ENVIRONMENTS } from '../../../utils/constants';
-import { IProductBlobProperties, IProductContentZip, IProductRepositoryGateway, PRODUCT_BLOB_TYPE } from '../../entities/product';
+import { IProductBlobProperties, IProductContentZip, IProductRepositoryGateway, PRODUCT_BLOB_TYPE, PRODUCT_UPLOAD_BLOB_STATES } from '../../entities/product';
 import {  IGeneralServiceDependencies, IImageResizeOption, IUploader } from '../../interfaces';
-import fs from 'fs'
-import md5 from 'md5'
-import { BlobType } from '@azure/storage-blob';
 interface IUploadProductBlob{
   contentZip: string,
   previewImage: string,
@@ -36,40 +33,40 @@ export class UploadProductBlobService {
             blobLocalPath,
             AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB,
             async (origFilepath) => {
-              const hash = <string> await new Promise((resolve) => {
-                new Promise(async (resolve) => {
-                  let b64 = ''
-                  if (NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION) {
-                    try {
-                      b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
-                      resolve(b64)
-                    } catch (error) {
-                      console.log('failed to get data: ', error);
-                      throw error
-                    }
-                  } else {
-                    b64 = fs.readFileSync(blobLocalPath, {encoding: 'base64'})
-                    // ### DEVNOTE ###
-                    // just added 1 second delay here because on local, the uploading of file is too fast.
-                    // and uploading finish first instead of saving or insert the product data.
-                    setTimeout(() => {
-                      resolve(b64)
-                    }, 1000)
-                  }
-                })
-                .then((b64: string) => {
-                  const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
-                  resolve(h)
-                })
-                return
-              })
+              // const hash = <string> await new Promise((resolve) => {
+              //   new Promise(async (resolve) => {
+              //     let b64 = ''
+              //     if (NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION) {
+              //       try {
+              //         b64 = await this.dependencies.fileUploader.download(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+              //         resolve(b64)
+              //       } catch (error) {
+              //         console.log('failed to get data: ', error);
+              //         throw error
+              //       }
+              //     } else {
+              //       b64 = fs.readFileSync(blobLocalPath, {encoding: 'base64'})
+              //       // ### DEVNOTE ###
+              //       // just added 1 second delay here because on local, the uploading of file is too fast.
+              //       // and uploading finish first instead of saving or insert the product data.
+              //       setTimeout(() => {
+              //         resolve(b64)
+              //       }, 1000)
+              //     }
+              //   })
+              //   .then((b64: string) => {
+              //     const h = b64 ? md5(Buffer.from(b64, 'base64')) : ''
+              //     resolve(h)
+              //   })
+              //   return
+              // })
               resolve(<any>{
-                hash,
+                hash: '',
                 originalFilepath: origFilepath,
                 blobURL: 
                   NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? 
                     origFilepath : 
-                    `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(blobLocalPath)}`,
+                    `${BACKEND_HOST}/v1/products/${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${this.getBlobExtension(blobLocalPath)}`
               })
               return
             })
@@ -148,14 +145,14 @@ export class UploadProductBlobService {
       const {contentZip, previewVideo, previewImage} = productBody
       const uploadedBlobURLs = <IUploadProductBlobResponse>{}
       if (contentZip) {
-        const q = this.uploadOne(productId, PRODUCT_BLOB_TYPE.CONTENT_ZIP, contentZip)
+        const q = this.uploadBlob(productId, PRODUCT_BLOB_TYPE.CONTENT_ZIP, contentZip)
       }
       if (previewImage) {
-        uploadedBlobURLs.previewImage = await this.uploadOne(productId, PRODUCT_BLOB_TYPE.PREVIEW_IMAGE, previewImage)
-        uploadedBlobURLs.thumbnail = await this.uploadOne(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, previewImage)
+        uploadedBlobURLs.previewImage = await this.uploadBlob(productId, PRODUCT_BLOB_TYPE.PREVIEW_IMAGE, previewImage)
+        uploadedBlobURLs.thumbnail = await this.uploadBlob(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, previewImage)
       }
       if (previewVideo) {
-        uploadedBlobURLs.previewVideo = await this.uploadOne(productId, PRODUCT_BLOB_TYPE.PREVIEW_VIDEO, previewVideo)
+        uploadedBlobURLs.previewVideo = await this.uploadBlob(productId, PRODUCT_BLOB_TYPE.PREVIEW_VIDEO, previewVideo)
       }
       // add logs
       return uploadedBlobURLs
@@ -163,5 +160,23 @@ export class UploadProductBlobService {
       console.log('failed to create product. \nError :>> ', error);
       throw error
     }
+  }
+
+  private uploadBlob = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
+    let blobProperty = <IProductBlobProperties>{
+      blobURL: '',
+      originalFilepath: '',
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
+    }
+    try {
+      const response = await this.uploadOne(productId, productBlobType, blobLocalPath)
+      blobProperty = {
+        ...response,
+        state: PRODUCT_UPLOAD_BLOB_STATES.COMPLETED
+      }
+    } catch (error) {
+      blobProperty.state = PRODUCT_UPLOAD_BLOB_STATES.FAILED
+    }
+    return blobProperty
   }
 }

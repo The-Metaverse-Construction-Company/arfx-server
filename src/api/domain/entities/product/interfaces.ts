@@ -1,11 +1,12 @@
 import {
   IGeneralEntityProperties
 } from '../../interfaces/index'
-import { PRODUCT_STATES } from './constants';
+import { PRODUCT_STATES, PRODUCT_UPLOAD_BLOB_STATES } from './constants';
 
 export interface IProductBlobProperties {
   originalFilepath: string
   blobURL: string
+  state: PRODUCT_UPLOAD_BLOB_STATES
 }
 export interface IProductContentZip extends IProductBlobProperties{
   version: number // version of the product. will increase this every time product is updated.
