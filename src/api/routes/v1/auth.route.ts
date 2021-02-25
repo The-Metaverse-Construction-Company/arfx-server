@@ -31,7 +31,7 @@ router.route('/')
  *    post:
  *      tags: 
  *      - "Authentication"
- *      summary: Authenticate the registered users.
+ *      summary: Authenticating azure token or register new user based on the
  *      security:
  *       - userBearerAuth: []
  *      responses:
