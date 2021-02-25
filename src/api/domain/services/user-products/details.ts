@@ -17,14 +17,16 @@ export class UserProductDetailsService {
    */
   public getOne = async (userId: string, id: string) => {
     try {
-      const userProduct:IProductEntity = <any> await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
-      const blobName = userProduct.contentZip.blobURL.split('/').pop()
-      const sasToken = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
-      userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${sasToken}`
+      const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
+      if (userProduct) {
+        const blobName = userProduct.contentZip.blobURL.split('/').pop()
+        const sasToken = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+        userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${sasToken}`
+      }
       // add some logs here.
       return userProduct
     } catch (error) {
-      console.log('failed to create user product. \nError :>> ', error);
+      console.log('failed to get user product. \nError :>> ', error);
       throw error
     }
   }

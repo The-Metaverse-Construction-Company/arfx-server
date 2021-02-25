@@ -60,7 +60,7 @@ export default {
     create: async (purchaseHistoryId: string, data: IChargeCustomerPaymentParams) => {
       try {
         const paymentIntent = await stripe.paymentIntents.create({
-          amount: data.amount * 100, //
+          amount: data.amount * 100, // 
           currency: "usd",
           customer: data.customerId,
           metadata: {
@@ -69,12 +69,9 @@ export default {
           // payment_method: data.paymentMethodId,
           // off_session: true,
           // confirm: true,
-          description: "Purchase product from ARFX."
+          description: "Purchased product from ARFX Home."
         }, {idempotencyKey: purchaseHistoryId})
-        return {
-          authenticated: true,
-          paymentIntent
-        }
+        return paymentIntent
       } catch (err) {
         throw err
       }

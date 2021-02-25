@@ -24,7 +24,7 @@ export interface IChargeCustomerPaymentParams {
 }
 interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
   payment: {
-    createIntent(purchaseHistoryId: string, paymentData: IChargeCustomerPaymentParams): Promise<{authenticated: boolean, paymentIntent: any}>
+    createIntent(purchaseHistoryId: string, paymentData: IChargeCustomerPaymentParams): Promise<any>
     retrieveIntent(paymentMethodId: string): Promise<{authenticated: boolean, paymentIntent: any}>
     setupCustomerPaymentIntent(customerId: string): Promise<any>
   }
@@ -53,7 +53,8 @@ export class PurchaseProductService {
       // fetch user data.
       const user = await this.dependencies.userDetailsService.findOne(userId)
       // fetch product data.
-      const product = await this.dependencies.productDetailsService.findOne(purchaseBody.productId)
+      const product = await this.dependencies.productDetailsService
+        .findOne(purchaseBody.productId)
       // initialize purchase entity
       const newPurchaseHistory = new PurchaseHistoryEntity({
         amount: Number((product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)),
@@ -76,7 +77,7 @@ export class PurchaseProductService {
         intentSecret = await this.dependencies.payment.setupCustomerPaymentIntent(user.stripeCustomerId)
       }
       // create intent customer and charge the customer.
-      let {authenticated, paymentIntent} = await this.dependencies.payment.createIntent(newPurchaseHistory._id, {
+      let paymentIntent = await this.dependencies.payment.createIntent(newPurchaseHistory._id, {
         amount: newPurchaseHistory.amount,
         customerId: user.stripeCustomerId,
         user
@@ -86,13 +87,11 @@ export class PurchaseProductService {
       await this.dependencies.repositoryGateway.insertOne(newPurchaseHistory)
       // add some logs
       return {
-        // authenticated: authenticated,
         payment: paymentIntent,
-        // purchaseDetails: newPurchaseHistory,
         intentSecret
       }
     } catch (error) {
-      console.log('failed to create product. \nError :>> ', error);
+      console.log('failed to purchase the product. \nError :>> ', error);
       throw error
     }
   }

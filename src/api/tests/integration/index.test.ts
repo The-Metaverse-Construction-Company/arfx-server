@@ -32,7 +32,7 @@ before((done) => {
   console.log = () => ({})
   sinon
     .stub(PaymentGateway.paymentIntent, 'create')
-    .resolves({authenticated: false, paymentIntent: <any>{_id: 'cus_IuC9hvua5AC5gL'}})
+    .resolves(<any>{_id: 'cus_IuC9hvua5AC5gL'})
   sinon
     .stub(PaymentGateway.customer, 'create')
     .resolves(`cus_IuC9hvua5AC5gL`)
