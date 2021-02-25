@@ -102,7 +102,9 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
           $project: {
             userId: 0,
             userProduct: 0,
-            contentZip: 0,
+            contentZip: {
+              originalFilepath: 0
+            },
             previewImage: {
               originalFilepath: 0
             },
