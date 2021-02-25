@@ -37,6 +37,8 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         {
           $lookup: {
             from: COLLECTION_NAMES.USER_PRODUCT,
+            // localField: "$_id",
+            // foreignField: "$productId",
             let: {
               productId: '$_id'
             },
@@ -68,7 +70,6 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
           $unwind: {
             preserveNullAndEmptyArrays: true,
             path: '$userProducts',
-
           }
         },
         {

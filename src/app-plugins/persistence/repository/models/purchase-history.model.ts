@@ -65,4 +65,7 @@ const RepositoryModel = <Record<keyof IPurchaseHistoryEntity, SchemaTypeOpts<Obj
 }
 
 const RepositorySchema = new Schema<IPurchaseHistoryRepository>(RepositoryModel)
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IPurchaseHistoryRepository>(COLLECTION_NAMES.PURCHASE_HISTORY, RepositorySchema)

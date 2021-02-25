@@ -77,4 +77,8 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IUserRepository>(COLLECTION_NAMES.USER, RepositorySchema)

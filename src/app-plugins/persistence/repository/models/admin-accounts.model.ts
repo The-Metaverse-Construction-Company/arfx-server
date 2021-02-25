@@ -63,4 +63,7 @@ const RepositoryModel = <Record<keyof IAdminAccountsEntity, any>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IAdminAccountsRepositoryModel>(COLLECTION_NAMES.ADMIN_ACCOUNT, RepositorySchema)

@@ -6,7 +6,7 @@ import {
 import {
   default as UserRepositoryModel,
   IUserRepository
-} from './models/users'
+} from './models/users.model'
 
 import GeneralRepository from './General.Gateway'
 import { IPaginationQueryParams } from '../../../api/domain/interfaces/general-repository-gateway'

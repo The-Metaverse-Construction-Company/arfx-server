@@ -88,4 +88,8 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IProductRepository>(COLLECTION_NAMES.PRODUCT, RepositorySchema)
