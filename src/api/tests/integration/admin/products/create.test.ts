@@ -23,6 +23,7 @@ const productObj = {
   price: Number(faker.finance.amount(1, 25)),
 }
 export let addedProductResponse = <IProductEntity>{}
+export let addedProductResponseToDelete = <IProductEntity>{}
 const request = supertest(App)
 describe('@Create Product API', () => {
   it('should success creating product.', (done) => {
@@ -50,7 +51,7 @@ describe('@Create Product API', () => {
         assert.isAbove(result.price, 0, 'product price must be not be lower than 0.')
         assert.isAbove(result.discountPercentage, -1, 'product discountPercentage must be not be lower than 0.')
         assert.isBoolean(result.published, 'product published must be boolean.')
-        assert.isUndefined(result.contentZip.originalFilePath, 'result.contentZip.originalFilePath must not be defined.')
+        assert.isUndefined(result.contentZip, 'result.contentZip must not be defined.')
         assert.isUndefined(result.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
         assert.isUndefined(result.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
         assert.isUndefined(result.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')
@@ -79,10 +80,11 @@ describe('@Create Product API', () => {
         assert.isAbove(result.price, 0, 'product price must be not be lower than 0.')
         assert.isAbove(result.discountPercentage, -1, 'product discountPercentage must be not be lower than 0.')
         assert.isBoolean(result.published, 'product published must be boolean.')
-        assert.isUndefined(result.contentZip.originalFilePath)
-        assert.isUndefined(result.previewImage.originalFilePath)
-        assert.isUndefined(result.previewVideo.originalFilePath)
-        assert.isUndefined(result.thumbnail.originalFilePath)
+        assert.isUndefined(result.contentZip, 'result.contentZip must not be defined.')
+        assert.isUndefined(result.previewImage.originalFilePath, 'result.previewImage.originalFilePath must not be defined.')
+        assert.isUndefined(result.previewVideo.originalFilePath, 'result.previewVideo.originalFilePath must not be defined.')
+        assert.isUndefined(result.thumbnail.originalFilePath, 'result.thumbnail.originalFilePath must not be defined.')
+        addedProductResponseToDelete = result
         done()
       })
       .catch(done)
