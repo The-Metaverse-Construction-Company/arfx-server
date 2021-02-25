@@ -1,11 +1,48 @@
 import express from 'express'
 import * as controller from '../../controllers/auth.controller'
-
+import { authAzureAD, authorize } from '../../middlewares/auth'
 import {signInValidationPipeline
 } from '../../validations/auth.validation'
 import { requestValidatorMiddleware } from '../../validations'
+import httpStatus from 'http-status'
+import { successReponse } from '../../helper/http-response'
 
 const router = express.Router();
+router.route('/')
+/**
+ * @swagger
+ *  /v1/auth:
+ *    get:
+ *      tags: 
+ *      - "Authentication"
+ *      security:
+ *      - userBearerAuth: []
+ *      summary: Validating access token.
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/User/Detail'
+ */
+  .get(authorize(), (req, res, next) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
+/**
+ * @swagger
+ *  /v1/auth/azure:
+ *    post:
+ *      tags: 
+ *      - "Authentication"
+ *      summary: Authenticate the registered users.
+ *      security:
+ *       - userBearerAuth: []
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/User/Detail'
+ */
+router.route('/azure')
+  .post(authAzureAD(),
+  (req, res) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
 //Routes
 /**
  * @swagger
@@ -18,7 +55,7 @@ const router = express.Router();
  *        $ref: '#/components/requestBody/User/signIn'
  *      responses:
  *        '200':
- *          $ref: '#/components/responses/SignIn'
+ *          $ref: '#/components/responses/User/Detail'
  */
 router.route('/login')
   .post(

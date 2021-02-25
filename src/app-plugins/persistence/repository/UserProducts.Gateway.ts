@@ -84,6 +84,11 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
                   title: "$product.title",
                   name: "$product.name",
                   description: "$product.description",
+                  contentZip: {
+                    blobURL: "$product.contentZip.blobURL",
+                    hash: "$product.contentZip.hash",
+                    version: "$product.contentZip.version",
+                  },
                   previewImage: {
                     blobURL: "$product.previewImage.blobURL"
                   },
@@ -152,6 +157,14 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
         const _productDetails = userProductDetails.toJSON()
         responseData = {
           ..._productDetails,
+          //@ts-expect-error
+          contentZip: {blobURL: _productDetails.productId.contentZip.blobURL, hash: _productDetails.productId.contentZip.hash, version: _productDetails.productId.contentZip.version},
+          //@ts-expect-error
+          previewImage: {blobURL: _productDetails.productId.previewImage.blobURL},
+          //@ts-expect-error
+          previewVideo: {blobURL: _productDetails.productId.previewVideo.blobURL},
+          //@ts-expect-error
+          thumbnail: {blobURL: _productDetails.productId.thumbnail.blobURL},
           //@ts-expect-error
           ..._productDetails.productId,
           _id: _productDetails._id,

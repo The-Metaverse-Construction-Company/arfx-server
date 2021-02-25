@@ -14,7 +14,8 @@ import {
   userDetails,
   userVerifyOTPToken,
   sendUserOTPService,
-  createUserService
+  createUserService,
+  verifyUserService
 } from './users'
 /**
  * @repositories
@@ -40,9 +41,7 @@ export const verifyUser = (redis: RedisClient) => {
   const authToken = new OTPToken({redisClient: redis})
   return new VerifiedUserService({
     revokeToken: authToken.removeOTPToken,
-    repositoryGateway: new UserRepository(),
-    userDetails: userDetails(),
-    createPaymentGatewayAccount: PaymentGateway.customer.create,
+    verifyUserService: verifyUserService()
   })
 }
 export const verifySignUpToken = (redis: RedisClient) => {
