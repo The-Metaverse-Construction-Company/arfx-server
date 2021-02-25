@@ -10,7 +10,7 @@ import {
 } from './models/purchase-history.model'
 
 import GeneralRepository from './General.Gateway'
-import { IPaginationParameters, IAggregatePaginationResponse } from '../../../api/domain/interfaces/general-repository-gateway'
+import { IAggregatePaginationResponse } from '../../../api/domain/interfaces/general-repository-gateway'
 
 export class PurchaseHistoryRepository extends GeneralRepository<IPurchaseHistoryRepository, IPurchaseHistoryEntity> implements IPurchaseHistorryRepositoryGateway {
   constructor () {
