@@ -133,7 +133,7 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
   public getOneByUserId = async (userId: string, id: string) => {
     try {
       let responseData = null
-      let userProductDetails = await this.collectionModel.findOne({
+      const userProductDetails = await this.collectionModel.findOne({
         userId,
         $or: [
           {
@@ -146,7 +146,7 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
       })
       .populate({
         path: 'productId',
-        select: 'title name description contentZip previewImage previewVideo _id'
+        select: 'title name description contentZip previewImage thumbnail previewVideo _id'
       })
       if (userProductDetails) {
         const _productDetails = userProductDetails.toJSON()
