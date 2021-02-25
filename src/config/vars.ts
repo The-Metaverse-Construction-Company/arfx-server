@@ -9,7 +9,8 @@ import AZURE_COSMOS_CONFIG from './azure-cosmos'
 const getMongoDBURI = (NODE_ENV: string) => {
   switch(NODE_ENV) {
     case NODE_ENVIRONMENTS.TEST:
-      return `mongodb://${AZURE_COSMOS_CONFIG.accountName}:${AZURE_COSMOS_CONFIG.key}@${AZURE_COSMOS_CONFIG.accountName}.mongo.cosmos.azure.com:${AZURE_COSMOS_CONFIG.port}/arfxhome-test?ssl=true&appName=@${AZURE_COSMOS_CONFIG.accountName}@`
+      // return `mongodb://${AZURE_COSMOS_CONFIG.accountName}:${AZURE_COSMOS_CONFIG.key}@${AZURE_COSMOS_CONFIG.accountName}.mongo.cosmos.azure.com:${AZURE_COSMOS_CONFIG.port}/arfxhome-test?ssl=true&appName=@${AZURE_COSMOS_CONFIG.accountName}@`
+      return process.env.MONGO_URI_TEST
     case NODE_ENVIRONMENTS.PRODUCTION:
       return `mongodb://${AZURE_COSMOS_CONFIG.accountName}:${AZURE_COSMOS_CONFIG.key}@${AZURE_COSMOS_CONFIG.accountName}.mongo.cosmos.azure.com:${AZURE_COSMOS_CONFIG.port}/${AZURE_COSMOS_CONFIG.databaseName}?ssl=true&appName=@${AZURE_COSMOS_CONFIG.accountName}@`
     default:
@@ -18,6 +19,7 @@ const getMongoDBURI = (NODE_ENV: string) => {
   }
 }
 export const env = process.env.NODE_ENV || ''
+console.log('getMongoDBURI(env) :>> ', getMongoDBURI(env));
 export const port =  process.env.PORT || ''
 export const jwtSecret =  process.env.JWT_SECRET || ''
 export const jwtExpirationInterval =  process.env.JWT_EXPIRATION_MINUTES ? parseInt(process.env.JWT_EXPIRATION_MINUTES) : 60
