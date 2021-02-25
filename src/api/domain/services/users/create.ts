@@ -37,6 +37,8 @@ export class CreateUserService {
       await this.deps.validateEmail({email: newUser.email.value})
       // insert user to the repository.
       await this.deps.repositoryGateway.insertOne(newUser)
+      //remove password property on the entity so it will not display on the response.
+      delete newUser.password
       //add some logs
       return newUser
     } catch (error) {
