@@ -1,0 +1,21 @@
+name: Deploy arfx-server image to Azure Registry and Deploy to Dev Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: electronappregistry.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t mycontainer.azurecr.io/devapp:${{ github.sha }}
+        docker push mycontainer.azurecr.io/devapp:${{ github.sha }}
