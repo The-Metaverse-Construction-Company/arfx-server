@@ -1,11 +1,11 @@
 import {body} from 'express-validator'
-import {productDetails} from '../service-configurations/products'
+import {productDetailService} from '../service-configurations/products'
   // POST /v1/auth/register
 
 const productIdValidation = async (productId: string, {req}: any) => {
   try {
     // validate productId
-    await productDetails()
+    await productDetailService()
       .findOne(productId)
       .catch(() => {
         throw new Error('No product found on given productId.')

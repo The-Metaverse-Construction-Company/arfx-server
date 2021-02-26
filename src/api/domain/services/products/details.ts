@@ -3,7 +3,7 @@ import {
 } from '../../entities/product'
 import { IGeneralServiceDependencies } from '../../interfaces';
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class ProductDetails {
+export class ProductDetailService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
@@ -14,7 +14,8 @@ export class ProductDetails {
     try {
       // get list in the repo
       const product = await this.dependencies.repositoryGateway.findOne({
-        _id: productId
+        _id: productId,
+        deleted: false
       })
       return product
     } catch (error) {

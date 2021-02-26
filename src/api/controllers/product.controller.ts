@@ -6,8 +6,8 @@ import {
   createProduct,
   productList,
   updateProduct,
-  productDetails,
-  removeProduct,
+  productDetailService,
+  removeProductService,
   updateProductPublishStatus,
   updateProductBlobService
 } from '../service-configurations/products'
@@ -159,7 +159,7 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
     const {
       productId = ''
     } = req.params
-    const product = await productDetails()
+    const product = await productDetailService()
       .findOne(productId)
       // set productDetails on the response locals to access other routes.
     res.locals['productDetails'] = product
@@ -218,7 +218,7 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     const {
       productId = ''
     } = req.params
-    const product = await removeProduct()
+    const product = await removeProductService()
       .removeOne(productId)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(removeProductOriginalFilepath(product)))

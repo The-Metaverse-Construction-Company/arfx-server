@@ -32,4 +32,5 @@ export interface IProductEntity extends IProdutBody, IGeneralEntityProperties {
   state: PRODUCT_STATES
   adminAccountId: string // admin account who added the product
   purchaseCount: number // number of times this product purchased.
+  deleted: boolean // status of the product if tag as deleted.
 }

@@ -7,7 +7,7 @@ import {
   UpdatePurchasePaymentChargeService
 } from '../domain/services/purchase-history'
 import {
-  productDetails,
+  productDetailService,
   updateProductPurchaseCountService
 } from './products'
 import {
@@ -25,7 +25,7 @@ import {
 export const purchaseProductService = () => (
   new PurchaseProductService({
     repositoryGateway: new PurchaseHistoryRepository(),
-    productDetailsService: productDetails(),
+    productDetailsService: productDetailService(),
     userDetailsService: userDetails(),
     createUserProductsService: createUserProductsService(),
     userProductDetailsService: userProductDetailsService(),

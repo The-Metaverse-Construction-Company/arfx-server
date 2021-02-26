@@ -18,7 +18,13 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
   }
 
   public getPaginationList = (filterQuery: IFeaturedProductsParams) => {
-    const {userId = ''} = filterQuery
+    const {userId = '', showDeletedProduct = false} = filterQuery
+    let deletedProductQuery = {}
+    if (!showDeletedProduct) {
+      deletedProductQuery = {
+        "products.deleted": false
+      }
+    }
     try {
       const response = this.aggregateWithPagination([
         {
@@ -64,6 +70,9 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
             preserveNullAndEmptyArrays: false,
             path: "$products"
           }
+        },
+        {
+          $match: deletedProductQuery
         },
         {
           $project: {

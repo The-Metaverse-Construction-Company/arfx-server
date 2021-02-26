@@ -5,7 +5,7 @@ import {
   PurchaseHistoryEntity
 } from '../../entities'
 import {
-  ProductDetails
+  ProductDetailService
 } from '../products'
 import {
   UserDetailsService
@@ -28,7 +28,7 @@ interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRep
     retrieveIntent(paymentMethodId: string): Promise<{authenticated: boolean, paymentIntent: any}>
     setupCustomerPaymentIntent(customerId: string): Promise<any>
   }
-  productDetailsService: ProductDetails
+  productDetailsService: ProductDetailService
   userDetailsService: UserDetailsService
   createUserProductsService: CreateUserProductsService
   userProductDetailsService: UserProductDetailsService

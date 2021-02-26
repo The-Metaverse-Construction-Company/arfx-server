@@ -12,12 +12,14 @@ import {
   ProductEntity
 } from '../../entities'
 import {
-  UploadProductBlobService
-} from '../products'
+  UploadProductBlobService,
+  ProductDetailService
+} from './'
 import { IGeneralServiceDependencies } from '../../interfaces';
 
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
+  productDetailService: ProductDetailService
 }
 export class UpdateProductBlobService {
   constructor(protected dependencies: IDependencies) {
@@ -43,9 +45,7 @@ export class UpdateProductBlobService {
    */
   public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string, fromUpdate: boolean = false) => {
     try {
-      const product = await this.dependencies.repositoryGateway.findOne({
-        _id: productId
-      })
+      const product = await this.dependencies.productDetailService.findOne(productId)
       let blobProperty = await this.uploadBlob(productId, productBlobType, blobLocalPath)
       console.log('blobProperty :>> ', blobProperty);
       const propertiesToUpdate = <Partial<IProductEntity>>{}

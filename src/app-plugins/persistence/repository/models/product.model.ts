@@ -85,6 +85,10 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: PRODUCT_STATES.PENDING
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Number,
     default: 0,

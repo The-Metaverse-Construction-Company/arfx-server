@@ -9,6 +9,7 @@ import {
 
 export interface IFeaturedProductsParams extends IPaginationParameters {
   userId?: string
+  showDeletedProduct?: boolean
 }
 export interface IFeaturedProductRepositoryGateway extends IGeneralRepositoryGateway<IFeaturedProductEntity> {
   getPaginationList: (filterQuery: IFeaturedProductsParams) => Promise<IAggregatePaginationResponse<IFeaturedProductEntity>>
