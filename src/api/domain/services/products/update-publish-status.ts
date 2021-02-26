@@ -14,7 +14,8 @@ export class UpdateProductPublishStatus {
     try {
       // we can also update this to soft delete, or even move it thru archieve.
       const updateProduct = await this.dependencies.repositoryGateway.updateOne({
-        _id: productId
+        _id: productId,
+        deleted: false
       }, {
         published: status
       })

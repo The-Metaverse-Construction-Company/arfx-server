@@ -5,8 +5,8 @@ import {
   CreateProductService,
   ProductList,
   UpdateProduct,
-  ProductDetails,
-  RemoveProduct,
+  ProductDetailService,
+  RemoveProductService,
   UpdateProductPublishStatus,
   // UpdateProductURLService,
   UploadProductBlobService,
@@ -35,6 +35,7 @@ export const uploadProductBlobService = () => (
 export const updateProductBlobService = () => (
   new UpdateProductBlobService({
     uploadProductBlobService: uploadProductBlobService(),
+    productDetailService: productDetailService(),
     repositoryGateway: new ProductRepository(),
   })
 )
@@ -58,13 +59,13 @@ export const productList = () => (
     repositoryGateway: new ProductRepository()
   })
 )
-export const productDetails = () => (
-  new ProductDetails({
+export const productDetailService = () => (
+  new ProductDetailService({
     repositoryGateway: new ProductRepository()
   })
 )
-export const removeProduct = () => (
-  new RemoveProduct({
+export const removeProductService = () => (
+  new RemoveProductService({
     repositoryGateway: new ProductRepository()
   })
 )
@@ -75,6 +76,7 @@ export const updateProductPublishStatus = () => (
 )
 export const updateProductPurchaseCountService = () => (
   new UpdateProductPurchaseCountService({
+    productDetailService: productDetailService(),
     repositoryGateway: new ProductRepository()
   })
 )

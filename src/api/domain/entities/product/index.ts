@@ -106,6 +106,8 @@ export default ({
     public readonly createdAt!: number
     public readonly updatedAt!: number
     public readonly state!: number
+    public readonly deleted: boolean = false
+
 
     constructor ({
       _id = '',
@@ -121,6 +123,7 @@ export default ({
       thumbnail = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       title = '',
       published = true,
+      deleted = false,
       state = PRODUCT_STATES.PENDING,
       // stripeCustomerId = '',
       updatedAt = Date.now(),
@@ -145,6 +148,7 @@ export default ({
       this.adminAccountId = adminAccountId
       this.purchaseCount = purchaseCount
       this.published = this.validateBoolean(published, 'published')
+      this.deleted = this.validateBoolean(deleted, 'deleted')
     }
     
   }

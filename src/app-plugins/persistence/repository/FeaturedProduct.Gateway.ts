@@ -11,6 +11,7 @@ import {
 
 import GeneralRepository from './General.Gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
+import { PRODUCT_STATES } from '../../../api/domain/entities/product'
 
 export class FeaturedProductRepository extends GeneralRepository<IFeaturedProductRepositoryModel, IFeaturedProductEntity> implements IFeaturedProductRepositoryGateway {
   constructor () {
@@ -18,7 +19,13 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
   }
 
   public getPaginationList = (filterQuery: IFeaturedProductsParams) => {
-    const {userId = ''} = filterQuery
+    const {userId = '', showDeletedProduct = false} = filterQuery
+    let deletedProductQuery = {}
+    if (!showDeletedProduct) {
+      deletedProductQuery = {
+        "products.deleted": false
+      }
+    }
     try {
       const response = this.aggregateWithPagination([
         {
@@ -63,6 +70,12 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
           $unwind: {
             preserveNullAndEmptyArrays: false,
             path: "$products"
+          }
+        },
+        {
+          $match: {
+            state: PRODUCT_STATES.COMPLETED,
+            ...deletedProductQuery
           }
         },
         {

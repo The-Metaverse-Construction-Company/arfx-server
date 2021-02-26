@@ -24,16 +24,19 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
    */
   public getPaginationList = async (userId: string, filterQuery: IProductListFilterQuery) => {
     try {
-      const {isAdmin = false} = filterQuery
+      const {isAdmin = false, showDeleted = false} = filterQuery
       let productStateQuery = <any>{}
       if (!isAdmin) {
         productStateQuery.state = PRODUCT_STATES.COMPLETED
+      }
+      if (!showDeleted) {
+        productStateQuery.deleted = true
       }
       const response = await this.aggregateWithPagination([
         {
           $match: {
             ...productStateQuery,
-            published: true
+            published: true,
           }
         },
         {

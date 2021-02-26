@@ -2,7 +2,12 @@ import {
   IProductRepositoryGateway
 } from '../../entities/product'
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
+import {
+  ProductDetailService
+} from './details'
+interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
+  productDetailService: ProductDetailService
+}
 export class UpdateProductPurchaseCountService {
   constructor(protected dependencies: IDependencies) {
   }
@@ -12,9 +17,7 @@ export class UpdateProductPurchaseCountService {
    */
   public updateOne = async (productId: string) => {
     try {
-      const product = await this.dependencies.repositoryGateway.findOne({
-        _id: productId
-      })
+      const product = await this.dependencies.productDetailService.findOne(productId)
       // we can also update this to soft delete, or even move it thru archieve.
       const updateProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId

@@ -26,7 +26,7 @@ export const featuredProductListRoute = async (req: Request, res: Response, next
     const featuredProduct = await featuredProductListService()
       .getList({
         ...req.query,
-        userId: !isAdmin ? _id : ''
+        userId: !isAdmin ? _id : '',
       })
     res.status(httpStatus.OK)
       .json(successReponse(featuredProduct))
