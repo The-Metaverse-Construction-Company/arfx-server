@@ -129,6 +129,23 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
           }
         },
         {
+          $addFields: {
+            userProduct: {
+              $filter: {
+                input: "$userProduct",
+                as: "item",
+                cond: {
+                  $and: [
+                    {
+                      $eq: ['$$item.userId', userId]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
           $unwind: {
             preserveNullAndEmptyArrays: true,
             path: '$userProduct',

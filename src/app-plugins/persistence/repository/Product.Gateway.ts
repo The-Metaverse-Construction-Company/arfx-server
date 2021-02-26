@@ -1,7 +1,9 @@
 
 import {
   IProductRepositoryGateway,
-  IProductEntity
+  IProductEntity,
+  IProductListFilterQuery,
+  PRODUCT_STATES
 } from '../../../api/domain/entities/product'
 import {
   default as ProductRepositoryModel,
@@ -9,7 +11,6 @@ import {
 } from './models/product.model'
 
 import GeneralRepository from './General.Gateway'
-import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
 
 export class ProductRepository extends GeneralRepository<IProductRepository, IProductEntity> implements IProductRepositoryGateway {
@@ -21,11 +22,17 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
    * @param userId to display if the user already owned the product.
    * @param filterQuery 
    */
-  public getPaginationList = async (userId: string, filterQuery: IPaginationParameters) => {
+  public getPaginationList = async (userId: string, filterQuery: IProductListFilterQuery) => {
     try {
+      const {isAdmin = false} = filterQuery
+      let productStateQuery = <any>{}
+      if (!isAdmin) {
+        productStateQuery.state = PRODUCT_STATES.COMPLETED
+      }
       const response = await this.aggregateWithPagination([
         {
           $match: {
+            ...productStateQuery,
             published: true
           }
         },
@@ -64,6 +71,23 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
             //   }
             // ],
             as: 'userProduct'
+          }
+        },
+        {
+          $addFields: {
+            userProduct: {
+              $filter: {
+                input: "$userProduct",
+                as: "item",
+                cond: {
+                  $and: [
+                    {
+                      $eq: ['$$item.userId', userId]
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         {
