@@ -1,4 +1,5 @@
 import {
+  IProductListFilterQuery,
   IProductRepositoryGateway
 } from '../../entities/product'
 import { IGeneralServiceDependencies } from '../../interfaces';
@@ -10,7 +11,7 @@ export class ProductList {
    * create new product.
    * @param productBody 
    */
-  public getList = async (queryParams?: any) => {
+  public getList = async (queryParams?: IProductListFilterQuery) => {
     try {
       // get list in the repo
       const productList = await this.dependencies.repositoryGateway.getPaginationList(queryParams.userId, queryParams)

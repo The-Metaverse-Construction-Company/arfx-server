@@ -137,6 +137,7 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
       .getList({
         ...req.query,
         userId: !isAdmin ? _id : '',
+        isAdmin: isAdmin
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))

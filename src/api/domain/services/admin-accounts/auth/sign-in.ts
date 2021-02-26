@@ -29,7 +29,7 @@ export class AdminAccountSignInService {
       const token = await this.deps.generateToken({
         referenceId: adminAccount._id,
         tokenType: ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN
-      })
+      }, 60 * 4) // 4 hrs token duration
       // and some logs or send email notifications
       //@ts-ignore
       delete adminAccount.password
