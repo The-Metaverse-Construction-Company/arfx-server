@@ -17,5 +17,6 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
+        az acr login --name ElectronAppRegistry
         docker build . -t mycontainer.azurecr.io/devapp:${{ github.sha }}
         docker push mycontainer.azurecr.io/devapp:${{ github.sha }}
