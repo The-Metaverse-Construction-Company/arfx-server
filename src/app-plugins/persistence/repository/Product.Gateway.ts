@@ -30,7 +30,7 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         productStateQuery.state = PRODUCT_STATES.COMPLETED
       }
       if (!showDeleted) {
-        productStateQuery.deleted = true
+        productStateQuery.deleted = false
       }
       const response = await this.aggregateWithPagination([
         {
