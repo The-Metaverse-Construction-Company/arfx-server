@@ -1,9 +1,6 @@
-name: Deploy arfx-server image to Azure Registry and Deploy to Dev Server
+name: Deploy arfx backend service
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   build:
@@ -13,9 +10,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:
-        login-server: electronappregistry.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+        login-server: index.docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
     - run: |
-        docker build . -t mycontainer.azurecr.io/devapp:${{ github.sha }}
-        docker push mycontainer.azurecr.io/devapp:${{ github.sha }}
+        docker build . -t arfxhome/backend-service:latest
+        docker push arfxhome/backend-service
