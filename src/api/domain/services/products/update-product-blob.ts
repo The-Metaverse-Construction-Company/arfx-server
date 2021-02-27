@@ -47,7 +47,6 @@ export class UpdateProductBlobService {
     try {
       const product = await this.dependencies.productDetailService.findOne(productId)
       let blobProperty = await this.uploadBlob(productId, productBlobType, blobLocalPath)
-      console.log('blobProperty :>> ', blobProperty);
       const propertiesToUpdate = <Partial<IProductEntity>>{}
       if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_IMAGE) {
         // call another one for the thumbnail
@@ -55,28 +54,44 @@ export class UpdateProductBlobService {
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.previewImage = blobProperty
         } else {
-          propertiesToUpdate['previewImage.state'] = blobProperty.state
+          propertiesToUpdate.previewImage = {
+            ...product.previewImage,
+            state: blobProperty.state
+          }
         }
         if (thumbnailBlobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.thumbnail = thumbnailBlobProperty
         } else {
-          propertiesToUpdate['thumbnail.state'] = thumbnailBlobProperty.state
+          propertiesToUpdate.thumbnail = {
+            ...product.thumbnail,
+            state: blobProperty.state
+          }
         }
       } else if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_VIDEO) {
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED) {
-          propertiesToUpdate['previewVideo.state'] = blobProperty.state
+          propertiesToUpdate.previewVideo = {
+            ...product.previewVideo,
+            state: blobProperty.state
+          }
         } else {
           propertiesToUpdate.previewVideo = blobProperty
         }
       } else if (productBlobType === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
+          propertiesToUpdate.contentZip = {
           //@ts-expect-error
-          propertiesToUpdate['contentZip.hash'] = blobProperty.hash
-          propertiesToUpdate['contentZip.blobURL'] = blobProperty.blobURL
-          propertiesToUpdate['contentZip.originalFilepath'] = blobProperty.originalFilepath
-          propertiesToUpdate['contentZip.version'] = product.contentZip.version + 1
+            hash: blobProperty.hash,
+            blobURL: blobProperty.blobURL,
+            originalFilepath: blobProperty.originalFilepath,
+            version: product.contentZip.version + 1,
+            state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
+          }
         }
-        propertiesToUpdate['contentZip.state'] = blobProperty.state
+        propertiesToUpdate.contentZip = {
+          ...propertiesToUpdate.contentZip,
+          ...product.contentZip,
+          state: PRODUCT_UPLOAD_BLOB_STATES.COMPLETED
+        }
       } else {
         throw new Error('Invalid blob type.')
       }
