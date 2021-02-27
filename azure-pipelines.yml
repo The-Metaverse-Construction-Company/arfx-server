@@ -40,5 +40,5 @@ stages:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push'
-        imageName: '$(ImageName)'
+        imageName: arfxhome/backend-service:latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
