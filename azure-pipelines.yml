@@ -27,3 +27,21 @@ stages:
         dockerfile: './Dockerfile'
         tags: |
           arfxhome/backend-service:latest
+          
+ - stage: Push
+  displayName: Push image to DockerHub
+  jobs:
+  - job: push
+    displayName: Push-to-DockerHub
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Push image
+      inputs:
+        containerRegistry: |
+          $(dockerHub)
+        repository: $(imageName)
+        command: push
+        tags: |
+          latest
