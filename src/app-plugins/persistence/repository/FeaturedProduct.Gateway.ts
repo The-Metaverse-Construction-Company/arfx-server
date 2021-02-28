@@ -74,7 +74,7 @@ export class FeaturedProductRepository extends GeneralRepository<IFeaturedProduc
         },
         {
           $match: {
-            state: PRODUCT_STATES.COMPLETED,
+            "products.state": PRODUCT_STATES.COMPLETED,
             ...deletedProductQuery
           }
         },
