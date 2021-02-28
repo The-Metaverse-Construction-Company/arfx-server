@@ -43,7 +43,7 @@ export class UpdateProductBlobService {
    * create new product.
    * @param productBody 
    */
-  public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string, fromUpdate: boolean = false) => {
+  public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
     try {
       const product = await this.dependencies.productDetailService.findOne(productId)
       let blobProperty = await this.uploadBlob(productId, productBlobType, blobLocalPath)
@@ -99,7 +99,8 @@ export class UpdateProductBlobService {
         ...product,
         ...propertiesToUpdate
       })
-      if (!fromUpdate) {
+      //check if the product state is still not completed, then if not, still update the blob state until it's not completed.
+      if (!(product.state === PRODUCT_STATES.COMPLETED)) {
         if ((productEntity.contentZip.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
           productEntity.previewImage.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
           productEntity.previewVideo.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&

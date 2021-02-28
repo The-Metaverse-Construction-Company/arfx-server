@@ -111,7 +111,7 @@ export const uploadUpdateProductBlobRoute = async (req: Request, res: Response, 
     const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
     const file = <any> req.file || {};
     const updatedProduct = await updateProductBlobService()
-      .updateOne(productId, <any>blobType, file.path, true)
+      .updateOne(productId, <any>blobType, file.path)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
     res.end()
