@@ -88,8 +88,8 @@ export class UpdateProductBlobService {
           }
         }
         propertiesToUpdate.contentZip = {
-          ...propertiesToUpdate.contentZip,
           ...product.contentZip,
+          ...propertiesToUpdate.contentZip,
           state: PRODUCT_UPLOAD_BLOB_STATES.COMPLETED
         }
       } else {
