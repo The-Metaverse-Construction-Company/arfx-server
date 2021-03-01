@@ -14,10 +14,10 @@ import './products/update-published-status.test'
 /**
  * @features_products
  */
-import './featured-products/create.test'
-import './featured-products/update.test'
-import './featured-products/remove.test'
-import './featured-products/lists.test'
+// import './featured-products/create.test'
+// import './featured-products/update.test'
+// import './featured-products/remove.test'
+// import './featured-products/lists.test'
 /**
  * @users
  */
