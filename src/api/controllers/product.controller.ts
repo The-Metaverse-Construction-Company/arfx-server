@@ -150,6 +150,33 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
 };
 /**
  * @public
+ * featured product list
+ * @requestQuery
+ *  @field -> searchText: string
+ *  @field -> startAt: number
+ *  @field -> limitTo: number
+ */
+export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {_id = '', isAdmin = false} = <any>req.user
+    const newProduct = await productList()
+      .getList({
+        ...req.query,
+        userId: !isAdmin ? _id : '',
+        isAdmin: isAdmin,
+        onFeaturedList: true
+      })
+    res.status(httpStatus.OK)
+      .json(successReponse(newProduct))
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+/**
+ * @public
  * product list
  * @requestParams
  *  @field -> productId: string

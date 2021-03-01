@@ -1,4 +1,5 @@
 
+import urandom from 'unique-random'
 import {
   IProductRepositoryGateway,
   IProductEntity,
@@ -12,7 +13,7 @@ import {
 
 import GeneralRepository from './General.Gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
-
+const uniqueRandomNumbers = urandom(1, 100)
 export class ProductRepository extends GeneralRepository<IProductRepository, IProductEntity> implements IProductRepositoryGateway {
   constructor () {
     super(ProductRepositoryModel)
@@ -24,13 +25,18 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
    */
   public getPaginationList = async (userId: string, filterQuery: IProductListFilterQuery) => {
     try {
-      const {isAdmin = false, showDeleted = false} = filterQuery
+      const {isAdmin = false, showDeleted = false, onFeaturedList = false} = filterQuery
       let productStateQuery = <any>{}
+      let featuredListQuery = <any>{}
       if (!isAdmin) {
         productStateQuery.state = PRODUCT_STATES.COMPLETED
       }
       if (!showDeleted) {
         productStateQuery.deleted = false
+      }
+      if (onFeaturedList) {
+        // if flag onf eatured list is true, then set owned property to false to remove all of the users that already owned or purchased by the user.
+        featuredListQuery.hasOwned = false
       }
       const response = await this.aggregateWithPagination([
         {
@@ -126,6 +132,9 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
           }
         },
         {
+          $match: featuredListQuery
+        },
+        {
           $project: {
             userId: 0,
             userProduct: 0,
@@ -145,6 +154,7 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
         }
       ], {
         ...filterQuery,
+        sortBy: !onFeaturedList ? {fieldName: 'createdAt', status: -1} : null
       })
       return response
     } catch (error) {
