@@ -26,11 +26,13 @@ export class FeaturedProductList {
       if (productList.length === 0) {
         // get all product instead
         productList = await this.dependencies.repositoryGateway.getFeaturedList({
-          limit: 5,
           ...queryParams,
+          limit: 25,
         })
       }
-      return productList.sort(() => 0.5 - Math.random()).splice(0, queryParams.limit)
+      return {
+        data: productList.sort(() => 0.5 - Math.random()).splice(0, queryParams.limit)
+      }
     } catch (error) {
       console.log('failed to get product list. \nError :>> ', error);
       throw error
