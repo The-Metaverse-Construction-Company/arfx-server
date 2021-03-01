@@ -1,5 +1,4 @@
 
-import urandom from 'unique-random'
 import {
   IProductRepositoryGateway,
   IProductEntity,
@@ -13,7 +12,6 @@ import {
 
 import GeneralRepository from './General.Gateway'
 import { COLLECTION_NAMES } from './constants/collection-names'
-const uniqueRandomNumbers = urandom(1, 100)
 export class ProductRepository extends GeneralRepository<IProductRepository, IProductEntity> implements IProductRepositoryGateway {
   constructor () {
     super(ProductRepositoryModel)
