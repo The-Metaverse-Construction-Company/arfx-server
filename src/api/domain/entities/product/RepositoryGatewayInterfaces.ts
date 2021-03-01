@@ -14,4 +14,5 @@ export interface IProductListFilterQuery extends IPaginationParameters {
 }
 export interface IProductRepositoryGateway extends IGeneralRepositoryGateway<IProductEntity> {
   getPaginationList: (userId: string, filterQuery: IPaginationParameters) => Promise<IAggregatePaginationResponse<IProductEntity>>
+  getFeaturedList: (filterQuery: IProductListFilterQuery) => Promise<IProductEntity[]>
 }
