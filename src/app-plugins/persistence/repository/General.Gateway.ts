@@ -161,23 +161,14 @@ export default abstract class GeneralDBCommands<T, K> {
    * a function that return a pagination data.
    */
   public aggregateWithPagination <SF extends keyof K>(pipeline: any[], queryParams: IPaginationQueryParams & {searchFields?: SF[]}): Promise<IAggregatePagination<K>> {
-    let {limit = 20, pageNo = 0, sortBy = null, searchFields = [], searchText = ''} = queryParams || {}
+    let {limit = 20, pageNo = 0, sortBy = {fieldName: "createdAt", status: -1}, searchFields = [], searchText = ''} = queryParams || {}
     //@ts-ignore
     const endPage = parseInt(limit) >= 0 ? parseInt(limit) : 20
     //@ts-ignore
     const startPage = parseInt(pageNo) >= 1 ? endPage * parseInt(pageNo - 1) : 0
     //@ts-ignore
-    var sortTo = {createdAt: -1}
-    // if (sortBy) {
-    //   sortTo = Array.isArray(sortBy) ? sortBy.reduce((obj, s) => {
-    //     obj[s.fieldName] = parseInt(s.status)
-    //     return obj
-    //   }, {}) : {[sortBy.fieldName]: sortBy.status}
-    // }
+    var sortTo = <any>{}
     const firstPipeline = <any[]>[
-      {
-        $sort: sortTo
-      },
       {
         $skip: startPage
       },
@@ -185,6 +176,13 @@ export default abstract class GeneralDBCommands<T, K> {
         $limit: endPage
       }
     ]
+    if (sortBy) {
+      sortTo = Array.isArray(sortBy) ? sortBy.reduce((obj, s) => {
+        obj[s.fieldName] = s.status
+        return obj
+      }, {}) : {[sortBy.fieldName]: sortBy.status}
+      firstPipeline.unshift({$sort: sortTo})
+    }
     // if limitTO is equal to = 0, will remove the $limit on the pipeline
     if (endPage === 0) {
       const ind = firstPipeline.findIndex((stage) => Object.keys(stage)[0] === '$limit')

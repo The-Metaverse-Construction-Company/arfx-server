@@ -32,6 +32,7 @@ import { AZURE_BLOB_CONTAINER_NAME } from '../../utils/constants'
 
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
+
 router.route('/')
 /**
  * @swagger
@@ -77,6 +78,31 @@ router.route('/')
     requestValidatorMiddleware,
     controller.productListRoute
   )
+  router.route('/featured')
+  /**x
+   * @swagger
+   * /v1/products/featured:
+   *  get:
+   *    summary: "List Of the Featured Products/Scenes"
+   *    tags:
+   *      - "Products"
+   *    security:
+   *      - userBearerAuth: []
+   *      - adminBearerAuth: []
+   *    parameters:
+   *      - $ref: '#/components/requestQuery/pageNo'
+   *      - $ref: '#/components/requestQuery/limit'
+   *      - $ref: '#/components/requestQuery/searchText'
+   *    responses:
+   *      '200':
+   *        $ref: '#/components/responseBody/Products'
+   */
+    .get(
+      authorize(),
+      PaginationQueryPipeline,
+      requestValidatorMiddleware,
+      controller.featuredProductListRoute
+    )
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
 /**
  * @swagger
