@@ -9,7 +9,8 @@ import {
   productDetailService,
   removeProductService,
   updateProductPublishStatus,
-  updateProductBlobService
+  updateProductBlobService,
+  featuredProductList
 } from '../service-configurations/products'
 import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
@@ -159,12 +160,15 @@ export const productListRoute = async (req: Request, res: Response, next: NextFu
 export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {_id = '', isAdmin = false} = <any>req.user
-    const newProduct = await productList()
+    const {limit = 0, pageNo = 0, searchText = ''} = req.query
+    const newProduct = await featuredProductList()
       .getList({
-        ...req.query,
+        searchText: searchText.toString(),
         userId: !isAdmin ? _id : '',
         isAdmin: isAdmin,
-        onFeaturedList: true
+        onFeaturedList: true,
+        limit: parseInt(limit as string),
+        pageNo: parseInt(pageNo as string)
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))

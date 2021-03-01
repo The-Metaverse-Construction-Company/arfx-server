@@ -1,6 +1,7 @@
 export * from './create'
 export * from './update'
 export * from './lists'
+export * from './featured-lists'
 export * from './update-publish-status'
 export * from './remove'
 export * from './details'

@@ -11,7 +11,8 @@ import {
   // UpdateProductURLService,
   UploadProductBlobService,
   UpdateProductPurchaseCountService,
-  UpdateProductBlobService
+  UpdateProductBlobService,
+  FeaturedProductList
 } from '../domain/services/products'
 /**
  * @repository
@@ -56,6 +57,11 @@ export const updateProduct = () => (
 )
 export const productList = () => (
   new ProductList({
+    repositoryGateway: new ProductRepository()
+  })
+)
+export const featuredProductList = () => (
+  new FeaturedProductList({
     repositoryGateway: new ProductRepository()
   })
 )
