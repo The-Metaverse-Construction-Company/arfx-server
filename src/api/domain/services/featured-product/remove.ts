@@ -1,6 +1,12 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IFeaturedProductRepositoryGateway
 } from '../../entities/featured-product'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
@@ -9,11 +15,15 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProd
 export class RemoveFeaturedProductService {
   constructor (protected deps: IServiceDependencies) {
   }
-  public removeOne = async (bannerId: string) => {
+  /**
+   * remove the specific featured product.
+   * @param featuredProductId
+   */
+  public removeOne = async (featuredProductId: string) => {
     try {
       // remove the product banner on the repository.
       const removedFeaturedProduct = await this.deps.repositoryGateway.removeOne({
-        _id: bannerId
+        _id: featuredProductId
       })
       if (!removedFeaturedProduct) {
         throw new Error('No featured product found.')

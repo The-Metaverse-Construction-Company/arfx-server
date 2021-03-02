@@ -1,15 +1,24 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IFeaturedProductRepositoryGateway, IFeaturedProductsParams
 } from '../../entities/featured-product'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies,
 } from '../../interfaces'
-import { IPaginationParameters } from '../../interfaces/general-repository-gateway'
 interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProductRepositoryGateway>{
 }
 export class FeaturedProductListService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * get featured product lists.
+   * @param filterQuery 
+   */
   public getList = async (filterQuery: IFeaturedProductsParams) => {
     try {
       // remove the product banner on the repository.
