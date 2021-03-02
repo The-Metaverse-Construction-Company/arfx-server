@@ -1,16 +1,33 @@
+/**
+ * @entity
+ */
 import {
   UserEntity
 } from '../../entities'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @user_entity_interfaces
+ */
 import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
+/**
+ * @services
+ */
 import {UserDetailsService} from './user-details'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
-  validateEmail(data: {email: string, userId?: string}): Promise<any>
+  validateEmail(email: string, option: {userId?: string}): Promise<any>
   userDetailsService: UserDetailsService
 }
 export class UpdateUserService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * update user/customer metadata.
+   * @param userId 
+   * @param userData 
+   */
   public updateOne = async (userId: string, userData: IUserParams) => {
     try {
       const {
@@ -38,7 +55,7 @@ export class UpdateUserService {
         role,
       })
       // check duplicate email on the repository
-      await this.deps.validateEmail({userId: newUser._id, email: newUser.email.value})
+      await this.deps.validateEmail(newUser.email.value, {userId: newUser._id})
       // update user entity in the repository.
       await this.deps.repositoryGateway.updateOne({
         _id: newUser._id

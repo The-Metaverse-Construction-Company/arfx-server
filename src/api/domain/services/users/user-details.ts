@@ -1,4 +1,10 @@
+/**
+ * @user_entity_interfaces
+ */
 import {IUserEntity, IUserRepositoryGateway} from '../../entities/users'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
@@ -6,6 +12,11 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserDetailsService {
   constructor (protected dependencies: IServiceDependencies) {
   }
+  /**
+   * get user details by userId
+   * @param userId 
+   * @param projection 
+   */
   public findOne = async (userId: string, projection: Partial<Record<keyof IUserEntity, 1|0>> = {}) => {
     try {
       const user = await this.dependencies.repositoryGateway.findOne({

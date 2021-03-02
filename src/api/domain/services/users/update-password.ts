@@ -1,10 +1,18 @@
+/**
+ * @entity
+ */
 import {
   UserEntity
 } from '../../entities'
-// import {UserDetailsService} from '../users'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+/**
+ * @user_entity_interfaces
+ */
 import { IUserRepositoryGateway } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   // userDetails: UserDetailsService
@@ -12,6 +20,11 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UpdateUserPasswordService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * update user/customer password
+   * @param userId 
+   * @param newPassword 
+   */
   public updateOne = async (userId: string, newPassword: string) => {
     try {
       // fetch user by email.
@@ -23,6 +36,7 @@ export class UpdateUserPasswordService {
         ...JSON.parse(JSON.stringify(user)),
         password: newPassword
       })
+      // update it to repository.
       await this.deps.repositoryGateway.updateOne({
         _id: user._id,
       }, {

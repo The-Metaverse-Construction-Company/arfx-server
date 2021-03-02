@@ -1,10 +1,20 @@
-import { IRevokeToken } from '../../interfaces'
-import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+/**
+ * @entity_interfaces
+ */
 import { IUserRepositoryGateway } from '../../entities/users'
+/**
+ * @entity
+ */
 import { UserEntity } from '../../entities'
+/**
+ * @services
+ */
 import {UserDetailsService} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   userDetails: UserDetailsService
