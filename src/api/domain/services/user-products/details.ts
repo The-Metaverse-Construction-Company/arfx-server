@@ -20,12 +20,12 @@ export class UserProductDetailsService {
   }
   /**
    * get the user product details.
-   * 
    * @param userId 
    * @param id // can be userProductId productId
    */
   public getOne = async (userId: string, id: string) => {
     try {
+      // get the user product details.
       const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
       if (userProduct) {
         // get the blob name by convertiong the string to array and separated by "/" and then get the last element to get the blob name.
