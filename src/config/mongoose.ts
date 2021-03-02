@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { NODE_ENVIRONMENTS } from '../api/utils/constants';
 import logger from './../config/logger'
-import { mongo, env } from "./vars"
+import { mongo, NODE_ENV } from "./vars"
 // set mongoose Promise to Bluebird
 //@ts-ignore
 mongoose.Promise = Promise;
@@ -13,7 +13,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 // print mongoose logs in dev env
-if (env === NODE_ENVIRONMENTS.DEVELOPMENT) {
+if (NODE_ENV === NODE_ENVIRONMENTS.DEVELOPMENT) {
   mongoose.set('debug', true);
 }
 

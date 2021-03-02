@@ -18,13 +18,12 @@ const getMongoDBURI = (NODE_ENV: string) => {
       return process.env.MONGO_URI
   }
 }
-export const env = process.env.NODE_ENV || ''
-console.log('getMongoDBURI(env) :>> ', getMongoDBURI(env));
+export const NODE_ENV = process.env.NODE_ENV || 'development'
 export const port =  process.env.PORT || ''
 export const jwtSecret =  process.env.JWT_SECRET || ''
 export const jwtExpirationInterval =  process.env.JWT_EXPIRATION_MINUTES ? parseInt(process.env.JWT_EXPIRATION_MINUTES) : 60
 export const mongo =  {
-  uri: getMongoDBURI(env)
+  uri: getMongoDBURI(NODE_ENV)
 }
 export const AZURE_COSMOS_KEY = process.env.AZURE_COSMOS_KEY || ''
 export const logs = process.env.NODE_ENV === 'production' ? 'combined' : 'dev'
@@ -35,7 +34,6 @@ export const emailConfig = {
   password: process.env.EMAIL_PASSWORD,
 }
 export const BACKEND_HOST = process.env.BACKEND_HOST || `http://localhost:3000`
-export const NODE_ENV = process.env.NODE_ENV || 'development'
 // ENV VARIABLES
 export const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || ''
 export const JWT_ACCESS_TOKEN_DURATION_MINUTES = process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES ? parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRATION_MINUTES) : 60

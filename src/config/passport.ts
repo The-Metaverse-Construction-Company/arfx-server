@@ -7,9 +7,11 @@ import {
 } from 'passport-jwt';
 import {
   BearerStrategy,
-  IBearerStrategyOption
 } from 'passport-azure-ad'
 import {Request} from 'express'
+/**
+ * @env_variables
+ */
 import {
   ADMIN_JWT_ACCESS_TOKEN_SECRET,
   JWT_ACCESS_TOKEN_SECRET
@@ -23,14 +25,25 @@ import {
   createUserService,
   userDetails
 } from '../api/service-configurations/users'
+/**
+ * @app_entities
+ */
+import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
+import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
 import {
   adminAccountVerifyAuthTokenService
 } from '../api/service-configurations/admin-accounts'
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../api/utils/constants';
-import RedisClient from './redis'
-import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
+/**
+ * @config_variable
+ */
 import AzureADConfig  from '../config/azure-ad'
-import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
+import RedisClient from './redis'
+
+
 const jwtOptions = {
   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
@@ -41,8 +54,7 @@ const adminJWTOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
   passReqToCallback: true
 };
-console.log('AzureADConfig :>> ', AzureADConfig);
-const azureADB2COptions = <IBearerStrategyOption>AzureADConfig
+
 const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
   try {
     const {authorization = ''} = req.headers

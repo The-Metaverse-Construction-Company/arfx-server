@@ -1,8 +1,14 @@
-import { IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @admin_entity
+ */
 import { 
   IAdminAccountRepositoryGateway,
  } from '../../entities/admin-accounts'
-interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
+ /**
+  * @general_interfaces
+  */
+ import { IGeneralServiceDependencies } from '../../interfaces'
+ interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
 }
 export class AdminAccountDetailsService {
   constructor (protected deps: IServiceDependencies) {
@@ -17,6 +23,7 @@ export class AdminAccountDetailsService {
         _id: id
       }, {password: 0})
       .catch(() => {
+        // just overwrite the error when there's no data found.
         throw new Error('No admin account found.')
       })
       //add some logs

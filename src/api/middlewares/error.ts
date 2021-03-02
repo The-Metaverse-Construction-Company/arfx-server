@@ -4,7 +4,7 @@ Request, Response
 } from 'express'
 import httpStatus from 'http-status'
 import APIError from '../utils/APIError'
-import { env } from '../../config/vars'
+import { NODE_ENV } from '../../config/vars'
 
 /**
  * Error handler. Send stacktrace only during development
@@ -17,7 +17,7 @@ const requestHandler = (err: any, req: Request, res: Response, next: NextFunctio
     errors: err.errors,
     stack: err.stack,
   };
-  if (env !== 'development') {
+  if (NODE_ENV !== 'development') {
     delete response.stack;
   }
   res.status(err.status);
