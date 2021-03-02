@@ -1,6 +1,7 @@
-import fs from 'fs'
+/**
+ * @entity_interfaces
+ */
 import {
-  IProductBlob,
   IProductBlobProperties,
   IProductEntity,
   IProductRepositoryGateway,
@@ -8,22 +9,41 @@ import {
   PRODUCT_STATES,
   PRODUCT_UPLOAD_BLOB_STATES
 } from '../../entities/product'
+/**
+ * @entity
+ */
 import {
   ProductEntity
 } from '../../entities'
+/**
+ * @services
+ */
 import {
   UploadProductBlobService,
   ProductDetailService
 } from './'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
 
+interface IFileSystem {
+  removeOne(filepath: string): void
+}
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
   productDetailService: ProductDetailService
+  fileSystem: IFileSystem
 }
 export class UpdateProductBlobService {
   constructor(protected dependencies: IDependencies) {
   }
+  /**
+   * upload each blob.
+   * @param productId 
+   * @param productBlobType 
+   * @param blobLocalPath 
+   */
   private uploadBlob = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
     let blobProperty = <IProductBlobProperties>{
       state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
@@ -40,7 +60,11 @@ export class UpdateProductBlobService {
     return blobProperty
   }
   /**
-   * create new product.
+   * update the product blobs
+   *  - previewImage
+   *  - previewVideo
+   *  - thumbnail
+   *  - contentZip
    * @param productBody 
    */
   public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
@@ -116,7 +140,7 @@ export class UpdateProductBlobService {
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId
       }, propertiesToUpdate)
-      fs.unlinkSync(blobLocalPath)
+      this.dependencies.fileSystem.removeOne(blobLocalPath)
       // add logs
       return updatedProduct
     } catch (error) {

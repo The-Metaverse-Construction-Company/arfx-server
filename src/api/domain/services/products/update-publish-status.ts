@@ -2,12 +2,14 @@ import {
   IProductRepositoryGateway
 } from '../../entities/product'
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class UpdateProductPublishStatus {
-  constructor(protected dependencies: IDependencies) {
+interface IServiceDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
+export class UpdateProductPublishStatusService {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
-   * remove selected product
+   * update the status of the product publish
+   *  - false: unpublish which is will not shown on the product list
+   *  - true: published show on the product list.
    * @param productBody 
    */
   public updateOne = async (productId: string, status: boolean = true) => {

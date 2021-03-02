@@ -1,7 +1,16 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductRepositoryGateway
 } from '../../entities/product'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
+/**
+ * @services
+ */
 import {
   ProductDetailService
 } from './details'
@@ -12,22 +21,25 @@ export class UpdateProductPurchaseCountService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * remove selected product
+   * update the total purchase count of the service
+   * 
    * @param productBody 
    */
   public updateOne = async (productId: string) => {
     try {
+      // check the product first if existing.
       const product = await this.dependencies.productDetailService.findOne(productId)
-      // we can also update this to soft delete, or even move it thru archieve.
+      // then increment the purchaseCount
+      product.purchaseCount +=1
       const updateProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId
       }, {
-        purchaseCount: product.purchaseCount + 1
+        purchaseCount: product.purchaseCount
       })
       // add logs here
       return updateProduct
     } catch (error) {
-      console.log('failed to create product. \nError :>> ', error);
+      console.log('failed to update purchase count of the product. \nError :>> ', error);
       throw error
     }
   }

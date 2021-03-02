@@ -42,10 +42,20 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IProductRepos
 export class UploadProductBlobService {
   constructor(protected dependencies: IServiceDependencies) {
   }
+  /**
+   * get the blob extension.
+   * @param filename
+   */
   private getBlobExtension = (filename: string) => {
     const blobArr = filename.split('.')
     return blobArr.length >= 1 ? blobArr[blobArr.length -1] : ''
   }
+  /**
+   * upload the blob on the storage cloud provider
+   * @param productId 
+   * @param type 
+   * @param blobLocalPath 
+   */
   public uploadOne = async (productId: string, type: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
     try {
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {

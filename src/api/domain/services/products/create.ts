@@ -1,12 +1,27 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductEntity,
   IProductRepositoryGateway,
   IProductParams
 } from '../../entities/product'
+/**
+ * @entity
+ */
 import {
   ProductEntity
 } from '../../entities'
-import { IGeneralServiceDependencies, IUploader, IValidateProductTotalAmount } from '../../interfaces';
+/**
+ * @general_interfaces
+ */
+import {
+  IGeneralServiceDependencies, 
+  IValidateProductTotalAmount
+} from '../../interfaces';
+/**
+ * @services
+ */
 import {UploadProductBlobService} from './upload-blob'
 export interface _IProdutParams extends IProductParams, Pick<IProductEntity, 'published'> {
   contentZip: string,
@@ -43,14 +58,6 @@ export class CreateProductService {
       if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
         throw new Error('total price must not be below $0.50 usd.')
       }
-      // upload to cloud storage provider
-      // const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
-      //   contentZip,
-      //   previewImage,
-      //   previewVideo
-      // })
-      // merge to newProductEntity object to blob response
-      // Object.assign(newProductEntity, blobResponse)
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs
