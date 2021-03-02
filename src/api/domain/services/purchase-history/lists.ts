@@ -1,15 +1,20 @@
+/**
+ * @entity_interfaces
+ */
 import {
-  IPurchaseHistorryRepositoryGateway, IPurchaseHistoryPaginationListParams
+  IPurchaseHistorryRepositoryGateway,
+  IPurchaseHistoryPaginationListParams
 } from '../../entities/purchase-history'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
-import { IPaginationParameters } from '../../interfaces/general-repository-gateway';
-interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
-export class PurchaseHistoryList {
-  constructor(protected dependencies: IDependencies) {
+interface IServiceDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
+export class PurchaseHistoryListService {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
-   * get list 
-   * @param userId 
+   * get purchase history list.
    * @param queryParams 
    */
   public getList = async (queryParams: IPurchaseHistoryPaginationListParams) => {

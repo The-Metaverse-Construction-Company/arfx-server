@@ -1,9 +1,18 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IPurchaseHistorryRepositoryGateway, IPurchaseHistoryParams, PURCHASE_HISTORY_STATE
 } from '../../entities/purchase-history'
+/**
+ * @entity
+ */
 import {
   PurchaseHistoryEntity
 } from '../../entities'
+/**
+ * @services
+ */
 import {
   ProductDetailService
 } from '../products'
@@ -14,7 +23,13 @@ import {
   CreateUserProductsService,
   UserProductDetailsService
 } from '../user-products'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
+/**
+ * @entity_user_interfaces
+ */
 import { IUserEntity } from '../../entities/users'
 export interface IChargeCustomerPaymentParams {
   customerId: string,
@@ -40,8 +55,9 @@ export class PurchaseProductService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create purchase history
-   * @param productBody 
+   * purchase product
+   * @param userId 
+   * @param purchaseBody 
    */
   public purchaseOne = async (userId: string, purchaseBody: _IPurchaseHistoryParams) => {
     try {
@@ -55,7 +71,7 @@ export class PurchaseProductService {
       // fetch product data.
       const product = await this.dependencies.productDetailsService
         .findOne(purchaseBody.productId)
-      // initialize purchase entity
+      // initialize purchase entity to run the business rules
       const newPurchaseHistory = new PurchaseHistoryEntity({
         amount: Number((product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)),
         price: product.price,
