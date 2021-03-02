@@ -6,8 +6,13 @@ interface Deps {
 export class UserSignOutService {
   constructor (protected deps: Deps) {
   }
+  /**
+   * sign-out the user/customer
+   * @param userId
+   */
   public signOut = async (userId: string) => {
     try {
+      // revoke or remove the sign-in token.
       await this.deps.revokeToken(userId, TOKEN_TYPE.SIGN_IN)
       // add some logs or notification.
       return true
