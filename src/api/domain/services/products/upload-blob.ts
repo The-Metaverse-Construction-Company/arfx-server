@@ -1,6 +1,29 @@
-import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST, NODE_ENVIRONMENTS } from '../../../utils/constants';
-import { IProductBlobProperties, IProductContentZip, IProductRepositoryGateway, PRODUCT_BLOB_TYPE, PRODUCT_UPLOAD_BLOB_STATES } from '../../entities/product';
-import {  IGeneralServiceDependencies, IImageResizeOption, IUploader } from '../../interfaces';
+/**
+ * @env_variables
+ */
+import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST } from '../../../../config/vars';
+/**
+ * @constant
+ */
+import { NODE_ENVIRONMENTS } from '../../../utils/constants';
+/**
+ * @product_entity
+ */
+import { 
+  IProductBlobProperties,
+  IProductContentZip,
+  IProductRepositoryGateway,
+  PRODUCT_BLOB_TYPE,
+  PRODUCT_UPLOAD_BLOB_STATES 
+} from '../../entities/product';
+/**
+ * @general_entity_interfaces
+ */
+import {  
+  IGeneralServiceDependencies,
+  IImageResizeOption,
+  IUploader
+} from '../../interfaces';
 interface IUploadProductBlob{
   contentZip: string,
   previewImage: string,

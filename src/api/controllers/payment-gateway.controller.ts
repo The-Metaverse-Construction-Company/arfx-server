@@ -1,14 +1,30 @@
-import {Request, Response, NextFunction, Router} from 'express'
-import {stripe} from '../../config/payment-gateway'
+/**
+ * @libraries
+ */
 import httpStatus from 'http-status';
+import {Request, Response, NextFunction, Router} from 'express'
+/**
+ * @configs
+ */
+import {stripe} from '../../config/payment-gateway'
+/**
+ * @domain
+ */
 import { PURCHASE_HISTORY_STATE } from '../domain/entities/purchase-history';
+/**
+ * @services
+ */
 import {updatePurchasePaymentChargeService, updatePurchaseStateService} from '../service-configurations/purchase-history'
-import { STRIPE_WH_SECRET } from '../utils/constants';
-
-const app = Router({mergeParams: true})
+/**
+ * @env_variables
+ */
+import { STRIPE_WH_SECRET } from '../../config/vars';
+/**
+ * a middleware guard to validate if the request is really coming from stripe.
+ */
 export const paymentGatewayWebhookMiddleware = async (request: Request, response: Response, next: NextFunction) => {
   const stripeSignature = request.headers['stripe-signature'] as string
-  const webhooksSecret = `whsec_c1BWtxolzoOAqMmF2RCMnt3iSL658swc`
+  const webhooksSecret = STRIPE_WH_SECRET
   let event;
   try {
     event = stripe.webhooks.constructEvent(request.body, stripeSignature, webhooksSecret)
@@ -17,6 +33,9 @@ export const paymentGatewayWebhookMiddleware = async (request: Request, response
     response.sendStatus(httpStatus.FORBIDDEN)
   }
 }
+/**
+ * payment webhook to update the transaction state
+ */
 export const paymentGatewayWebhookRoute = (request: Request, response: Response) => {
   let event = request.body;
   new Promise((resolve, reject) => {
@@ -54,5 +73,3 @@ export const paymentGatewayWebhookRoute = (request: Request, response: Response)
     response.sendStatus(httpStatus.BAD_REQUEST)
   })
 }
-app.post('/webhook', )
-export default app

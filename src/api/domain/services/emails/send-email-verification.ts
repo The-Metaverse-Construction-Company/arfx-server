@@ -1,9 +1,21 @@
 
-import { CLIENT_HOST, TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @env_variables
+ */
+import { CLIENT_HOST } from '../../../../config/vars'
+/**
+ * @constant
+ */
+import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @user_entity
+ */
 import {
-  IUserEntity,
   IUserRepositoryGateway
 } from '../../entities/users/index'
+/**
+ * @general_entity
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
@@ -13,6 +25,11 @@ interface IDependencies extends IGeneralServiceDependencies<IUserRepositoryGatew
 export class SendEmailVerificationService {
   constructor (protected deps: IDependencies) {
   }
+  /**
+   * send email verification for account who haven't verified yet.
+   * @param userId 
+   * @param token 
+   */
   public sendOne = async (userId: string, token: string) => {
     try {
       console.log('Sending email verification....');

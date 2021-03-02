@@ -1,15 +1,27 @@
-import PaymentGateway from '../../config/payment-gateway'
+/**
+ * @libraries
+ */
 import httpStatus from 'http-status'
 import {
   Response, Request, NextFunction
 } from 'express'
-import {
-  userDetails
-} from '../service-configurations/users'
 import Stripe from 'stripe'
-import { STRIPE_SECRET_KEY } from '../utils/constants'
-import { successReponse } from '../helper/http-response'
+/**
+ * @payment_config
+ */
+import PaymentGateway from '../../config/payment-gateway'
+/**
+ * @env_variables
+ */
+import { STRIPE_SECRET_KEY } from '../../config/vars'
+/**
+ * @user_entity
+ */
 import { IUserEntity } from '../domain/entities/users'
+/**
+ * @helper
+ */
+import { successReponse } from '../helper/http-response'
 import AppError from '../utils/response-error'
 const stripe = new Stripe(STRIPE_SECRET_KEY, {typescript: true, apiVersion: "2020-08-27"})
 

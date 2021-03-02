@@ -12,7 +12,7 @@ import AuthToken from './auth-token'
 import {
   ADMIN_JWT_ACCESS_TOKEN_SECRET,
   ADMIN_JWT_REFRESH_TOKEN_SECRET
-} from '../utils/constants'
+} from '../../config/vars'
 interface IUserTokenData {
   referenceId: string
   tokenType: string

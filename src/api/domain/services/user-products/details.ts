@@ -1,8 +1,16 @@
-import { AZURE_BLOB_CONTAINER_NAME } from '../../../utils/constants';
-import { IProductEntity } from '../../entities/product';
+/**
+ * @env_variables
+ */
+import { AZURE_BLOB_CONTAINER_NAME } from '../../../../config/vars';
+/**
+ * @entity
+ */
 import {
   IUserProductsRepositoryGateway,
 } from '../../entities/user-products'
+/**
+ * @general_entity_interfaces
+ */
 import { IBlobStorage, IGeneralServiceDependencies } from '../../interfaces';
 interface IDependencies extends IGeneralServiceDependencies<IUserProductsRepositoryGateway> {
   blobStorage: IBlobStorage
@@ -11,6 +19,7 @@ export class UserProductDetailsService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
+   * get the user product details.
    * 
    * @param userId 
    * @param id // can be userProductId productId
@@ -19,9 +28,12 @@ export class UserProductDetailsService {
     try {
       const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
       if (userProduct) {
+        // get the blob name by convertiong the string to array and separated by "/" and then get the last element to get the blob name.
         const blobName = userProduct.contentZip.blobURL.split('/').pop()
-        const sasToken = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
-        userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${sasToken}`
+        // generate azure AD SAS Query params for the client app to fetch or able to donwload the content zip
+        const azureADSASQueryParams = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+        // overwrite the value of content zip blob url which is the zip file for the product/scene.
+        userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${azureADSASQueryParams}`
       }
       // add some logs here.
       return userProduct
