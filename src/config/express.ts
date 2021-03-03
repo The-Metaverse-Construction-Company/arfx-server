@@ -78,7 +78,7 @@ app.use(cors());
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
 passport.use('admin-auth', strategies.adminAuthJWT);
-passport.use(strategies.AzureADAuthJWT);
+passport.use('azure-oauth-bearer', strategies.AzureADAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
 app.get('/api/ad-auth', passport.authenticate('oauth-bearer', { session: false }), (req, res, next) => {
