@@ -15,7 +15,6 @@ import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
 import { errorResponse, successReponse } from '../helper/http-response'
 import AppError from '../utils/response-error'
-const User = require('../models/user.model');
 
 /**
  * @public

@@ -15,7 +15,6 @@ import {
   userVerifyToken
 } from '../service-configurations/users'
 
-// import User from '../models/user.model'
 import { successReponse } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
 import AppError from '../utils/response-error'
