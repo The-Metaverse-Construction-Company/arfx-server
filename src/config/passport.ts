@@ -94,7 +94,7 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
       .catch(async (err) => {
         if (err.message === 'No data found.') {
           const email = data.preferred_username ?? data.emails.length >= 1 ? data.emails[0] : ''
-          const fullName = data.name ?? `${data.given_name} ${data.family_name}`
+          const fullName = data.name && data.name !== 'unknown' ? data.name : `${data.given_name} ${data.family_name}`
           const newUser = await createUserService()
             .createOne({
               name: fullName,
