@@ -1,10 +1,20 @@
-import { IRevokeToken } from '../../interfaces'
-import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+/**
+ * @entity_interfaces
+ */
 import { IUserRepositoryGateway } from '../../entities/users'
+/**
+ * @entity
+ */
 import { UserEntity } from '../../entities'
+/**
+ * @services
+ */
 import {UserDetailsService} from '../users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   userDetails: UserDetailsService
@@ -13,9 +23,13 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class VerifyUserService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * verify one user/customer
+   * @param userId 
+   */
   public verifyOne = async (userId: string) => {
     try {
-      //fetch user details
+      //get user details
       const user = await this.deps.userDetails.findOne(userId, {password: 0})
       // create account on stripe. 
       // reference: https://stripe.com/docs/api/customers
@@ -33,6 +47,7 @@ export class VerifyUserService {
         },
         stripeCustomerId: customerId
       })
+      // verified user and set the stripe customer id
       const updatedUser = await this.deps.repositoryGateway.updateOne({
         _id: userId
       }, {
@@ -41,7 +56,6 @@ export class VerifyUserService {
         "email.verifiedAt": validatedUser.email.verifiedAt,
         stripeCustomerId: validatedUser.stripeCustomerId
       })
-      //@ts-ignore
       delete updatedUser.password 
       //add some logs
       return updatedUser

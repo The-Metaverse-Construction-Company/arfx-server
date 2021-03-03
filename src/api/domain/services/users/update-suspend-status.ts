@@ -1,10 +1,21 @@
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces'
-import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
+/**
+ * @user_entity_interfaces
+ */
+import { IUserRepositoryGateway } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
 }
 export class UpdateUserSuspendStatusService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * update suspend status of the customer/user
+   * @param userId 
+   * @param suspendStatus 
+   */
   public updateOne = async (userId: string, suspendStatus: boolean) => {
     try {
       // initiate user entity to run the validation for business rules.

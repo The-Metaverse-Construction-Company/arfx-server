@@ -1,23 +1,36 @@
 import httpStatus from 'http-status'
+/**
+ * @api_error
+ */
 import APIError from '../../../utils/APIError'
-
+/**
+ * @user_entity_interfaces
+ */
 import {
   IUserRepositoryGateway
 } from '../../entities/users'
-
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+interface IOptions {
+  userId?: string
+}
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
 export class ValidateDuplicateEmailService {
   constructor (protected dependencies: IServiceDependencies) {
   }
-
-  validateOne = async ({
-    email = '',
-    userId = ''
-  }) => {
+  /**
+   * validate user/customer email if already exists on the user repository
+   * @param param0 
+   */
+  public validateOne = async (email: string, option: IOptions = {}) => {
     try {
+      const {
+        userId = ''
+      } = option
       const query = <any>{
         'email.value': email
       }

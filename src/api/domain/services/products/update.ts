@@ -1,14 +1,24 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductEntity,
   IProductParams,
   IProductRepositoryGateway,
-  IProdutBody
 } from '../../entities/product'
+/**
+ * @entity
+ */
 import {
   ProductEntity
 } from '../../entities'
-
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies, IValidateProductTotalAmount } from '../../interfaces';
+/**
+ * @services
+ */
 import { UploadProductBlobService } from './upload-blob';
 export interface _IProductParams extends IProductParams{
   contentZip: string,
@@ -23,7 +33,7 @@ export class UpdateProduct {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create new product.
+   * update the selected product details.
    * @param productBody 
    */
   public updateOne = async (productId: string, productBody: _IProductParams) => {
@@ -52,8 +62,6 @@ export class UpdateProduct {
       if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
         throw new Error('total price must not be below $0.50 usd.')
       }
-      // merge to fieldsToUpload object
-      // Object.assign(fieldsToUpdate, blobResponse)
       // update to repository
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: newProductEntity._id

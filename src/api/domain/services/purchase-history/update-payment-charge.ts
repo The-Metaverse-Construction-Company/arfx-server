@@ -1,11 +1,17 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IPurchaseHistorryRepositoryGateway
 } from '../../entities/purchase-history'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
+interface IServiceDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
 }
 export class UpdatePurchasePaymentChargeService {
-  constructor(protected dependencies: IDependencies) {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
    * update the state of the puchase.

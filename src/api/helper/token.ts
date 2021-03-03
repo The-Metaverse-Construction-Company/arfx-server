@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import { env, jwtSecret, jwtExpirationInterval } from '../../config/vars'
 class Token {
   private jwt: any
   private DEFAULT_SECRET_KEY: string = ''

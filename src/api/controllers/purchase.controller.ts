@@ -67,8 +67,6 @@ export const purchaseHistoryDetailsRoute = async (req: Request, res: Response, n
   try {
     const {_id = ''} = <IUserEntity>req.user
     const {purchasedProductId = ''} = req.params
-    console.log('_id :>> ', _id);
-    console.log('purchasedProductId xxx:>> ', purchasedProductId);
     const newPurchaseHistory = await purchaseHistoryDetails()
       .getOne(_id, purchasedProductId)
     res.status(httpStatus.OK)

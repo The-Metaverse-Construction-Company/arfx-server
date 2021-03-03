@@ -1,14 +1,23 @@
-
+/**
+ * @libraries
+ */
 import {RedisClient} from 'redis'
-import { TOKEN_LABEL,
+/**
+ * @environment_variables
+ */
+import {
   JWT_ACCESS_TOKEN_DURATION_MINUTES,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_DURATION_MINUTES,
-  JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
+  JWT_REFRESH_TOKEN_SECRET} from '../../config/vars'
+
+import {
+  TOKEN_LABEL
+} from '../utils/constants'
+/**
+ * @helper
+ */
 import Token from './token'
-// import Token from '../../../helper/token'
-// import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
-// import Redis from '../../../../config/redis'
 interface deps {
   accessTokenSecret?: string
   refreshTokenSecret?: string

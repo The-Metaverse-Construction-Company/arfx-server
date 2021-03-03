@@ -1,8 +1,17 @@
-import { IVerifyToken } from '../../../interfaces'
+/**
+ * @services
+ */
 import {AdminAccountDetailsService} from '../index'
+/**
+ * @admin_entity
+ */
 import {
   ADMIN_ACCOUNT_TOKEN_TYPES
 } from '../../../entities/admin-accounts'
+/**
+ * @general_entity
+ */
+import { IVerifyToken } from '../../../interfaces'
 interface Deps {
   verifyToken: IVerifyToken
   adminAccountDetails: AdminAccountDetailsService

@@ -1,6 +1,29 @@
-import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST, NODE_ENVIRONMENTS } from '../../../utils/constants';
-import { IProductBlobProperties, IProductContentZip, IProductRepositoryGateway, PRODUCT_BLOB_TYPE, PRODUCT_UPLOAD_BLOB_STATES } from '../../entities/product';
-import {  IGeneralServiceDependencies, IImageResizeOption, IUploader } from '../../interfaces';
+/**
+ * @env_variables
+ */
+import { NODE_ENV, AZURE_BLOB_CONTAINER_NAME, BACKEND_HOST } from '../../../../config/vars';
+/**
+ * @constant
+ */
+import { NODE_ENVIRONMENTS } from '../../../utils/constants';
+/**
+ * @product_entity
+ */
+import { 
+  IProductBlobProperties,
+  IProductContentZip,
+  IProductRepositoryGateway,
+  PRODUCT_BLOB_TYPE,
+  PRODUCT_UPLOAD_BLOB_STATES 
+} from '../../entities/product';
+/**
+ * @general_entity_interfaces
+ */
+import {  
+  IGeneralServiceDependencies,
+  IImageResizeOption,
+  IUploader
+} from '../../interfaces';
 interface IUploadProductBlob{
   contentZip: string,
   previewImage: string,
@@ -19,10 +42,20 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IProductRepos
 export class UploadProductBlobService {
   constructor(protected dependencies: IServiceDependencies) {
   }
+  /**
+   * get the blob extension.
+   * @param filename
+   */
   private getBlobExtension = (filename: string) => {
     const blobArr = filename.split('.')
     return blobArr.length >= 1 ? blobArr[blobArr.length -1] : ''
   }
+  /**
+   * upload the blob on the storage cloud provider
+   * @param productId 
+   * @param type 
+   * @param blobLocalPath 
+   */
   public uploadOne = async (productId: string, type: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
     try {
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {

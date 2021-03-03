@@ -1,18 +1,19 @@
+import fs from 'fs'
 /**
  * @services
  */
 import {
   CreateProductService,
-  ProductList,
+  ProductListService,
   UpdateProduct,
   ProductDetailService,
   RemoveProductService,
-  UpdateProductPublishStatus,
+  UpdateProductPublishStatusService,
   // UpdateProductURLService,
   UploadProductBlobService,
   UpdateProductPurchaseCountService,
   UpdateProductBlobService,
-  FeaturedProductList
+  FeaturedProductListService
 } from '../domain/services/products'
 /**
  * @repository
@@ -38,6 +39,11 @@ export const updateProductBlobService = () => (
     uploadProductBlobService: uploadProductBlobService(),
     productDetailService: productDetailService(),
     repositoryGateway: new ProductRepository(),
+    fileSystem: {
+      removeOne: (filepath: string) => {
+        fs.unlinkSync(filepath)
+      }
+    }
   })
 )
 
@@ -56,12 +62,12 @@ export const updateProduct = () => (
   })
 )
 export const productList = () => (
-  new ProductList({
+  new ProductListService({
     repositoryGateway: new ProductRepository()
   })
 )
 export const featuredProductList = () => (
-  new FeaturedProductList({
+  new FeaturedProductListService({
     repositoryGateway: new ProductRepository()
   })
 )
@@ -76,7 +82,7 @@ export const removeProductService = () => (
   })
 )
 export const updateProductPublishStatus = () => (
-  new UpdateProductPublishStatus({
+  new UpdateProductPublishStatusService({
     repositoryGateway: new ProductRepository()
   })
 )

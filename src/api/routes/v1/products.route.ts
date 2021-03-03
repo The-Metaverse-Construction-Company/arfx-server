@@ -28,7 +28,6 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
-import { AZURE_BLOB_CONTAINER_NAME } from '../../utils/constants'
 
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)

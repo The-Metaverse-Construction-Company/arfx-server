@@ -1,10 +1,17 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductRepositoryGateway
 } from '../../entities/product'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
+
+interface IServiceDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
 export class RemoveProductService {
-  constructor(protected dependencies: IDependencies) {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
    * remove selected product

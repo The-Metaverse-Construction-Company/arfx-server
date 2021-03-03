@@ -1,12 +1,6 @@
 
 import {RedisClient} from 'redis'
 import RandomNumber from 'random-number'
-import { TOKEN_LABEL,
-  JWT_ACCESS_TOKEN_DURATION_MINUTES,
-  JWT_ACCESS_TOKEN_SECRET,
-  JWT_REFRESH_TOKEN_DURATION_MINUTES,
-  JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
-import Token from './token'
 const RNOptions = {
   min: 10000,
   max: 99999,

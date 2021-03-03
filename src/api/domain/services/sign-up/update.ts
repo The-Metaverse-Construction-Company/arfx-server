@@ -1,10 +1,14 @@
+/**
+ * @general_interfaces
+ */
 import { IRevokeToken } from '../../interfaces'
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../../../utils/constants'
-import {
-  IGeneralServiceDependencies
-} from '../../interfaces'
-import { IUserRepositoryGateway } from '../../entities/users'
-import { UserEntity } from '../../entities'
+/**
+ * @user_services
+ */
 import {VerifyUserService} from '../users'
 interface IServiceDependencies {
   revokeToken: IRevokeToken
@@ -13,6 +17,10 @@ interface IServiceDependencies {
 export class VerifiedUserService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * update or verify the otp or token of the user/customer
+   * @param userId 
+   */
   public updateOne = async (userId: string) => {
     try {
       //verify user by userId

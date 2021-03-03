@@ -1,8 +1,8 @@
 import PaymentGateway from '../../config/payment-gateway'
 import {
   PurchaseProductService,
-  PurchaseHistoryDetails,
-  PurchaseHistoryList,
+  PurchaseHistoryDetailsService,
+  PurchaseHistoryListService,
   UpdatePurchaseStateService,
   UpdatePurchasePaymentChargeService
 } from '../domain/services/purchase-history'
@@ -49,12 +49,12 @@ export const updatePurchasePaymentChargeService = () => (
   })
 )
 export const purchaseHistoryDetails = () => (
-  new PurchaseHistoryDetails({
+  new PurchaseHistoryDetailsService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )
 export const purchaseHistoryList = () => (
-  new PurchaseHistoryList({
+  new PurchaseHistoryListService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )

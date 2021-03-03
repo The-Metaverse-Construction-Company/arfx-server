@@ -1,10 +1,19 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IFeaturedProductParams,
   IFeaturedProductRepositoryGateway
 } from '../../entities/featured-product'
+/**
+ * @entity
+ */
 import {
   FeaturedProductEntity
 } from '../../entities'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
@@ -13,6 +22,11 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IFeaturedProd
 export class UpdateFeaturedProductService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * update single featured product.
+   * @param bannerId 
+   * @param data 
+   */
   public updateOne = async (bannerId: string, data: IFeaturedProductParams) => {
     try {
       const {
@@ -36,7 +50,6 @@ export class UpdateFeaturedProductService {
           active: featuredProduct.active,
           productId: featuredProduct.productId,
           indexNo: featuredProduct.indexNo
-          // adminAccountId: featuredProduct.adminAccountId
         })
       //add some logs
       return featuredProduct

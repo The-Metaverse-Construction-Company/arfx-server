@@ -1,8 +1,20 @@
-
-import { CLIENT_HOST, TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @env_variables
+ */
+import { CLIENT_HOST} from '../../../../config/vars'
+/**
+ * @constant
+ */
+import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @user_entity
+ */
 import {
   IUserRepositoryGateway
 } from '../../entities/users/index'
+/**
+ * @general_entity
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
@@ -12,7 +24,12 @@ interface IDependencies extends IGeneralServiceDependencies<IUserRepositoryGatew
 export class SendResetPasswordService {
   constructor (protected deps: IDependencies) {
   }
-  sendOne = async (userId: string, token: string) => {
+  /**
+   * send reset password email.
+   * @param userId 
+   * @param token 
+   */
+  public sendOne = async (userId: string, token: string) => {
     try {
       // initiate user entity to run the validation for business rules.
       // insert to repository.

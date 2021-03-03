@@ -1,24 +1,32 @@
+/**
+ * @libaries
+ */
+import {
+  IBearerStrategyOption
+} from 'passport-azure-ad'
+/**
+ * constants variables
+ */
+import { 
+  AZURE_AD_ACCOUNT_NAME,
+  AZURE_AD_CLIENT_ID,
+  AZURE_AD_CLIENT_SECRET_ID
+} from '../config/vars'
 
-import {IBearerStrategyOption, IOIDCStrategyOption, VerifyOIDCFunction} from 'passport-azure-ad'
-const tenantId = process.env.AZURE_AD_TENAND_ID || ''
-const clientId = process.env.AZURE_AD_TENAND_ID || ''
-const q = <IBearerStrategyOption> {
+const AZURE_AD_CONFIG = <IBearerStrategyOption> {
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/v2.0/authorize', 
-  identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/authorize', 
-  clientID: 'fb576b86-5743-4354-b236-d2766629735e',
-  clientSecret: 'c9f3a616-6a05-42aa-9358-30036ec583ea', 
-  // responseType: 'code', 
-  // responseMode: 'form_post', 
-  // redirectUrl: 'http://localhost:3000/v1/auth', 
-  // allowHttpForRedirectUrl: true,
+  identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.b2clogin.com/${AZURE_AD_ACCOUNT_NAME}.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration`, 
+  clientID: AZURE_AD_CLIENT_ID,
+  clientSecret: AZURE_AD_CLIENT_SECRET_ID, 
   validateIssuer: false,
-  isB2C: false,
+  isB2C: true,
+  policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
-  audience: 'fb576b86-5743-4354-b236-d2766629735e',
-  // useCookieInsteadOfSession: true,
-  scope: ['user.read'],
-  loggingLevel: 'info'
+  audience: AZURE_AD_CLIENT_ID,
+  scope: ['simple-scope', 'openid', 'offline_access'],
+  loggingLevel: 'info',
+  loggingNoPII: false,
 }
-export default q
+export default AZURE_AD_CONFIG

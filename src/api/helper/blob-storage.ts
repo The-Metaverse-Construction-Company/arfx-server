@@ -1,6 +1,5 @@
 import fs from 'fs'
 import { 
-  BlobServiceClient,
   BlockBlobClient,
   generateBlobSASQueryParameters,
   BlobSASPermissions,
@@ -10,7 +9,9 @@ import {
   AZURE_CONNECTION_STRING,
   NODE_ENV,
   AZURE_BLOB_KEY,
-  AZURE_ACCOUNT_NAME,
+  AZURE_ACCOUNT_NAME
+} from '../../config/vars';
+import {
   NODE_ENVIRONMENTS
 } from '../utils/constants';
 const blobStorage = {

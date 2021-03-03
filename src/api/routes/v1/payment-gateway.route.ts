@@ -6,7 +6,7 @@ import {
 } from '../../controllers/payment-gateway.controller'
 const app = Router({mergeParams: true})
 app.post('/webhook',
-  // paymentGatewayWebhookMiddleware, 
+  paymentGatewayWebhookMiddleware, 
   paymentGatewayWebhookRoute
 )
 

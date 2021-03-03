@@ -1,7 +1,14 @@
-import { IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @admin_entity
+ */
 import { 
   IAdminAccountRepositoryGateway,
  } from '../../entities/admin-accounts'
+
+ /**
+  * @general_interfaces
+  */
+ import { IGeneralServiceDependencies } from '../../interfaces'
 interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
 }
 export class AdminAccountListService {

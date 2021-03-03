@@ -1,9 +1,24 @@
+/**
+ * @general_interfaces
+ */
 import { IGenerateToken } from '../../interfaces'
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+/**
+ * @user_entity_interfaces
+ */
 import { IUserRepositoryGateway } from '../../entities/users'
+/**
+ * @services
+ */
 import {
   ValidateUserPasswordService
 } from '../users'
@@ -15,6 +30,10 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserSignInService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * sign-in the user/customer
+   * @param param0 
+   */
   public signIn = async ({
     username = '',
     password = '',
@@ -34,6 +53,7 @@ export class UserSignInService {
       if (!user.email.verified) {
         throw new Error('Account not yet verified, Please verify your account first.')
       }
+      // generate auth token
       const token = await this.deps.generateToken({
         referenceId: user._id,
         tokenType: TOKEN_TYPE.SIGN_IN

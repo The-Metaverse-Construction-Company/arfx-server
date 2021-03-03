@@ -1,10 +1,16 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IPurchaseHistorryRepositoryGateway
 } from '../../entities/purchase-history'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
-export class PurchaseHistoryDetails {
-  constructor(protected dependencies: IDependencies) {
+interface IServiceDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
+export class PurchaseHistoryDetailsService {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
    * find purchase history details
@@ -12,7 +18,7 @@ export class PurchaseHistoryDetails {
    */
   public getOne = async (userId: string, purchaseHistoryId: string) => {
     try {
-      // get list in the repo
+      // get the purchase history details.
       const purchaseHistory = await this.dependencies.repositoryGateway.findOne({
         _id: purchaseHistoryId,
         userId: userId

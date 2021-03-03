@@ -1,10 +1,19 @@
+/**
+ * @user_entity
+ */
 import {
   UserEntity
 } from '../../entities'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @user_entity_interfaces
+ */
 import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
-  validateEmail(data: {email: string, userId?: string}): Promise<any>
+  validateEmail(email, option?: {userId?: string}): Promise<any>
 }
 interface _ICreateUserParams extends IUserParams {
   azureAdUserId?: string
@@ -12,6 +21,10 @@ interface _ICreateUserParams extends IUserParams {
 export class CreateUserService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * create user/customer
+   * @param param0
+   */
   public createOne = async ({
     email = '',
     name = '',
@@ -44,7 +57,7 @@ export class CreateUserService {
         }
       })
       // check duplicate email.
-      await this.deps.validateEmail({email: newUser.email.value})
+      await this.deps.validateEmail(newUser.email.value)
       // insert user to the repository.
       await this.deps.repositoryGateway.insertOne(newUser)
       //remove password property on the entity so it will not display on the response.
