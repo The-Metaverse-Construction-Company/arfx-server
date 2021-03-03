@@ -31,30 +31,13 @@ export class ValidateDuplicateEmailService {
       const {
         userId = ''
       } = option
-      const query = <any>{
-        'email.value': email
-      }
-      // ignore the provided userId on finding duplicate email.
-      // most likely will use on update function
-      if (userId) {
-        query._id = {
-          $ne: userId
-        }
-      }
       // initiate user entity
       // add catch to handle the built in error on the findOne when no details found.
-      const user = await this.dependencies.repositoryGateway.findOne(query).catch(() => null)
+      const user = await this.dependencies.repositoryGateway.validateEmail(email, {
+        userId
+      })
       if (user) {
-        throw new APIError({
-          message: 'Validation Error',
-          errors: [{
-            field: 'email',
-            location: 'body',
-            messages: ['"email" already exists'],
-          }],
-          status: httpStatus.BAD_REQUEST,
-          isPublic: true
-        });
+        throw new Error('"email" already exists to our repository.')
       }
       //add some logs
       return true
