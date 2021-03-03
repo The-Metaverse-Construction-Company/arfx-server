@@ -80,11 +80,15 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
     return done(error, false);
   }
 };
-const azureADAuthHandler = async (req: any, done: any = () => null) => {
+const azureADAuthHandler = async (req: any, data: any, done: any = () => null) => {
   try {
-    if (!req.oid) {
+    const accessToken = req.headers['authorization'].split(' ')[1]
+    if (!data.oid) {
       throw new Error('No user auth found.')
     }
+    console.log('accessToken :>> ', accessToken);
+    console.log('rexxxq :>> ', data);
+    console.log('donxxxe :>> ', done);
     const user = await userDetails()
       .findByAzureAdUserId(req.oid)
       .catch(async (err) => {
@@ -107,7 +111,8 @@ const azureADAuthHandler = async (req: any, done: any = () => null) => {
     done(null, user)
     return
   } catch (error) {
-    done(error, null, {})
+    console.log('error :>> ', error);
+    // done(error, null, {})
   }
   // try {
   //   const {authorization = ''} = req.headers

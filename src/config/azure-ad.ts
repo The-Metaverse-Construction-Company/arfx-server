@@ -21,10 +21,12 @@ const AZURE_AD_CONFIG = <IBearerStrategyOption> {
   clientID: AZURE_AD_CLIENT_ID,
   clientSecret: AZURE_AD_CLIENT_SECRET_ID, 
   validateIssuer: false,
-  isB2C: false,
+  isB2C: true,
+  policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
   audience: AZURE_AD_CLIENT_ID,
-  scope: ['user.read'],
-  loggingLevel: 'info'
+  scope: ['simple-scope', 'openid', 'offline_access'],
+  loggingLevel: 'info',
+  loggingNoPII: false,
 }
 export default AZURE_AD_CONFIG
