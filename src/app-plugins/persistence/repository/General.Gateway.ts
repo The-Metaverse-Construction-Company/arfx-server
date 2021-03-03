@@ -117,7 +117,7 @@ export default abstract class GeneralDBCommands<T, K> {
       $set: data
     })
     .then((result) => {
-      return <T[]>result
+      return <any>result
     })
   }
   /**
