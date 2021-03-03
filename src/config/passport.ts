@@ -90,21 +90,23 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
     console.log('rexxxq :>> ', data);
     console.log('donxxxe :>> ', done);
     const user = await userDetails()
-      .findByAzureAdUserId(req.oid)
+      .findByAzureAdUserId(data.oid)
       .catch(async (err) => {
         if (err.message === 'No data found.') {
-          const email = req.preferred_username ?? req.emails.length >= 1 ? req.emails[0] : ''
-          const fullName = req.name ?? `${req.given_name} ${req.family_name}` 
+          const email = data.preferred_username ?? data.emails.length >= 1 ? data.emails[0] : ''
+          const fullName = data.name ?? `${data.given_name} ${data.family_name}`
           const newUser = await createUserService()
             .createOne({
               name: fullName,
               email: email,
               mobileNumber: '',
               password: '',
-              azureAdUserId: req.oid,
+              azureAdUserId: data.oid,
               role: ALLOWED_USER_ROLE.USER
             })
-          const user  = await verifyUserService().verifyOne(newUser._id)
+            // set the account from azure ad verified.
+          const user  = await verifyUserService()
+            .verifyOne(newUser._id)
           return user
         }
       })
@@ -112,7 +114,7 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
     return
   } catch (error) {
     console.log('error :>> ', error);
-    // done(error, null, {})
+    done(error, null, {})
   }
   // try {
   //   const {authorization = ''} = req.headers

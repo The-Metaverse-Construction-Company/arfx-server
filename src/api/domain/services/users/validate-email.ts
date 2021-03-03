@@ -45,16 +45,7 @@ export class ValidateDuplicateEmailService {
       // add catch to handle the built in error on the findOne when no details found.
       const user = await this.dependencies.repositoryGateway.findOne(query).catch(() => null)
       if (user) {
-        throw new APIError({
-          message: 'Validation Error',
-          errors: [{
-            field: 'email',
-            location: 'body',
-            messages: ['"email" already exists'],
-          }],
-          status: httpStatus.BAD_REQUEST,
-          isPublic: true
-        });
+        throw new Error('"email" already exists to our repository.')
       }
       //add some logs
       return true
