@@ -86,14 +86,14 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
     if (!data.oid) {
       throw new Error('No user auth found.')
     }
-    console.log('accessToken :>> ', accessToken);
-    console.log('rexxxq :>> ', data);
-    console.log('donxxxe :>> ', done);
     const user = await userDetails()
       .findByAzureAdUserId(data.oid)
       .catch(async (err) => {
         if (err.message === 'No data found.') {
-          const email = data.preferred_username ?? data.emails.length >= 1 ? data.emails[0] : ''
+          const email = data.preferred_username ?? (data.emails && data.emails.length >= 1) ? data.emails[0] : ''
+          if (!email) {
+            throw new Error('No primary email found.')
+          }
           const fullName = data.name && data.name !== 'unknown' ? data.name : `${data.given_name} ${data.family_name}`
           const newUser = await createUserService()
             .createOne({

@@ -24,10 +24,10 @@ import { STRIPE_WH_SECRET } from '../../config/vars';
  */
 export const paymentGatewayWebhookMiddleware = async (request: Request, response: Response, next: NextFunction) => {
   const stripeSignature = request.headers['stripe-signature'] as string
-  const webhooksSecret = STRIPE_WH_SECRET
+  console.log('STRIPE_WH_SECRET ', STRIPE_WH_SECRET);
   let event;
   try {
-    event = stripe.webhooks.constructEvent(request.body, stripeSignature, webhooksSecret)
+    event = stripe.webhooks.constructEvent(request.body, stripeSignature, STRIPE_WH_SECRET)
     next()
   } catch (error) {
     response.sendStatus(httpStatus.FORBIDDEN)

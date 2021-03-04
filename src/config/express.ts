@@ -32,16 +32,6 @@ app.use(morgan(logs));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, '../../public')))
-// initialize busboy middleware
-// app.use((req: Request, _: any, next: NextFunction) => {
-//   if (req.method === 'POST') {
-//     req.app.set('busboy', new Busboy({ headers: req.headers }))
-//     // req.busboy.on('field', (fieldname, value) => {
-//     //   req.body[fieldname] = value
-//     // });
-//   }
-//   next()
-// })
 // setup request fingerprint
 app.use(Fingerprint({
   parameters: [
