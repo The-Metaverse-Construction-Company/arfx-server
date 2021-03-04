@@ -47,6 +47,7 @@
     "express": "^4.15.2",
     "express-fingerprint": "^1.2.2",
     "express-validator": "^6.9.2",
+    "ffmpeg": "0.0.4",
     "hbs": "^4.1.1",
     "helmet": "^3.5.0",
     "http-status": "^1.0.1",
