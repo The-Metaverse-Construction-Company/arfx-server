@@ -43,7 +43,6 @@ import { TOKEN_TYPE } from '../api/utils/constants';
 import AzureADConfig  from '../config/azure-ad'
 import RedisClient from './redis'
 
-
 const jwtOptions = {
   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
@@ -89,6 +88,7 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
     const user = await userDetails()
       .findByAzureAdUserId(data.oid)
       .catch(async (err) => {
+        console.log('data :>> ', data);
         if (err.message === 'No data found.') {
           const email = data.preferred_username ?? (data.emails && data.emails.length >= 1) ? data.emails[0] : ''
           if (!email) {

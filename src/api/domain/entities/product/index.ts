@@ -32,6 +32,7 @@ export const ProductCoreEntity = ({
     public previewVideo!: IProductBlobProperties
     public previewImage!: IProductBlobProperties
     public thumbnail!: IProductBlobProperties
+    public previewGif!: IProductBlobProperties
     constructor ({
       name,
       title,
@@ -40,6 +41,7 @@ export const ProductCoreEntity = ({
       previewImage,
       thumbnail,
       previewVideo,
+      previewGif,
       discountPercentage,
       price,
       _id,
@@ -87,6 +89,7 @@ export const ProductCoreEntity = ({
       this.previewImage = previewImage
       this.previewVideo = previewVideo
       this.thumbnail = thumbnail
+      this.previewGif = previewGif
       this.discountPercentage = discountPercentage
       this.price = price
     }
@@ -121,6 +124,7 @@ export default ({
       previewVideo = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       previewImage = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       thumbnail = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
+      previewGif = {blobURL: '', originalFilepath: '', state: PRODUCT_UPLOAD_BLOB_STATES.PENDING},
       title = '',
       published = true,
       deleted = false,
@@ -140,6 +144,7 @@ export default ({
         previewImage,
         previewVideo,
         thumbnail,
+        previewGif,
         discountPercentage,
         price
       })

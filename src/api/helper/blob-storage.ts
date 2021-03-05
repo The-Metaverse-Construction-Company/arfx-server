@@ -23,7 +23,7 @@ const blobStorage = {
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
         try {
-          if ((NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION)) {
+          // if ((NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION)) {
             // uploading the file thru cloud
             // upload the file and run it thru background.
             const fileReadStream = fs.createReadStream(file)
@@ -36,13 +36,12 @@ const blobStorage = {
               .finally(() => {
                 callback(bbc.url)
                 resolve(bbc.url)
-                console.log('Removing blob file.');
               })
             blobLoc = bbc.url
-          } else {
-            callback(blobLoc)
-            resolve(blobLoc)
-          }
+          // } else {
+          //   callback(blobLoc)
+          //   resolve(blobLoc)
+          // }
           // resolve(blobLoc)
         } catch (error) {
           console.log('failed to upload. Error: ', error);
