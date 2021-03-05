@@ -53,6 +53,7 @@ export const ProductCoreRepositotyModelObj = {
   previewImage: ProductBlobObject,
   previewVideo: ProductBlobObject,
   thumbnail: ProductBlobObject,
+  previewGif: ProductBlobObject,
   price: {
     type: Number,
     default: 0,

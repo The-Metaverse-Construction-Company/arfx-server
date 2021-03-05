@@ -17,6 +17,7 @@ export interface IProductBlob {
   previewVideo: IProductBlobProperties // preview clip URL,
   previewImage: IProductBlobProperties // preview image of the product,
   thumbnail: IProductBlobProperties // preview image of the product,
+  previewGif: IProductBlobProperties // preview image of the product,
 }
 export interface IProductParams {
   name: string // some internal name

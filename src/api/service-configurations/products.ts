@@ -26,12 +26,14 @@ import {
  */
 import BlobStorage from '../helper/blob-storage'
 import ProductImageResize from '../helper/image-resize'
+import generateGIFFromVideo from '../helper/gif-generator'
 import { validateProductTotalPrice } from '../helper/validate-product-total-price'
 export const uploadProductBlobService = () => (
   new UploadProductBlobService({
     fileUploader: BlobStorage,
     imageResizer: ProductImageResize,
     repositoryGateway: new ProductRepository(),
+    generateGifFromVideo: generateGIFFromVideo
   })
 )
 export const updateProductBlobService = () => (
