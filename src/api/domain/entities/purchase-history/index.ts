@@ -42,6 +42,7 @@ export default ({
       contentZip,
       previewImage,
       previewVideo,
+      previewGif,
       thumbnail,
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
@@ -54,6 +55,7 @@ export default ({
         previewImage,
         previewVideo,
         thumbnail,
+        previewGif,
         discountPercentage,
         price
       })

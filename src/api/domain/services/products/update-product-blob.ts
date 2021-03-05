@@ -26,7 +26,9 @@ import {
  * @general_interfaces
  */
 import { IGeneralServiceDependencies } from '../../interfaces';
-
+interface IProductBlobResponseProperties extends IProductBlobProperties {
+  localFilepath: string
+}
 interface IFileSystem {
   removeOne(filepath: string): void
 }
@@ -36,23 +38,32 @@ interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGa
   fileSystem: IFileSystem
 }
 export class UpdateProductBlobService {
-  constructor(protected dependencies: IDependencies) {
-  }
+  constructor(protected dependencies: IDependencies) {}
   /**
    * upload each blob.
    * @param productId 
    * @param productBlobType 
    * @param blobLocalPath 
    */
-  private uploadBlob = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
-    let blobProperty = <IProductBlobProperties>{
-      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING
+  private uploadBlobToBlobStorage = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
+    let blobProperty = <IProductBlobResponseProperties>{
+      state: PRODUCT_UPLOAD_BLOB_STATES.PENDING,
+      localFilepath: '',
+      originalFilepath: '',
+      blobURL: '',
     }
     try {
-      const response = await this.dependencies.uploadProductBlobService.uploadOne(productId, productBlobType, blobLocalPath)
+      const {
+        blobURL,
+        localFilepath,
+        originalFilepath,
+        uploadToStorageStatus
+      } = await this.dependencies.uploadProductBlobService.uploadOne(productId, productBlobType, blobLocalPath)
       blobProperty = {
-        ...response,
-        state: PRODUCT_UPLOAD_BLOB_STATES.COMPLETED
+        blobURL,
+        originalFilepath,
+        localFilepath,
+        state: uploadToStorageStatus ? PRODUCT_UPLOAD_BLOB_STATES.COMPLETED : PRODUCT_UPLOAD_BLOB_STATES.FAILED
       }
     } catch (error) {
       blobProperty.state = PRODUCT_UPLOAD_BLOB_STATES.FAILED
@@ -63,6 +74,7 @@ export class UpdateProductBlobService {
    * update the product blobs
    *  - previewImage
    *  - previewVideo
+   *  - previewGif
    *  - thumbnail
    *  - contentZip
    * @param productBody 
@@ -70,11 +82,10 @@ export class UpdateProductBlobService {
   public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
     try {
       const product = await this.dependencies.productDetailService.findOne(productId)
-      let blobProperty = await this.uploadBlob(productId, productBlobType, blobLocalPath)
+      let {localFilepath, ...blobProperty} = await this.uploadBlobToBlobStorage(productId, productBlobType, blobLocalPath)
       const propertiesToUpdate = <Partial<IProductEntity>>{}
       if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_IMAGE) {
         // call another one for the thumbnail
-        const thumbnailBlobProperty = await this.uploadBlob(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, blobLocalPath)
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.previewImage = blobProperty
         } else {
@@ -83,6 +94,7 @@ export class UpdateProductBlobService {
             state: blobProperty.state
           }
         }
+        const {localFilepath, ...thumbnailBlobProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, blobLocalPath)
         if (thumbnailBlobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.thumbnail = thumbnailBlobProperty
         } else {
@@ -91,14 +103,25 @@ export class UpdateProductBlobService {
             state: blobProperty.state
           }
         }
+        this.dependencies.fileSystem.removeOne(localFilepath)
       } else if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_VIDEO) {
-        if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED) {
+        if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
+          propertiesToUpdate.previewVideo = blobProperty
+          const {localFilepath, ...previewGifProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.PREVIEW_GIF, blobLocalPath)
+          if (previewGifProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
+            propertiesToUpdate.previewGif = previewGifProperty
+          } else {
+            propertiesToUpdate.previewGif = {
+              ...product.previewGif,
+              state: blobProperty.state
+            }
+          }
+          this.dependencies.fileSystem.removeOne(localFilepath)
+        } else {
           propertiesToUpdate.previewVideo = {
             ...product.previewVideo,
             state: blobProperty.state
           }
-        } else {
-          propertiesToUpdate.previewVideo = blobProperty
         }
       } else if (productBlobType === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
@@ -119,6 +142,7 @@ export class UpdateProductBlobService {
       } else {
         throw new Error('Invalid blob type.')
       }
+      // initiate to run the business rules validations
       const productEntity = new ProductEntity({
         ...product,
         ...propertiesToUpdate
@@ -128,19 +152,22 @@ export class UpdateProductBlobService {
         if ((productEntity.contentZip.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
           productEntity.previewImage.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
           productEntity.previewVideo.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
+          productEntity.previewGif.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED &&
           productEntity.thumbnail.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED)) {
             propertiesToUpdate.state = PRODUCT_STATES.COMPLETED
           } else if ((productEntity.contentZip.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED ||
             productEntity.previewImage.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED ||
             productEntity.previewVideo.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED ||
+            productEntity.previewGif.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED ||
             productEntity.thumbnail.state === PRODUCT_UPLOAD_BLOB_STATES.FAILED)) {
               propertiesToUpdate.state = PRODUCT_STATES.FAILED
           }
       }
+      this.dependencies.fileSystem.removeOne(localFilepath)
+      //update it to our product repository.
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: productId
       }, propertiesToUpdate)
-      this.dependencies.fileSystem.removeOne(blobLocalPath)
       // add logs
       return updatedProduct
     } catch (error) {
