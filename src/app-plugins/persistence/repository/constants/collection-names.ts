@@ -4,4 +4,5 @@ export const COLLECTION_NAMES = {
   PURCHASE_HISTORY: 'purchase_histories',
   USER_PRODUCT: 'user_products',
   USER: 'users',
+  FEATURED_PRODUCT: 'featured_products',
 }

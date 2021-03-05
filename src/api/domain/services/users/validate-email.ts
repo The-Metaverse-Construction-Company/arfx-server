@@ -1,52 +1,47 @@
 import httpStatus from 'http-status'
+/**
+ * @api_error
+ */
 import APIError from '../../../utils/APIError'
-
+/**
+ * @user_entity_interfaces
+ */
 import {
   IUserRepositoryGateway
 } from '../../entities/users'
-
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
+interface IOptions {
+  userId?: string
+}
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
 export class ValidateDuplicateEmailService {
   constructor (protected dependencies: IServiceDependencies) {
   }
-
-  validateOne = async ({
-    email = '',
-    userId = ''
-  }) => {
+  /**
+   * validate user/customer email if already exists on the user repository
+   * @param param0 
+   */
+  public validateOne = async (email: string, option: IOptions = {}) => {
     try {
-      const query = <any>{
-        'email.value': email
-      }
-      // ignore the provided userId on finding duplicate email.
-      // most likely will use on update function
-      if (userId) {
-        query._id = {
-          $ne: userId
-        }
-      }
+      const {
+        userId = ''
+      } = option
       // initiate user entity
       // add catch to handle the built in error on the findOne when no details found.
-      const user = await this.dependencies.repositoryGateway.findOne(query).catch(() => null)
+      const user = await this.dependencies.repositoryGateway.validateEmail(email, {
+        userId
+      })
       if (user) {
-        throw new APIError({
-          message: 'Validation Error',
-          errors: [{
-            field: 'email',
-            location: 'body',
-            messages: ['"email" already exists'],
-          }],
-          status: httpStatus.CONFLICT,
-          isPublic: true
-        });
+        throw new Error('"email" already exists to our repository.')
       }
       //add some logs
       return true
     } catch (error) {
-      console.log('error :>> ', error);
       throw error
     }
   }

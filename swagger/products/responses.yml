@@ -1,0 +1,44 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  responseBody:
+    Product:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+    Products:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/responses/http/success'
+              - type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+    PurchaseProduct:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/responses/http/success'
+              - type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      payment:
+                        type: object
+                        properties:
+                          client_secret: 
+                            type: string
+                            description: 'client_secret that needed to confirm the payment.'
+                            default: ''

@@ -1,0 +1,54 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  models:
+    User:
+      _id:
+        type: string
+        required: true,
+        description: 'id of the user/customer.'
+      name:
+        type: string
+        description: 'fullName or display name of the user/customer.'
+        default: 'John Doe'
+      role:
+        type: string
+        description: 'role name of the user/customer.'
+        default: 'user'
+      password:
+        type: string
+        description: 'password of the user/customer.'
+        default: 'test123'
+      stripeCustomerId:
+        type: string
+        description: 'customerId from payment gateway(stripe).'
+      email:
+        value: 
+          type: string
+          description: 'email address of the user.'
+          default: 'testmail0001@mailnesia.com'
+        verified: 
+          $ref: '#/components/schemas/general/verificationEntity/verified'
+        verifiedAt: 
+          $ref: '#/components/schemas/general/verificationEntity/verifiedAt'
+      emailObj:
+        type: object
+        properties:
+          value: 
+            $ref: '#/components/models/User/email/value'
+          verified: 
+            # $ref: '#/components/models/User/email/verified'
+          verifiedAt: 
+            $ref: '#/components/models/User/email/verifiedAt'
+      mobileNumber:
+        $ref: '#/components/schemas/FieldVerificationEntity'
+      createdAt:
+        $ref: '#/components/schemas/FieldCreatedAt'
+      updatedAt:
+        $ref: '#/components/schemas/FieldUpdatedAt'
+        

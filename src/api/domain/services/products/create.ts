@@ -1,14 +1,36 @@
+/**
+ * @entity_interfaces
+ */
 import {
-  IProdutBody,
-  IProductRepositoryGateway
+  IProductEntity,
+  IProductRepositoryGateway,
+  IProductParams
 } from '../../entities/product'
+/**
+ * @entity
+ */
 import {
   ProductEntity
 } from '../../entities'
-import { IGeneralServiceDependencies, IUploader } from '../../interfaces';
-
+/**
+ * @general_interfaces
+ */
+import {
+  IGeneralServiceDependencies, 
+  IValidateProductTotalAmount
+} from '../../interfaces';
+/**
+ * @services
+ */
+import {UploadProductBlobService} from './upload-blob'
+export interface _IProdutParams extends IProductParams, Pick<IProductEntity, 'published'> {
+  contentZip: string,
+  previewImage: string,
+  previewVideo: string,
+}
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
-  fileUploader: IUploader
+  uploadProductBlobService: UploadProductBlobService
+  validateProductTotalAmount: IValidateProductTotalAmount
 }
 export class CreateProductService {
   constructor(protected dependencies: IDependencies) {
@@ -18,16 +40,24 @@ export class CreateProductService {
    * @param productBody 
    *  - filepath: path of the file that uploaded on the server.
    */
-  public createOne = async (productBody: IProdutBody & {filepath: string}, adminAccountId: string) => {
+  public createOne = async (productBody: _IProdutParams, adminAccountId: string) => {
     try {
-      const {filepath} = productBody
+      const {contentZip, previewVideo, previewImage, discountPercentage = 0, published = true} = productBody
       const newProductEntity = new ProductEntity({
-        ...productBody,
+        name: productBody.name,
+        description: productBody.description,
+        title: productBody.title,
         adminAccountId: adminAccountId,
-        contentURL: filepath
+        price: productBody.price,
+        published,
+        discountPercentage
       })
-      // upload to cloud storage provider
-      await this.dependencies.fileUploader.upload(newProductEntity._id, filepath)
+      // calculate the total price and validate it if its not below $0.50 usd.
+      // payment gateway provider have a limit of $0.50 as it's minimum amount and with a maximum amount of $999,999.99 for the transaction.
+      // reference link: https://support.chargebee.com/support/solutions/articles/228511-transaction-amount-limit-in-stripe#:~:text=The%20minimum%20amount%20for%20processing,Click%20Here%20for%20other%20currencies.
+      if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
+        throw new Error('total price must not be below $0.50 usd.')
+      }
       // insert it thru the repo.
       await this.dependencies.repositoryGateway.insertOne(newProductEntity)
       // add logs

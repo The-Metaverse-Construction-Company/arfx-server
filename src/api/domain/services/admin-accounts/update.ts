@@ -1,16 +1,31 @@
+/**
+ * @admin_entitiy
+ */
 import {
   AdminAccountsEntity
 } from '../../entities'
-import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
-import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @admin_entity_interfaces
+ */
 import { 
   IAdminAccountRepositoryGateway,
   IAdminAccountsParams
  } from '../../entities/admin-accounts'
+/**
+ * @general_interfaces
+ */
+import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
+
+ /**
+  * @admin_services
+  */
+ import {
+  AdminAccountValidateEmailService
+} from './index'
 interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
   // generateToken: IGenerateToken
   // sendEmail(userId: string, token: string): Promise<any>
-  // validateEmail(data: {email: string, userId?: string}): Promise<any>
+  adminAccountValidateEmailService: AdminAccountValidateEmailService
 }
 export class UpdateAdminAccountService {
   constructor (protected deps: IServiceDependencies) {
@@ -23,9 +38,6 @@ export class UpdateAdminAccountService {
   public updateOne = async (adminAccountId: string, requestParams: IAdminAccountsParams) => {
     try {
       // initiate admin entity to run the validation for business rules.
-      const adminAccount = await this.deps.repositoryGateway.findOne({
-        _id: adminAccountId
-      })
       const newAdminAccount = new AdminAccountsEntity({
         _id: adminAccountId,
         ...requestParams,
@@ -35,6 +47,8 @@ export class UpdateAdminAccountService {
           verified: false
         },
       })
+      //validate email to repo and get the admin account details
+      const adminAccount = await this.deps.adminAccountValidateEmailService.validateOne(newAdminAccount.email.value, newAdminAccount._id)
       // check duplicate email.
       // await this.deps.validateEmail({email: newAdminAccount.email.value})
       // insert to repository.
@@ -45,9 +59,9 @@ export class UpdateAdminAccountService {
         lastName: newAdminAccount.lastName,
         roleLevel: newAdminAccount.roleLevel,
         //@ts-expect-error
-        "email.value": newAdminAccount.email,
+        "email.value": newAdminAccount.email.value,
         // if its detect that the email is changed, then set the verified to false, if not, then just set the old value in it.
-        "email.verified": adminAccount.email.value !== newAdminAccount.email.value ? false : adminAccount.email.verified,
+        "email.verified": adminAccount && (adminAccount.email.value === newAdminAccount.email.value) ? adminAccount.email.verified : false,
       })
       // const token = await this.deps.generateToken({
       //   referenceId: newAdminAccount._id,

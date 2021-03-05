@@ -12,7 +12,8 @@ import {
   CreateAdminAccountService,
   UpdateAdminAccountService,
   AdminAccountSignInService,
-  AdminAccountVerifyAuthTokenService
+  AdminAccountVerifyAuthTokenService,
+  AdminAccountValidateEmailService
 } from '../domain/services/admin-accounts'
 /**
  * @repository
@@ -28,9 +29,15 @@ import {
 import AuthToken from '../helper/admin-account-token'
 import {compare} from '../helper/encryptor'
 
+export const adminAccountValidateEmailService = () => (
+  new AdminAccountValidateEmailService({
+    repositoryGateway: new AdminAccountRepository(),
+  })
+)
 export const createAdminAccountService = (redis: RedisClient) => (
   new CreateAdminAccountService({
     repositoryGateway: new AdminAccountRepository(),
+    adminAccountValidateEmailService: adminAccountValidateEmailService()
     // generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     // sendEmail: sendVerificationEmail().sendOne,
     // validateEmail: validateUserEmail().validateOne
@@ -39,6 +46,7 @@ export const createAdminAccountService = (redis: RedisClient) => (
 export const updateAdminAccountService = (redis: RedisClient) => (
   new UpdateAdminAccountService({
     repositoryGateway: new AdminAccountRepository(),
+    adminAccountValidateEmailService: adminAccountValidateEmailService()
     // generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     // sendEmail: sendVerificationEmail().sendOne,
     // validateEmail: validateUserEmail().validateOne

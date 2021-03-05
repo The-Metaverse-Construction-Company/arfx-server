@@ -3,10 +3,13 @@ dist
 package-lock.json
 # uploaded product content
 uploaded
+public
 # Environment variables
 .env
 .env.local
 .env.example
+#electron app released version
+electron-released-version
 # Logs
 logs
 *.log

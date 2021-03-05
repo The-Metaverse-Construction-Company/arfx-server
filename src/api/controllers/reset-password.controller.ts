@@ -16,6 +16,7 @@ import {
   successReponse
 } from '../helper/http-response'
 import { TOKEN_TYPE } from '../utils/constants'
+import AppError from '../utils/response-error'
 
 
 export const verifyResetPasswordMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +28,10 @@ export const verifyResetPasswordMiddleWare = async (req: Request, res: Response,
     res.locals.resetPasswordData = response
     next()
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 export const sendResetPasswordRoute = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,14 +41,20 @@ export const sendResetPasswordRoute = async (req: Request, res: Response, next: 
     const response = await sendResetPassword(redisPublish).resetOne(email)
     res.status(httpStatus.OK).json(successReponse(response));
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 export const verifyResetPasswordRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.status(httpStatus.OK).json(successReponse(res.locals.resetPasswordData));
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
@@ -58,6 +68,9 @@ export const updateResetPasswordRoute = async (req: Request, res: Response, next
       .updateOne(userId, password, token)
     res.status(httpStatus.OK).json(successReponse(response));
   } catch (error) {
-    return next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

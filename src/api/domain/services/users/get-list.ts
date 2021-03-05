@@ -1,33 +1,32 @@
+/**
+ * @user_interfaces
+ */
 import {
   IUserRepositoryGateway
 } from '../../entities/users'
-
+/**
+ * @general_repository_interfaces
+ */
 import { IPaginationParameters } from '../../interfaces/general-repository-gateway'
-
+/**
+ * @general_interfaces
+ */
 import {
   IGeneralServiceDependencies
 } from '../../interfaces'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{}
-// interface IPaginationListParams {
-//   page: number
-//   perPage: number,
-//   name: string
-//   email: string
-//   role: string
-// }
 export class UserListService {
   constructor (protected dependencies: IServiceDependencies) {
   }
-  public getList = async ({pageNo = 1, limit = 10, searchText = ''}: Partial<IPaginationParameters>) => {
+  /**
+   * user product list
+   * @param filterQuery 
+   */
+  public getList = async (filterQuery: Partial<IPaginationParameters>) => {
     try {
-      const query = {
-        name: new RegExp(searchText, 'i'),
-        "email.value": new RegExp(searchText, 'i')
-      }
-      const list = await this.dependencies.repositoryGateway.findAll(query, {pageNo, limit}, {
-        password: 0
-      })
-      return list
+      // get pagination list of the user
+      const response = await this.dependencies.repositoryGateway.paginationList(filterQuery)
+      return response
     } catch (error) {
       console.log('error :>> ', error);
       throw error

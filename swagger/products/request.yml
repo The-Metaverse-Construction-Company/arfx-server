@@ -1,0 +1,77 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  requestBody:
+    Product:
+      form:
+        content:
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ProductParam'
+                # - type: object
+                #   properties:
+                #     contentZip:
+                #       type: string
+                #       format: binary
+                #     previewImage:
+                #       type: string
+                #       format: binary
+                #     previewVideo:
+                #       type: string
+                #       format: binary
+      published:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: 
+                  type: boolean
+                  default: false
+                  example: true
+      purchase: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  $ref: '#/components/models/Product/_id'
+                keepCardDetails:
+                  type: boolean
+                  default: false
+                  description: status or toggle if will save the card details upon checkout.
+                  example: false
+      blobUploader: 
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                blob:
+                  type: string
+                  format: binary
+  requestParams:
+    Product:
+      id:
+        in: path
+        name: productId
+        schema:
+          type: string
+          required: true
+      blobType:
+        in: path
+        name: blobType
+        schema:
+          type: string
+          required: true
+          enum:
+            - 'content-zip'
+            - 'preview-image'
+            - 'preview-video'

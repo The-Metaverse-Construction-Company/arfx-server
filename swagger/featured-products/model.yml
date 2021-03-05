@@ -1,0 +1,28 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  models:
+    FeaturedProduct:
+      _id:
+        $ref: '#/components/schemas/FieldId'
+      productId:
+        type: string
+        description: "product id that tag to this banner"
+      active:
+        type: boolean
+        description: "a flag or toggle for the active banners."
+      indexNo:
+        type: number
+        description: "sortIndex of the banner."
+      adminAccountId:
+        type: string
+        description: "admin account who created the banner."
+      createdAt:
+        $ref: '#/components/schemas/FieldCreatedAt'
+      updatedAt:
+        $ref: '#/components/schemas/FieldUpdatedAt'

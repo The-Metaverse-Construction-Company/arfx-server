@@ -1,0 +1,15 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  requestParams:
+    PurchaseHistory:
+      _id:
+        in: path
+        name: purchaseHistoryId
+        schema:
+          $ref: '/components/models/PurchaseHistory/_id'

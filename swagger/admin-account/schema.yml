@@ -1,0 +1,41 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    AdminAccountParam:
+      allOf:
+        - $ref: '#/components/schemas/AdminAccountBody'
+        - type: object
+          properties:
+            email: 
+              $ref: '#/components/models/AdminAccount/email/value'
+    AdminAccountBody:
+      type: object
+      properties:
+        firstName:
+          $ref: '#/components/models/AdminAccount/firstName'
+        lastName:
+          $ref: '#/components/models/AdminAccount/lastName'
+        password:
+          $ref: '#/components/models/AdminAccount/password'
+        roleLevel:
+          $ref: '#/components/models/AdminAccount/roleLevel'
+    AdminAccount:
+      allOf:
+      - $ref: '#/components/schemas/AdminAccountBody'
+      - type: object
+        properties:
+          _id:
+            $ref: '#/components/models/Product/_id'
+          adminAccountId:
+            $ref: '#/components/models/AdminAccount/adminAccountId'
+          createdAt:
+            $ref: '#/components/schemas/FieldCreatedAt'
+          updatedAt:
+            $ref: '#/components/schemas/FieldUpdatedAt'
+  

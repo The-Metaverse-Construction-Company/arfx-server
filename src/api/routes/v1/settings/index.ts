@@ -5,17 +5,16 @@ import PaymentCardRoute from './payment-card.route'
 import * as UserSettingRoute from '../../../controllers/user-settings/index.controller'
 const router = express.Router({mergeParams: true});
 router.use('/payment-card', 
-  authorize(LOGGED_USER),
   PaymentCardRoute)
-/**
+/**x
  * @swagger
  * /v1/users/{userId}/settings/password:
  *  patch:
  *    summary: "Set/update new user password."
  *    tags:
- *      - "User-Settings"
+ *      - "User Settings"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *    requestBody:
@@ -25,7 +24,6 @@ router.use('/payment-card',
  *        $ref: '#/components/responses/User/Detail'
  */
 router.patch('/password', 
-  authorize(LOGGED_USER),
   UserSettingRoute.userChangePasswordRoute)
 
 export default router;

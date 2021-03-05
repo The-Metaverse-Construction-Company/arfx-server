@@ -1,17 +1,48 @@
-import express, {Request, Response} from 'express'
-import validate from 'express-validation'
-import { authorize } from '../../middlewares/auth'
+import express from 'express'
 import * as controller from '../../controllers/auth.controller'
-import {LOGGED_USER, oAuth as oAuthLogin} from '../../middlewares/auth'
-
-import {
-  login,
-  register,
-  oAuth,
-  refresh,
+import { authAzureAD, authorize } from '../../middlewares/auth'
+import {signInValidationPipeline
 } from '../../validations/auth.validation'
+import { requestValidatorMiddleware } from '../../validations'
+import httpStatus from 'http-status'
+import { successReponse } from '../../helper/http-response'
 
 const router = express.Router();
+router.route('/')
+/**
+ * @swagger
+ *  /v1/auth:
+ *    get:
+ *      tags: 
+ *      - "Authentication"
+ *      security:
+ *      - userBearerAuth: []
+ *      summary: Validating access token.
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/User/Detail'
+ */
+  .get(authorize(), (req, res, next) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
+/**
+ * @swagger
+ *  /v1/auth/azure:
+ *    post:
+ *      tags: 
+ *      - "Authentication"
+ *      summary: Authenticating azure token or register new user based on the
+ *      security:
+ *       - userBearerAuth: []
+ *      responses:
+ *        '200':
+ *          $ref: '#/components/responses/User/Detail'
+ */
+router.route('/azure')
+  .post(authAzureAD(),
+  (req, res) => {
+    res.status(httpStatus.OK).send(successReponse(req.user))
+  })
 //Routes
 /**
  * @swagger
@@ -24,10 +55,14 @@ const router = express.Router();
  *        $ref: '#/components/requestBody/User/signIn'
  *      responses:
  *        '200':
- *          $ref: '#/components/responses/SignIn'
+ *          $ref: '#/components/responses/User/Detail'
  */
 router.route('/login')
-  .post(validate(login), controller.login)
+  .post(
+    signInValidationPipeline,
+    requestValidatorMiddleware,
+    controller.userSignInRoute
+  )
 /**
  * @swagger
  *  /v1/auth/sign-out:
@@ -35,79 +70,19 @@ router.route('/login')
  *      summary: Sign-out/logout the current logged-in user based on the access token used.
  *      tags: 
  *        - "Authentication"
- *      parameters:
- *        - $ref: "#/components/requestHeaders/authorizationParam"
+ *      security:
+ *        - userBearerAuth: []
  *      responses:
  *        '200':
  *          $ref: '#/components/responses/SignOut'
  */
 router.route('/sign-out')
   .post(controller.userSignOutRoute)
-
-
-/**
- * @api {post} v1/auth/refresh-token Refresh Token
- * @apiDescription Refresh expired accessToken
- * @apiVersion 1.0.0
- * @apiName RefreshToken
- * @apiGroup Auth
- * @apiPermission public
- *
- * @apiParam  {String}  email         User's email
- * @apiParam  {String}  refreshToken  Refresh token aquired when user logged in
- *
- * @apiSuccess {String}  tokenType     Access Token's type
- * @apiSuccess {String}  accessToken   Authorization Token
- * @apiSuccess {String}  refreshToken  Token to get a new accessToken after expiration time
- * @apiSuccess {Number}  expiresIn     Access Token's expiration time in miliseconds
- *
- * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
- * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or refreshToken
- */
-router.route('/refresh-token')
-  .post(validate(refresh), controller.refresh);
-
-/**
- * @api {post} v1/auth/facebook Facebook Login
- * @apiDescription Login with facebook. Creates a new user if it does not exist
- * @apiVersion 1.0.0
- * @apiName FacebookLogin
- * @apiGroup Auth
- * @apiPermission public
- *
- * @apiParam  {String}  access_token  Facebook's access_token
- *
- * @apiSuccess {String}  tokenType     Access Token's type
- * @apiSuccess {String}  accessToken   Authorization Token
- * @apiSuccess {String}  refreshToken  Token to get a new accessToken after expiration time
- * @apiSuccess {Number}  expiresIn     Access Token's expiration time in miliseconds
- *
- * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
- * @apiError (Unauthorized 401)  Unauthorized    Incorrect access_token
- */
-router.route('/facebook')
-  .post(validate(oAuth), oAuthLogin('facebook'), controller.oAuth);
-
-/**
- * @api {post} v1/auth/google Google Login
- * @apiDescription Login with google. Creates a new user if it does not exist
- * @apiVersion 1.0.0
- * @apiName GoogleLogin
- * @apiGroup Auth
- * @apiPermission public
- *
- * @apiParam  {String}  access_token  Google's access_token
- *
- * @apiSuccess {String}  tokenType     Access Token's type
- * @apiSuccess {String}  accessToken   Authorization Token
- * @apiSuccess {String}  refreshToken  Token to get a new accpessToken after expiration time
- * @apiSuccess {Number}  expiresIn     Access Token's expiration time in miliseconds
- *
- * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
- * @apiError (Unauthorized 401)  Unauthorized    Incorrect access_token
- */
-router.route('/google')
-  .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
-
+// router.route('/refresh-token')
+//   .post(validate(refresh), controller.refresh);
+// router.route('/facebook')
+//   .post(validate(oAuth), oAuthLogin('facebook'), controller.oAuth);
+// router.route('/google')
+//   .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
 
 export default router;

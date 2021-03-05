@@ -1,4 +1,10 @@
+/**
+ * @general_interfaces
+ */
 import { IVerifyToken } from '../../interfaces'
+/**
+ * @services
+ */
 import {UserDetailsService} from './index'
 interface Deps {
   verifyToken: IVerifyToken

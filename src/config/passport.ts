@@ -1,25 +1,49 @@
 /**
  * @libraries
  */
-import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
+import {
+  Strategy as JwtStrategy,
+  ExtractJwt
+} from 'passport-jwt';
+import {
+  BearerStrategy,
+} from 'passport-azure-ad'
 import {Request} from 'express'
+/**
+ * @env_variables
+ */
 import {
   ADMIN_JWT_ACCESS_TOKEN_SECRET,
   JWT_ACCESS_TOKEN_SECRET
-} from '../api/utils/constants'
-// import User from '../api/models/user.model';
+} from '../config/vars'
 /**
  * @services
  */
 import {
-  userVerifyToken
+  userVerifyToken,
+  verifyUserService,
+  createUserService,
+  userDetails
 } from '../api/service-configurations/users'
+/**
+ * @app_entities
+ */
+import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
+import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
 import {
   adminAccountVerifyAuthTokenService
 } from '../api/service-configurations/admin-accounts'
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../api/utils/constants';
+/**
+ * @config_variable
+ */
+import AzureADConfig  from '../config/azure-ad'
 import RedisClient from './redis'
-import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
+
+
 const jwtOptions = {
   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
@@ -56,6 +80,54 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
     return done(error, false);
   }
 };
+const azureADAuthHandler = async (req: any, data: any, done: any = () => null) => {
+  try {
+    const accessToken = req.headers['authorization'].split(' ')[1]
+    if (!data.oid) {
+      throw new Error('No user auth found.')
+    }
+    const user = await userDetails()
+      .findByAzureAdUserId(data.oid)
+      .catch(async (err) => {
+        if (err.message === 'No data found.') {
+          const email = data.preferred_username ?? (data.emails && data.emails.length >= 1) ? data.emails[0] : ''
+          if (!email) {
+            throw new Error('No primary email found.')
+          }
+          const fullName = data.name && data.name !== 'unknown' ? data.name : `${data.given_name} ${data.family_name}`
+          const newUser = await createUserService()
+            .createOne({
+              name: fullName,
+              email: email,
+              mobileNumber: '',
+              password: '',
+              azureAdUserId: data.oid,
+              role: ALLOWED_USER_ROLE.USER
+            })
+            // set the account from azure ad verified.
+          const user  = await verifyUserService()
+            .verifyOne(newUser._id)
+          return user
+        }
+      })
+    done(null, user)
+    return
+  } catch (error) {
+    console.log('error :>> ', error);
+    done(error, null, {})
+  }
+  // try {
+  //   const {authorization = ''} = req.headers
+  //   const accessToken = authorization.split(' ')[1]
+  //   const adminAccount = await adminAccountVerifyAuthTokenService(RedisClient)
+  //     .verifyOne(accessToken, ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN)
+  //   if (adminAccount) return done(null, JSON.parse(JSON.stringify({...adminAccount, isAdmin: true})));
+  //   return done(null, false);
+  // } catch (error) {
+  //   console.log('error :>> ', error);
+  //   return done(error, false);
+  // }
+};
 
 // const oAuth = (service: string) => async (token: string, done: any = () => null) => {
 //   try {
@@ -70,5 +142,6 @@ const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = (
 // };
 export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
 export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
+export const AzureADAuthJWT = new BearerStrategy(AzureADConfig, azureADAuthHandler);
 // export const facebook = new BearerStrategy(oAuth('facebook'));
 // export const google = new BearerStrategy(oAuth('google'));

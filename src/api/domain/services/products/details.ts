@@ -1,20 +1,27 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductRepositoryGateway
 } from '../../entities/product'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class ProductDetails {
+export class ProductDetailService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create new product.
-   * @param productBody 
+   * get product details.
+   * @param productId 
    */
   public findOne = async (productId: string) => {
     try {
-      // get list in the repo
+      // get product details.
       const product = await this.dependencies.repositoryGateway.findOne({
-        _id: productId
+        _id: productId,
+        deleted: false
       })
       return product
     } catch (error) {

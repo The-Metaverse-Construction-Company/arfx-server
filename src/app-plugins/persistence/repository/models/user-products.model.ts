@@ -6,7 +6,7 @@ import {
   IUserProductsEntity
 } from '../../../../api/domain/entities/user-products'
 import { COLLECTION_NAMES } from '../constants/collection-names'
-
+import {ProductBlobObject} from './product.model'
 export interface IUserProductsRepositoryModel extends Document, IUserProductsEntity {
   _id: any
 }
@@ -16,34 +16,35 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
     type: String,
     default: '',
   },
-  name: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  title: {
-    type: String,
-    default: '',
-    required: true,
-  },
-  contentURL: {
-    type: String,
-    default: ''
-  },
-  description: {
-    type: String,
-    default: '',
-    required: true,
-  },
+  // name: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
+  // title: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
+  // contentZip: ProductBlobObject,
+  // previewImage: ProductBlobObject,
+  // previewVideo: ProductBlobObject,
+  // description: {
+  //   type: String,
+  //   default: '',
+  //   required: true,
+  // },
   productId: {
     type: String,
     default: '',
     required: true,
+    ref: COLLECTION_NAMES.PRODUCT
   },
   userId: {
     type: String,
     default: '',
     required: true,
+    ref: COLLECTION_NAMES.USER
   },
   createdAt: {
     type: Number,
@@ -56,4 +57,7 @@ const RepositoryModel = <Record<keyof IUserProductsEntity, SchemaTypeOpts<Object
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IUserProductsRepositoryModel>(COLLECTION_NAMES.USER_PRODUCT, RepositorySchema)

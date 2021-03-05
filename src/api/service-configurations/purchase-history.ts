@@ -1,18 +1,21 @@
 import PaymentGateway from '../../config/payment-gateway'
 import {
   PurchaseProductService,
-  PurchaseHistoryDetails,
-  PurchaseHistoryList,
-  UpdatePurchaseStateService
+  PurchaseHistoryDetailsService,
+  PurchaseHistoryListService,
+  UpdatePurchaseStateService,
+  UpdatePurchasePaymentChargeService
 } from '../domain/services/purchase-history'
 import {
-  productDetails
+  productDetailService,
+  updateProductPurchaseCountService
 } from './products'
 import {
   userDetails
 } from './users'
 import {
-  createUserProductsService
+  createUserProductsService,
+  userProductDetailsService
 } from './user-products'
 
 import {
@@ -22,27 +25,36 @@ import {
 export const purchaseProductService = () => (
   new PurchaseProductService({
     repositoryGateway: new PurchaseHistoryRepository(),
-    productDetailsService: productDetails(),
+    productDetailsService: productDetailService(),
     userDetailsService: userDetails(),
     createUserProductsService: createUserProductsService(),
+    userProductDetailsService: userProductDetailsService(),
     payment: {
-      chargeCustomer: PaymentGateway.customer.charge,
+      createIntent: PaymentGateway.paymentIntent.create,
+      retrieveIntent: PaymentGateway.paymentIntent.retrieve,
       setupCustomerPaymentIntent: PaymentGateway.customer.setupIntents
     }
   })
 )
 export const updatePurchaseStateService = () => (
   new UpdatePurchaseStateService({
+    repositoryGateway: new PurchaseHistoryRepository(),
+    createUserProductsService: createUserProductsService(),
+    updateProductPurchaseCountService: updateProductPurchaseCountService()
+  })
+)
+export const updatePurchasePaymentChargeService = () => (
+  new UpdatePurchasePaymentChargeService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )
 export const purchaseHistoryDetails = () => (
-  new PurchaseHistoryDetails({
+  new PurchaseHistoryDetailsService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )
 export const purchaseHistoryList = () => (
-  new PurchaseHistoryList({
+  new PurchaseHistoryListService({
     repositoryGateway: new PurchaseHistoryRepository()
   })
 )

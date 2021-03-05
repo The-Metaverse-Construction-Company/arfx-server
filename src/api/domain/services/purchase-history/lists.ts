@@ -1,21 +1,26 @@
+/**
+ * @entity_interfaces
+ */
 import {
-  IPurchaseHistorryRepositoryGateway
+  IPurchaseHistorryRepositoryGateway,
+  IPurchaseHistoryPaginationListParams
 } from '../../entities/purchase-history'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
-interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
-export class PurchaseHistoryList {
-  constructor(protected dependencies: IDependencies) {
+interface IServiceDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {}
+export class PurchaseHistoryListService {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
-   * get purchase history lists
+   * get purchase history list.
    * @param queryParams 
    */
-  public getList = async (userId: string, queryParams?: any) => {
+  public getList = async (queryParams: IPurchaseHistoryPaginationListParams) => {
     try {
       // get list in the repo
-      const purchaseHistoryList = await this.dependencies.repositoryGateway.findAll({
-        userId
-      })
+      const purchaseHistoryList = await this.dependencies.repositoryGateway.getPaginationList(queryParams)
       return purchaseHistoryList
     } catch (error) {
       console.log('failed to create product. \nError :>> ', error);

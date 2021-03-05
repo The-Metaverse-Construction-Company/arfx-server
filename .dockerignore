@@ -13,3 +13,5 @@ Dockerfile
 .gitlab-ci.yml
 .env.local
 .env.example
+## electron desktop app released version
+electron-released-version

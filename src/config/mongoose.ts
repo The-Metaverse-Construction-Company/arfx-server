@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
-const logger = require('./../config/logger');
-const { mongo, env } = require('./vars');
+import { NODE_ENVIRONMENTS } from '../api/utils/constants';
+import logger from './../config/logger'
+import { mongo, NODE_ENV } from "./vars"
 // set mongoose Promise to Bluebird
-//@ts-expect-error
+//@ts-ignore
 mongoose.Promise = Promise;
 
 // Exit application on error
@@ -12,7 +13,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 // print mongoose logs in dev env
-if (env === 'development') {
+if (NODE_ENV === NODE_ENVIRONMENTS.DEVELOPMENT) {
   mongoose.set('debug', true);
 }
 
@@ -24,15 +25,23 @@ if (env === 'development') {
  */
 export default {
   connect: () => {
+    console.log('mongo.uri :>> ', mongo.uri);
     mongoose
       .connect(mongo.uri, {
         useCreateIndex: true,
-        keepAlive: true,
+        // keepAlive: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
       })
-      .then(() => console.log('mongoDB connected...'));
+      .then(() => console.log('mongoDB connected...'))
+      .catch((err) => {
+        console.log('failed to connect thru database. ERROR: ', err.message);
+      });
     return mongoose.connection;
+  },
+  close: () => {
+    mongoose.connection.close()
+    return true
   }
 }

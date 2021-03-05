@@ -3,9 +3,8 @@ import {
 Request, Response
 } from 'express'
 import httpStatus from 'http-status'
-import expressValidation from 'express-validation'
 import APIError from '../utils/APIError'
-import { env } from '../../config/vars'
+import { NODE_ENV } from '../../config/vars'
 
 /**
  * Error handler. Send stacktrace only during development
@@ -13,45 +12,50 @@ import { env } from '../../config/vars'
  */
 const requestHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   const response = {
-    code: err.status,
+    code: err.httpStatus ?? err.status,
     message: err.message || httpStatus[err.status],
     errors: err.errors,
     stack: err.stack,
   };
-
-  if (env !== 'development') {
+  if (NODE_ENV !== 'development') {
     delete response.stack;
   }
-
   res.status(err.status);
   res.json(response);
 };
 export const handler = requestHandler;
-
 /**
  * If error is not an instanceOf APIError, convert it.
  * @public
  */
 export const converter = (err: any, req: Request, res: Response, next: NextFunction) => {
   let convertedError = err;
-
-  if (err instanceof expressValidation.ValidationError) {
-    convertedError = new APIError({
-      message: 'Validation Error',
+  // if (err instanceof expressValidation.ValidationError) {
+  //   convertedError = new APIError({
+  //     message: 'Validation Error',
+  //     errors: err.errors,
+  //     status: err.status,
+  //     //@ts-expect-error
+  //     stack: err.stack,
+  //   });
+  // } else if (!(err instanceof APIError)) {
+  //   convertedError = new APIError({
+  //     message: err.message,
+  //     status: err.status,
+  //     stack: err.stack,
+  //   });
+  // }
+  console.log('err :>> ', err);
+  if (!(err instanceof APIError)) {
+    res.status(err.httpStatus ?? httpStatus.BAD_REQUEST);
+    res.json({
+      success: false,
       errors: err.errors,
-      status: err.status,
-      //@ts-expect-error
-      stack: err.stack,
+      result: null
     });
-  } else if (!(err instanceof APIError)) {
-    convertedError = new APIError({
-      message: err.message,
-      status: err.status,
-      stack: err.stack,
-    });
+  } else {
+    return requestHandler(convertedError, req, res, next);
   }
-
-  return requestHandler(convertedError, req, res, next);
 };
 
 /**

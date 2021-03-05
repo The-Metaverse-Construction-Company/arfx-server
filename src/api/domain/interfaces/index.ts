@@ -17,7 +17,7 @@ export interface IAddedBy {
   _id: string
 }
 export interface IGeneralEntityDependencies {
-  generateId: () => string
+  generateId(): string
 }
 export interface IGeneralServiceDependencies<T> {
   repositoryGateway: T
@@ -43,8 +43,11 @@ export interface IUploaderResponse {
   imageUrl: string
 }
 export interface IUploader {
-  upload: (newFilename: string, filePath: string) => Promise<any>
-  download: (path: string) =>  Promise<any>
+  upload: (newFilename: string, filePath: string, containerName?: string, callback?: (blobUrl: string) => void) => Promise<string>
+  download: (containerName: string, blobName: string) =>  Promise<any>
+}
+export interface IBlobStorage extends IUploader {
+  generateSASToken(containerName: string, blobName: string): string
 }
 export interface IGenerateShortUrl {
   (uri: string,data: any): Promise<string>
@@ -79,4 +82,14 @@ export interface IEmailBody {
   token: string
   email: string
   url: string
+}
+export interface IImageResizeOption {
+  filepath: string
+  newFilepath: string
+  width: number
+  height?: number
+}
+
+export interface IValidateProductTotalAmount {
+  (price: number, discountPercentage: number): boolean
 }

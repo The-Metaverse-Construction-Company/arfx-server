@@ -1,0 +1,53 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  models:
+    AdminAccount:
+      _id:
+        $ref: '#/components/schemas/FieldId'
+      firstName:
+        type: string
+        description: "firstName of the admin account."
+        example: 'John'
+      lastName:
+        type: string
+        description: "lastName of the admin account."
+        example: 'Doe'
+      roleLevel:
+        type: number
+        description: "roleLevel of the admin account."
+        enum: [1, 5]
+      password:
+        type: string
+        description: "password of the admin account."
+        example: 'test123'
+      email:
+        value: 
+          type: string
+          description: 'email address of the admin account.'
+          example: 'testmail0001@mailnesia.com'
+        verified: 
+          $ref: '#/components/schemas/general/verificationEntity/verified'
+        verifiedAt: 
+          $ref: '#/components/schemas/general/verificationEntity/verifiedAt'
+      emailObj:
+        type: object
+        properties:
+          value: 
+            $ref: '#/components/models/AdminAccount/email/value'
+          verified: 
+            $ref: '#/components/models/AdminAccount/email/verified'
+          verifiedAt: 
+            $ref: '#/components/models/AdminAccount/email/verifiedAt'
+      adminAccountId:
+        type: string
+        description: "adminAccountId account who created the admin account."
+      createdAt:
+        $ref: '#/components/schemas/FieldCreatedAt'
+      updatedAt:
+        $ref: '#/components/schemas/FieldUpdatedAt'

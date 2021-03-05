@@ -1,3 +1,6 @@
+/**
+ * @general_interfaces
+ */
 import { IGenerateToken } from '../../interfaces'
 interface IServiceDependencies {
 // interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
@@ -7,6 +10,11 @@ interface IServiceDependencies {
 export class SendUserOTPService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * send otp for users auth key
+   * @param userId
+   * @param tokenType 
+   */
   public sendOne = async (userId: string, tokenType: string) => {
     try {
       // generate token for sign up

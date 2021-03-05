@@ -7,61 +7,38 @@ import {
 
 export * from './interfaces'
 export * from './repository-gateway-interfaces'
-
+import GeneralEntity from '../general'
 interface Dependencies extends IGeneralEntityDependencies {
 }
 export default ({
   generateId
 }: Dependencies) => (
-  class ProductEntity implements IUserProductsEntity {
+  class UserProductEntity extends GeneralEntity({generateId}) implements IUserProductsEntity {
     public readonly _id!: string
-    public readonly name!: string
-    public readonly title!: string
-    public readonly description!: string
     public readonly userId!: string
     public readonly productId!: string
-    public readonly contentURL!: string
     public readonly createdAt!: number
     public readonly updatedAt!: number
     constructor ({
       _id = '',
-      name = '',
-      description = '',
-      contentURL = '',
       productId = '',
       userId = '',
-      title = '',
-      // stripeCustomerId = '',
       updatedAt = Date.now(),
       createdAt  = Date.now()
     }: Partial<IUserProductsEntity>) {
-      if (!_id) {
-        _id = generateId()
+      super({
+        _id,
+        createdAt,
+        updatedAt
+      })
+      if (this.validateString(productId, 'productId')) {
+        // add more business rules validation here if needed.
       }
-      if (!title) {
-        throw new Error('title must not be null, undefined or empty string.')
-      } else if (title.length < 3) {
-        throw new Error('title must atleast 3 characters.')
+      if (this.validateString(userId, 'userId')) {
+        // add more business rules validation here if needed.
       }
-      if (!description) {
-        throw new Error('description must not be null, undefined or empty string.')
-      }
-      if (!productId) {
-        throw new Error('productId must not be null, undefined or empty string.')
-      }
-      if (!userId) {
-        throw new Error('userId must not be null, undefined or empty string.')
-      }
-      // add additional business rules here if needed.
-      this._id = _id
-      this.name = name
-      this.description = description
-      this.contentURL = contentURL
       this.productId = productId
       this.userId = userId
-      this.title = title
-      this.updatedAt = updatedAt
-      this.createdAt = createdAt
     }
     
   }

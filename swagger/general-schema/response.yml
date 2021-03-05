@@ -1,0 +1,30 @@
+components:
+  responses:
+    http:
+      success:
+        type: object
+        properties:
+          success:
+            type: boolean
+            default: false
+          error:
+            type: any
+            default: null
+      paginationList:
+        type: object
+        properties:
+          page:
+            type: number
+            default: 0
+          total:
+            type: number
+            default: 0
+      failed:
+        type: object
+        properties:
+          success:
+            type: boolean
+            default: false
+          error:
+            type: any
+            default: null

@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/reset-password.controller'
+import { requestValidatorMiddleware } from '../../validations';
 import {
   sendPasswordReset,
   updateResetPasswordValidation,
@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.route('/')
-/**x
+/**
  * @swagger
  * paths:
  *  /v1/auth/reset-password:
@@ -24,7 +24,11 @@ router.route('/')
  *        '200':
  *          $ref: '#/components/responses/resetPassword/send'
  */
-  .post(validate(sendPasswordReset), controller.sendResetPasswordRoute)
+  .post(
+    sendPasswordReset,
+    requestValidatorMiddleware,
+    controller.sendResetPasswordRoute
+  )
 /**x
  * @swagger
  * paths:
@@ -39,7 +43,12 @@ router.route('/')
  *        '200':
  *          $ref: '#/components/responses/resetPassword/verifyToken'
  */
-  .get(validate(verifyResetPasswordToken), controller.verifyResetPasswordMiddleWare, controller.verifyResetPasswordRoute)
+  .get(
+    verifyResetPasswordToken,
+    requestValidatorMiddleware,
+    controller.verifyResetPasswordMiddleWare,
+    controller.verifyResetPasswordRoute
+  )
 /**x
  * @swagger
  * paths:
@@ -56,6 +65,11 @@ router.route('/')
  *        '200':
  *          $ref: '#/components/responses/resetPassword/verifyToken'
  */
-  .patch(validate(updateResetPasswordValidation), controller.verifyResetPasswordMiddleWare, controller.updateResetPasswordRoute);
+  .patch(
+    updateResetPasswordValidation,
+    requestValidatorMiddleware,
+    controller.verifyResetPasswordMiddleWare,
+    controller.updateResetPasswordRoute
+    );
 
 export default router;

@@ -1,0 +1,45 @@
+components:
+  schemas:
+    general:
+      verificationEntity:
+        value: 
+          type: string
+          description: Value of the email/mobile number.
+        verifiedAt: 
+          type: number
+          default: 0
+          description: Miliseconds when it verified.
+        verified: 
+          type: boolean
+          default: false
+          description: flag to determine if this is verified
+    FieldId:
+      type: string
+      description: Auto-generated id of this object.
+      default: ''
+      example: ''
+    FieldCreatedAt:
+      type: number
+      format: milis
+      description: Date when this object was created.
+    FieldUpdatedAt:
+      type: number
+      format: milis
+      description: Date when this object was updated.
+    FieldVerificationEntity:
+      type: object
+      properties:
+        value: 
+          type: string
+          description: Value of the email.
+        verifiedAt: 
+          type: number
+          default: 0
+          description: Miliseconds when it verified.
+        verified: 
+          type: boolean
+          default: false
+          description: flag to determine if this is verified
+    FieldAuthToken:
+      type: string
+      default: Auth token

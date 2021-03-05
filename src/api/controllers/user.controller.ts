@@ -3,141 +3,169 @@ import {
   Request, Response, NextFunction,
 } from 'express'
 import {
-  userSignUp,
-} from '../service-configurations/sign-up'
-import {
   userListService,
   userDetails,
-  sendUserOTPService
+  sendUserOTPService,
+  updateUserService,
+  createUserService,
+  updateUserSuspendStatusService
 } from '../service-configurations/users'
 
 import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
-import { successReponse } from '../helper/http-response'
-const { omit } = require('lodash');
-const User = require('../models/user.model');
+import { errorResponse, successReponse } from '../helper/http-response'
+import AppError from '../utils/response-error'
 
 /**
- * Load user and append to req.
  * @public
+ * Load user and append to req.
+ * @requestParams
+ *  @field -> userId: string
  */
-export const load = async (req: Request, res: Response, next: NextFunction, id: any) => {
+export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: string) => {
   try {
-    const user = await userDetails().findOne(id);
-  //@ts-expect-error
-    req.locals = { user };
-    return next();
+    const user = await userDetails()
+      .findOne(id);
+    res.locals['user'] = user
+    next()
+    return;
   } catch (error) {
-    return next(error);
+    res.status(httpStatus.BAD_REQUEST)
+        .send(errorResponse([error.message]))
   }
 };
 
 /**
- * Get user
  * @public
+ * Get customer/user detail based on the requestParams.userId
  */
-export const get = (req: Request, res: Response) => {
-  //@ts-expect-error
-  res.json(req.locals.user);
+export const UserDetailsRoute = (req: Request, res: Response) => {
+  res.status(httpStatus.OK)
+     .send(successReponse(res.locals['user']))
 }
 
 /**
- * Get logged in user info
  * @public
+ * create user/customer account.
+ * @requestBody
+ *  @field -> name: string
+ *  @field -> email: string
+ *  @field -> mobileNumber: string
  */
-export const loggedIn = (req: Request, res: Response) => {
-  res.json(JSON.parse(JSON.stringify(req.user)));
-}
-
-/**
- * Create new user
- * @public
- */
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const CreateUserRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const redisPublisher = req.app.get('redisPublisher')
-    const newUser = await userSignUp(redisPublisher)
+    const newUser = await createUserService()
       .createOne({
         ...req.body,
         role: ALLOWED_USER_ROLE.USER
       })
     // const user = new User(req.body);
     // const savedUser = await user.save();
-    res.status(httpStatus.CREATED).json(newUser);
+    res.
+      status(httpStatus.CREATED).
+      send(successReponse(newUser));
   } catch (error) {
-    console.log('error :>> ', error);
-    next(User.checkDuplicateEmail(error));
+    res.
+      status(httpStatus.BAD_REQUEST).
+      send(errorResponse([error.message]));
   }
 };
 
 /**
- * Replace existing user
  * @public
+ * Update selected user/customer account.
+ * @requestParams
+ *  @field -> userId: string
+ * @requestBody
+ *  @field -> name: string
+ *  @field -> email: string
+ *  @field -> role: string
+ *  @field -> mobileNumber: string
  */
-export const replace = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    //@ts-expect-error
-    const { user } = req.locals;
-    const newUser = new User(req.body);
-    const ommitRole = user.role !== 'admin' ? 'role' : '';
-    const newUserObject = omit(newUser.toObject(), '_id', ommitRole);
-
-    await user.updateOne(newUserObject, { override: true, upsert: true });
-    const savedUser = await User.findById(user._id);
-
-    res.json(savedUser.transform());
-  } catch (error) {
-    next(User.checkDuplicateEmail(error));
-  }
+export const UpdateUserRoute = (req: Request, res: Response, next: NextFunction) => {
+  const {userId = ''} = req.params
+  updateUserService()
+    .updateOne(userId, req.body)
+    .then((user) => {
+      res.status(httpStatus.ACCEPTED)
+        .send(successReponse(user))
+    })
+    .catch((e) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 
-/**
- * Update existing user
- * @public
- */
-export const update = (req: Request, res: Response, next: NextFunction) => {
-    //@ts-expect-error
-  const ommitRole = req.locals.user.role !== 'admin' ? 'role' : '';
-  const updatedUser = omit(req.body, ommitRole);
-    //@ts-expect-error
-  const user = Object.assign(req.locals.user, updatedUser);
-
-  user.save()
-    .then((savedUser: any) => res.json(savedUser.transform()))
-    .catch((e: Error) => next(User.checkDuplicateEmail(e)));
-};
 
 /**
- * Get user list
  * @public
+ * resend sign-in otp for user/customer who didn't received the otp via sms or email.
+ * @requestQuery
+ *  @field -> searchText: string
+ *  @field -> pageNo: number // page number of pagination list
+ *  @field -> limit: number // limit of the list.
  */
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const UserListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const users = await userListService()
       .getList({
         ...req.query,
       })
-    res.json(users);
+    res.json(successReponse(users));
   } catch (error) {
-    next(error);
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 
 /**
- * Delete user
  * @public
+ * update suspend status of the user/customer account
+ * @requestParam
+ *  @field -> userId: string
  */
-export const remove = (req: Request, res: Response, next: NextFunction) => {
-    //@ts-expect-error
-  const { user } = req.locals;
-
-  user.remove()
-    .then(() => res.status(httpStatus.NO_CONTENT).end())
-    .catch((e: Error) => next(e));
+export const SuspendUserRoute = (req: Request, res: Response, next: NextFunction) => {
+  // const { user } = req.locals;
+  const {userId = ''} = req.params
+  updateUserSuspendStatusService()
+    .updateOne(userId, true)
+    .then((user) => res.status(httpStatus.ACCEPTED).json(successReponse(user)))
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };
 /**
- * resend a otp
  * @public
+ * update un-suspend status of the user/customer account
+ * @requestParam
+ *  @field -> userId: string
+ */
+export const UnsuspendUserRoute = (req: Request, res: Response, next: NextFunction) => {
+  // const { user } = req.locals;
+  const {userId = ''} = req.params
+  updateUserSuspendStatusService()
+    .updateOne(userId, false)
+    .then((user) => res.status(httpStatus.ACCEPTED)
+      .json(successReponse(user)))
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
+};
+/**
+ * @public
+ * resend sign-in otp for user/customer who didn't received the otp via sms or email.
+ * @requestParam
+ *  @field -> userId: string
  */
 export const resendAccountVerificationOTPRoute = (req: Request, res: Response, next: NextFunction) => {
   const {userId} = req.params
@@ -147,5 +175,10 @@ export const resendAccountVerificationOTPRoute = (req: Request, res: Response, n
     .then((otp) => {
       res.status(httpStatus.OK).send(successReponse({code: otp}))
     })
-    .catch((e: Error) => next(e));
+    .catch((e: Error) => {
+      next(new AppError({
+        message: e.message,
+        httpStatus: httpStatus.BAD_REQUEST
+      }))
+    });
 };

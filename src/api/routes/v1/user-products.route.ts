@@ -1,8 +1,8 @@
 import express from 'express'
-import validate from 'express-validation'
 import * as controller from '../../controllers/user-products.controller'
-import { authorize, LOGGED_USER } from '../../middlewares/auth';
-import * as validations from '../../validations/purchase-history.validation'
+import { ALLOWED_USER_ROLE } from '../../domain/entities/users';
+import { authorize } from '../../middlewares/auth';
+import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations';
 
 const router = express.Router();
 
@@ -13,29 +13,33 @@ router.route('/')
 /**
  * @swagger
  * /v1/users/{userId}/products:
- *  patch:
+ *  get:
  *    summary: "List of product/scene that purchased of the user/customer."
  *    tags:
- *      - "User-Products"
+ *      - "User Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
  *    parameters:
- *      - $ref: '#/components/requestParams/Product/id'
+ *      - $ref: '#/components/requestParams/User/id'
  *    responses:
  *      '200':
  *        $ref: '#/components/responses/UserProducts'
  */
-  .get(controller.userProductListRoute)
+  .get(
+    PaginationQueryPipeline,
+    requestValidatorMiddleware,
+    controller.userProductListRoute
+  )
 router.route('/:userProductId')
 /**
  * @swagger
  * /v1/users/{userId}/products/{productId}:
- *  patch:
+ *  get:
  *    summary: "Details of product/scene that purchased of the user/customer."
  *    tags:
- *      - "User-Products"
+ *      - "User Products"
  *    security:
- *      - bearerAuth: []
+ *      - userBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/User/id'
  *      - $ref: '#/components/requestParams/Product/id'

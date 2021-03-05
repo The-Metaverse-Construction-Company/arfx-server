@@ -1,0 +1,14 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  responseBody:
+    AdminAccount:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AdminAccountParam'

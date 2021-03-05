@@ -1,26 +1,33 @@
 import {
-  model, Document, Schema, SchemaTypeOpts
+  model, Document, Schema, SchemaTypeOpts, SchemaTypeOptions
 } from 'mongoose'
 
 import {
-  IProductEntity
+  IProductEntity, PRODUCT_STATES, IProductBlobProperties, PRODUCT_UPLOAD_BLOB_STATES
 } from '../../../../api/domain/entities/product'
 import { COLLECTION_NAMES } from '../constants/collection-names'
 
+export const ProductBlobObject = {
+// export const ProductBlobObject = <Record<keyof IProductBlobProperties, SchemaTypeOpts<Object>>> {
+  type: Object,
+  originalFilepath: {
+    type: String,
+    default: ''
+  },
+  blobURL: {
+    type: String,
+    default: ''
+  },
+  state: {
+    type: Number,
+    default: PRODUCT_UPLOAD_BLOB_STATES.PENDING
+  },
+}
 export interface IProductRepository extends Document, IProductEntity {
   _id: any
 }
-// this will automatically error when it have a changes on the product entity interface
-const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
-  _id: {
-    type: String,
-    default: '',
-  },
+export const ProductCoreRepositotyModelObj = {
   name: {
-    type: String,
-    default: '',
-  },
-  description: {
     type: String,
     default: '',
   },
@@ -28,14 +35,24 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: String,
     default: '',
   },
-  contentURL: {
+  description: {
     type: String,
     default: '',
   },
-  published: {
-    type: Boolean,
-    default: false
+  contentZip: {
+    ...ProductBlobObject,
+    version: {
+      type: Number,
+      default: 0
+    },
+    hash: {
+      type: Number,
+      default: 0
+    },
   },
+  previewImage: ProductBlobObject,
+  previewVideo: ProductBlobObject,
+  thumbnail: ProductBlobObject,
   price: {
     type: Number,
     default: 0,
@@ -43,6 +60,17 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
   discountPercentage: {
     type: Number,
     default: 0,
+  }
+}
+// this will automatically error when it have a changes on the product entity interface
+const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
+  _id: {
+    type: String,
+    default: '',
+  },
+  published: {
+    type: Boolean,
+    default: false
   },
   adminAccountId: {
     type: String,
@@ -53,6 +81,14 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0
   },
+  state: {
+    type: Number,
+    default: PRODUCT_STATES.PENDING
+  },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Number,
     default: 0,
@@ -61,7 +97,13 @@ const RepositoryModel = <Record<keyof IProductEntity, SchemaTypeOpts<Object>>> {
     type: Number,
     default: 0,
   },
+  
+  ...ProductCoreRepositotyModelObj
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IProductRepository>(COLLECTION_NAMES.PRODUCT, RepositorySchema)

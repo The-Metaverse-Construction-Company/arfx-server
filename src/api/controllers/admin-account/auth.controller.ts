@@ -16,7 +16,8 @@ import {
 /**
  * @helpers
  */
-import { successReponse } from '../../helper/http-response'
+import { errorResponse, successReponse } from '../../helper/http-response'
+import AppError from '../../utils/response-error';
 /**
  * @public
  * create admin account
@@ -33,10 +34,13 @@ export const signInAdminAccountRoute = async (req: Request, res: Response, next:
     const {username = '', password = ''} = req.body
     const response = await adminAccountSignInService(redisClient)
       .signIn(username, password)
-    res.status(httpStatus.CREATED)
+    res.status(httpStatus.OK)
       .json(successReponse(response))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };
 export const validateAuthTokenRoute = async (req: Request, res: Response, next: NextFunction) => {
@@ -44,6 +48,9 @@ export const validateAuthTokenRoute = async (req: Request, res: Response, next: 
     res.status(httpStatus.OK)
       .json(successReponse({admin: req.user, token: ''}))
   } catch (error) {
-    next(error)
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
   }
 };

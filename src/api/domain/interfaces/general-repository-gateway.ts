@@ -11,7 +11,7 @@ export interface IPaginationParameters {
  searchText?: string
 }
 export interface IPaginationQueryParams extends IPaginationParameters {
-  sortBy?: ISortBy | ISortBy[]
+  sortBy?: null | ISortBy | ISortBy[]
 }
 export interface IStateChangeData<T> {
   newData: T

@@ -13,8 +13,9 @@ import RedisClient from './redis'
 
 const Fingerprint = require('express-fingerprint')
 import swaggerUI from 'swagger-ui-express'
-import SwaggerOptions from './swagger/index'
+import SwaggerOptions from './swagger'
 
+import path from 'path'
 const helmet = require('helmet')
 const compress = require('compression')
 const morgan = require('morgan')
@@ -30,16 +31,7 @@ app.use(morgan(logs));
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// initialize busboy middleware
-// app.use((req: Request, _: any, next: NextFunction) => {
-//   if (req.method === 'POST') {
-//     req.app.set('busboy', new Busboy({ headers: req.headers }))
-//     // req.busboy.on('field', (fieldname, value) => {
-//     //   req.body[fieldname] = value
-//     // });
-//   }
-//   next()
-// })
+app.use('/public', express.static(path.join(__dirname, '../../public')))
 // setup request fingerprint
 app.use(Fingerprint({
   parameters: [
@@ -76,9 +68,13 @@ app.use(cors());
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
 passport.use('admin-auth', strategies.adminAuthJWT);
+passport.use('azure-oauth-bearer', strategies.AzureADAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
-
+app.get('/api/ad-auth', passport.authenticate('oauth-bearer', { session: false }), (req, res, next) => {
+  res.json({ message: 'response from API endpoint' });
+  return next();
+});
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(SwaggerOptions))
 /**
  * @swagger
