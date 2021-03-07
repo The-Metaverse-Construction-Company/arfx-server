@@ -44,40 +44,40 @@ router.route('/azure')
     res.status(httpStatus.OK).send(successReponse(req.user))
   })
 //Routes
-/**
- * @swagger
- *  /v1/auth/login:
- *    post:
- *      tags: 
- *      - "Authentication"
- *      summary: Authenticate the registered users.
- *      requestBody:
- *        $ref: '#/components/requestBody/User/signIn'
- *      responses:
- *        '200':
- *          $ref: '#/components/responses/User/Detail'
- */
-router.route('/login')
-  .post(
-    signInValidationPipeline,
-    requestValidatorMiddleware,
-    controller.userSignInRoute
-  )
-/**
- * @swagger
- *  /v1/auth/sign-out:
- *    post:
- *      summary: Sign-out/logout the current logged-in user based on the access token used.
- *      tags: 
- *        - "Authentication"
- *      security:
- *        - userBearerAuth: []
- *      responses:
- *        '200':
- *          $ref: '#/components/responses/SignOut'
- */
-router.route('/sign-out')
-  .post(controller.userSignOutRoute)
+// /**
+//  * @swagger
+//  *  /v1/auth/login:
+//  *    post:
+//  *      tags: 
+//  *      - "Authentication"
+//  *      summary: Authenticate the registered users.
+//  *      requestBody:
+//  *        $ref: '#/components/requestBody/User/signIn'
+//  *      responses:
+//  *        '200':
+//  *          $ref: '#/components/responses/User/Detail'
+//  */
+// router.route('/login')
+//   .post(
+//     signInValidationPipeline,
+//     requestValidatorMiddleware,
+//     controller.userSignInRoute
+//   )
+// /**
+//  * @swagger
+//  *  /v1/auth/sign-out:
+//  *    post:
+//  *      summary: Sign-out/logout the current logged-in user based on the access token used.
+//  *      tags: 
+//  *        - "Authentication"
+//  *      security:
+//  *        - userBearerAuth: []
+//  *      responses:
+//  *        '200':
+//  *          $ref: '#/components/responses/SignOut'
+//  */
+// router.route('/sign-out')
+//   .post(controller.userSignOutRoute)
 // router.route('/refresh-token')
 //   .post(validate(refresh), controller.refresh);
 // router.route('/facebook')
