@@ -57,6 +57,7 @@ export class UploadProductBlobService {
       let blobContainerName = AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
       //@ts-expect-error
       let {path: blobLocalPath = ''} = uploadedBlob
+
       let originalFileExtension = blobLocalPath.split('.').pop()
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${originalFileExtension}`
@@ -135,6 +136,9 @@ export class UploadProductBlobService {
         const newFilepath = `${origPreviewImage.join('.')}-w${width}.${blobType}`
         // resize the image preview to 150(h)x150(w)
         try {
+          // overwrite the path of the previewVideo to new path of newly generated thumbnail.
+          //@ts-expect-error
+          uploadedBlob.path = newFilepath
           blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.THUMBNAIL}.${originalFileExtension}`
           originalFilepath = newFilepath
           await this.dependencies.imageResizer({
@@ -143,9 +147,6 @@ export class UploadProductBlobService {
             newFilepath 
           })
           blobLocalPath = newFilepath
-          // overwrite the path of the previewVideo to new path of newly generated thumbnail.
-          //@ts-expect-error
-          uploadedBlob.path = newFilepath
         } catch (error) {
           console.log('error :>> ', error);
           throw error
