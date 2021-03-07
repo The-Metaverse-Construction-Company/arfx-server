@@ -18,18 +18,18 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
   }
   private getProductListQuery (filterQuery: IProductListFilterQuery) {
     const {isAdmin = false, showDeleted = false, onFeaturedList = false, userId, limit} = filterQuery
-      let productStateQuery = <any>{}
-      let featuredListQuery = <any>{}
-      if (!isAdmin) {
-        productStateQuery.state = PRODUCT_STATES.COMPLETED
-      }
-      if (!showDeleted) {
-        productStateQuery.deleted = false
-      }
-      if (onFeaturedList) {
-        // if flag onf eatured list is true, then set owned property to false to remove all of the users that already owned or purchased by the user.
-        featuredListQuery.hasOwned = false
-      }
+    let productStateQuery = <any>{}
+    let featuredListQuery = <any>{}
+    if (!isAdmin) {
+      productStateQuery.state = PRODUCT_STATES.COMPLETED
+    }
+    if (!showDeleted) {
+      productStateQuery.deleted = false
+    }
+    if (onFeaturedList) {
+      // if flag onf eatured list is true, then set owned property to false to remove all of the users that already owned or purchased by the user.
+      featuredListQuery.hasOwned = false
+    }
     return [
       {
         $match: {
@@ -139,6 +139,9 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
           previewVideo: {
             originalFilepath: 0
           },
+          previewGif: {
+            originalFilepath: 0
+          },
           thumbnail: {
             originalFilepath: 0
           },
@@ -153,12 +156,19 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
   public getFeaturedList = async (filterQuery: IProductListFilterQuery) => {
     try {
       const {limit = 5} = filterQuery
-      const response = await this.collectionModel.aggregate([
+      let response = await this.collectionModel.aggregate([
         ...this.getProductListQuery(filterQuery),
         ...(limit >= 1 ? [{
           $limit: parseInt(limit as any)
         }] : [])
       ])
+      // check if the length of the response array is empty.
+      // then just fetch the product list without the pagination format.
+      if (response.length <= 0) {
+        return this.getFeaturedList({
+          ...filterQuery,
+          onFeaturedList: false})
+      }
       return response
     } catch (error) {
       throw error

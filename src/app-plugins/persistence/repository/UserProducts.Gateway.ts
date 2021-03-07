@@ -95,6 +95,9 @@ export class UserProductRepository extends GeneralRepository<IUserProductsReposi
                   previewVideo: {
                     blobURL: "$product.previewVideo.blobURL"
                   },
+                  previewGif: {
+                    blobURL: "$product.previewGif.blobURL"
+                  },
                   thumbnail: {
                     blobURL: "$product.thumbnail.blobURL"
                   },
