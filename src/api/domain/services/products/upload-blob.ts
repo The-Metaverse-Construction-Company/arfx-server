@@ -149,12 +149,11 @@ export class UploadProductBlobService {
       } catch (error) {
         uploadToStorageStatus = false
       }
-      // this.dependencies.fileSystem.removeOne(blobLocalPath)
       return {
         // blobURL: 
-          // NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? 
-          // originalFilepath : 
-          //   `${BACKEND_HOST}/v1/products/${productId}/${type}.${originalFileExtension}`,
+        //   NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION ? 
+        //   originalFilepath : 
+        //     `${BACKEND_HOST}/v1/products/${productId}/${type}.${originalFileExtension}`,
         blobURL: originalFilepath,
         localFilepath: blobLocalPath,
         originalFilepath: originalFilepath,
