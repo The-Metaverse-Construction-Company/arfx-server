@@ -55,7 +55,7 @@ stages:
       displayName: 'Azure App Service Deploy: backend-dev-api'
       inputs:
         appType: webAppContainer
-        ConnectedServiceName: Azure subscription 1 (4dd5d45b-2973-4ccf-9d12-8d2eea033878)'
+        azureSubscription: Azure subscription 1 (4dd5d45b-2973-4ccf-9d12-8d2eea033878)'
         WebAppName: backend-dev-api
         DockerNamespace: arfxhome
         DockerRepository: 'arfxhome/backend-service'
