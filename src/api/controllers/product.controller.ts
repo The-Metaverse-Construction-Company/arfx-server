@@ -95,7 +95,6 @@ export const uploadCreatedProductBlobRoute = async (req: Request, res: Response,
   try {
     const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
     const file = <any> req.file || {};
-    console.log('file :xx>> ', file);
     const updatedProduct = await updateProductBlobService()
       .updateOne(productId, <any>blobType, file)
     res.status(httpStatus.ACCEPTED)
@@ -113,7 +112,7 @@ export const uploadUpdateProductBlobRoute = async (req: Request, res: Response, 
     const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
     const file = <any> req.file || {};
     const updatedProduct = await updateProductBlobService()
-      .updateOne(productId, <any>blobType, file.path)
+      .updateOne(productId, <any>blobType, file)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
     res.end()
