@@ -143,6 +143,9 @@ export class UploadProductBlobService {
             newFilepath 
           })
           blobLocalPath = newFilepath
+          // overwrite the path of the previewVideo to new path of newly generated thumbnail.
+          //@ts-expect-error
+          uploadedBlob.path = newFilepath
         } catch (error) {
           console.log('error :>> ', error);
           throw error
