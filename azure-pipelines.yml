@@ -42,3 +42,5 @@ stages:
         command: 'Push'
         imageName: arfxhome/backend-service:latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
+      
+  
