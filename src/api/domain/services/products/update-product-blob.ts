@@ -45,7 +45,7 @@ export class UpdateProductBlobService {
    * @param productBlobType 
    * @param blobLocalPath 
    */
-  private uploadBlobToBlobStorage = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
+  private uploadBlobToBlobStorage = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, uploadedBlob: File) => {
     let blobProperty = <IProductBlobResponseProperties>{
       state: PRODUCT_UPLOAD_BLOB_STATES.PENDING,
       localFilepath: '',
@@ -58,7 +58,7 @@ export class UpdateProductBlobService {
         localFilepath,
         originalFilepath,
         uploadToStorageStatus
-      } = await this.dependencies.uploadProductBlobService.uploadOne(productId, productBlobType, blobLocalPath)
+      } = await this.dependencies.uploadProductBlobService.uploadOne(productId, productBlobType, uploadedBlob)
       blobProperty = {
         blobURL,
         originalFilepath,
@@ -79,10 +79,10 @@ export class UpdateProductBlobService {
    *  - contentZip
    * @param productBody 
    */
-  public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
+  public updateOne = async (productId: string, productBlobType: PRODUCT_BLOB_TYPE, uploadedBlob: File) => {
     try {
       const product = await this.dependencies.productDetailService.findOne(productId)
-      let {localFilepath, ...blobProperty} = await this.uploadBlobToBlobStorage(productId, productBlobType, blobLocalPath)
+      let {localFilepath, ...blobProperty} = await this.uploadBlobToBlobStorage(productId, productBlobType, uploadedBlob)
       const propertiesToUpdate = <Partial<IProductEntity>>{}
       if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_IMAGE) {
         // call another one for the thumbnail
@@ -94,7 +94,7 @@ export class UpdateProductBlobService {
             state: blobProperty.state
           }
         }
-        const {localFilepath, ...thumbnailBlobProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, blobLocalPath)
+        const {localFilepath, ...thumbnailBlobProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.THUMBNAIL, uploadedBlob)
         if (thumbnailBlobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.thumbnail = thumbnailBlobProperty
         } else {
@@ -107,7 +107,7 @@ export class UpdateProductBlobService {
       } else if (productBlobType === PRODUCT_BLOB_TYPE.PREVIEW_VIDEO) {
         if (blobProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
           propertiesToUpdate.previewVideo = blobProperty
-          const {localFilepath, ...previewGifProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.PREVIEW_GIF, blobLocalPath)
+          const {localFilepath, ...previewGifProperty} = await this.uploadBlobToBlobStorage(productId, PRODUCT_BLOB_TYPE.PREVIEW_GIF, uploadedBlob)
           if (previewGifProperty.state === PRODUCT_UPLOAD_BLOB_STATES.COMPLETED) {
             propertiesToUpdate.previewGif = previewGifProperty
           } else {

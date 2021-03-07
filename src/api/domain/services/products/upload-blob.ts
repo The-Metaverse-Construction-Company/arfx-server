@@ -49,12 +49,16 @@ export class UploadProductBlobService {
    * @param type 
    * @param blobLocalPath 
    */
-  public uploadOne = async (productId: string, type: PRODUCT_BLOB_TYPE, blobLocalPath: string) => {
+  public uploadOne = async (productId: string, type: PRODUCT_BLOB_TYPE, uploadedBlob: File) => {
     try {
       let originalFilepath = ''
       let blobFileName = ''
       let uploadToStorageStatus = false
       let blobContainerName = AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
+      //@ts-expect-error
+      let {path: blobLocalPath = ''} = uploadedBlob
+      console.log('upl@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2oadedBlob :>> ', uploadedBlob);
+      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@blobLocalPathb :>> ', blobLocalPath);
       let originalFileExtension = blobLocalPath.split('.').pop()
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${originalFileExtension}`
@@ -116,6 +120,11 @@ export class UploadProductBlobService {
         })
         blobLocalPath = newFilepath
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_GIF}.${originalFileExtension}`
+        //overwrite the mimetype of the previewVideo.
+        //@ts-expect-error
+        uploadedBlob.mimetype = 'image/gif'
+        //@ts-expect-error
+        uploadedBlob.path = blobLocalPath
       } else if (type === PRODUCT_BLOB_TYPE.PREVIEW_IMAGE) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${originalFileExtension}`
       } else if (type === PRODUCT_BLOB_TYPE.THUMBNAIL) {
@@ -142,7 +151,7 @@ export class UploadProductBlobService {
       try {
         originalFilepath = await this.dependencies.fileUploader.upload(
           blobFileName,
-          blobLocalPath,
+          uploadedBlob,
           blobContainerName
         )
         uploadToStorageStatus = true

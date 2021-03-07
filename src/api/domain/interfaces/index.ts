@@ -43,7 +43,7 @@ export interface IUploaderResponse {
   imageUrl: string
 }
 export interface IUploader {
-  upload: (newFilename: string, filePath: string, containerName?: string, callback?: (blobUrl: string) => void) => Promise<string>
+  upload: (newFilename: string, filePath: File, containerName?: string, callback?: (blobUrl: string) => void) => Promise<string>
   download: (containerName: string, blobName: string) =>  Promise<any>
 }
 export interface IBlobStorage extends IUploader {
