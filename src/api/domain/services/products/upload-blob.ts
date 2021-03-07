@@ -57,8 +57,6 @@ export class UploadProductBlobService {
       let blobContainerName = AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
       //@ts-expect-error
       let {path: blobLocalPath = ''} = uploadedBlob
-      console.log('upl@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2oadedBlob :>> ', uploadedBlob);
-      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@blobLocalPathb :>> ', blobLocalPath);
       let originalFileExtension = blobLocalPath.split('.').pop()
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${originalFileExtension}`
@@ -116,13 +114,15 @@ export class UploadProductBlobService {
         const filepath = blobLocalPath.split('.').shift()
         const newFilepath = `${filepath}.${originalFileExtension}`
         const result = this.dependencies.generateGifFromVideo(blobLocalPath, `${filepath}.${originalFileExtension}`, {
-          scale: 400
+          scale: 400,
+          duration: 10
         })
         blobLocalPath = newFilepath
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_GIF}.${originalFileExtension}`
         //overwrite the mimetype of the previewVideo.
         //@ts-expect-error
         uploadedBlob.mimetype = 'image/gif'
+        // overwrite the path of the previewVideo to new path of newly generated gif blob.
         //@ts-expect-error
         uploadedBlob.path = blobLocalPath
       } else if (type === PRODUCT_BLOB_TYPE.PREVIEW_IMAGE) {

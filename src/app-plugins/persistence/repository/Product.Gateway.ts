@@ -155,7 +155,7 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
    */
   public getFeaturedList = async (filterQuery: IProductListFilterQuery) => {
     try {
-      const {limit = 5} = filterQuery
+      const {limit = 5, onFeaturedList = false} = filterQuery
       let response = await this.collectionModel.aggregate([
         ...this.getProductListQuery(filterQuery),
         ...(limit >= 1 ? [{
@@ -164,7 +164,7 @@ export class ProductRepository extends GeneralRepository<IProductRepository, IPr
       ])
       // check if the length of the response array is empty.
       // then just fetch the product list without the pagination format.
-      if (response.length <= 0) {
+      if (response.length <= 0 && onFeaturedList) {
         return this.getFeaturedList({
           ...filterQuery,
           onFeaturedList: false})
