@@ -117,17 +117,21 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
     console.log('error :>> ', error);
     done(error, null, {})
   }
-  // try {
-  //   const {authorization = ''} = req.headers
-  //   const accessToken = authorization.split(' ')[1]
-  //   const adminAccount = await adminAccountVerifyAuthTokenService(RedisClient)
-  //     .verifyOne(accessToken, ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN)
-  //   if (adminAccount) return done(null, JSON.parse(JSON.stringify({...adminAccount, isAdmin: true})));
-  //   return done(null, false);
-  // } catch (error) {
-  //   console.log('error :>> ', error);
-  //   return done(error, false);
-  // }
+};
+const azureADAdminAuthHandler = async (req: any, data: any, done: any = () => null) => {
+  try {
+    const accessToken = req.headers['authorization'].split(' ')[1]
+    if (!data.oid) {
+      throw new Error('No user auth found.')
+    }
+    console.log('object :>> ', req);
+    console.log('object :>> ', data);
+    done(null, data)
+    return
+  } catch (error) {
+    console.log('error :>> ', error);
+    done(error, null, {})
+  }
 };
 
 // const oAuth = (service: string) => async (token: string, done: any = () => null) => {
@@ -155,10 +159,10 @@ export const AzureADAdminAuthJWT = new BearerStrategy({
   isB2C: true,
   policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
-  audience: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
+  audience: `7dad8244-d201-41a9-9fa1-4236025372df`,
   scope: ["openid", "profile", "User.Read", 'dev.read'],
   loggingLevel: 'info',
   loggingNoPII: false,
-}, azureADAuthHandler);
+}, azureADAdminAuthHandler);
 // export const facebook = new BearerStrategy(oAuth('facebook'));
 // export const google = new BearerStrategy(oAuth('google'));
