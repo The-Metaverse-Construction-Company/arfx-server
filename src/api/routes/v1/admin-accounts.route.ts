@@ -2,7 +2,8 @@ import express from 'express'
 import * as controller from '../../controllers/admin-account/index.controller'
 import * as authCrontroller from '../../controllers/admin-account/auth.controller'
 import {
-  authorize, authorizeAdminAccount
+  authorize, authorizeAdminAccount,
+  azureAdAminAuth
 } from '../../middlewares/auth'
 import * as adminValidations from '../../validations/admin-account.validation'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
@@ -22,6 +23,7 @@ const router = express.Router();
  *        '201':
  *          description: "OK"
  */
+router.get('/auth/azure', azureAdAminAuth(), authCrontroller.validateAuthTokenRoute)
 router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRoute)
 /**xx
  * @swagger
