@@ -15,10 +15,11 @@ import {
   NODE_ENVIRONMENTS
 } from '../utils/constants';
 const blobStorage = {
-  upload: (blobName: string, file: string, blobContainerName: string, callback = (url: string) => {}): Promise<string> => {
+  upload: (blobName: string, file: File, blobContainerName: string, callback = (url: string) => {}): Promise<string> => {
     return new Promise(async (resolve, reject) => {
       try {
-        let blobLoc = file
+        //@ts-expect-error
+        let {path:blobLoc = '', mimetype = '', originalname = '', fieldname = ''} = file
         const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, blobContainerName, blobName)
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
@@ -26,9 +27,14 @@ const blobStorage = {
           // if ((NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION)) {
             // uploading the file thru cloud
             // upload the file and run it thru background.
-            const fileReadStream = fs.createReadStream(file)
+            const fileReadStream = fs.createReadStream(blobLoc)
             bbc
-              .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5)
+              .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5, {
+                blobHTTPHeaders: {
+                  blobContentType: mimetype
+                  // blobContentDisposition: `form-data; name="${fieldname}"; filename="${originalname}"`
+                }
+              })
               .catch((err) => {
                 console.log('Failed to upload blob.', err.message);
                 // throw err
