@@ -1,6 +1,6 @@
 import express from 'express'
 import * as controller from '../../controllers/auth.controller'
-import { authAzureAD, authorize } from '../../middlewares/auth'
+import { authorize } from '../../middlewares/auth'
 import {signInValidationPipeline
 } from '../../validations/auth.validation'
 import { requestValidatorMiddleware } from '../../validations'
@@ -39,7 +39,7 @@ router.route('/')
  *          $ref: '#/components/responses/User/Detail'
  */
 router.route('/azure')
-  .post(authAzureAD(),
+  .post(authorize(),
   (req, res) => {
     res.status(httpStatus.OK).send(successReponse(req.user))
   })
@@ -56,12 +56,12 @@ router.route('/azure')
  *        '200':
  *          $ref: '#/components/responses/User/Detail'
  */
-router.route('/login')
-  .post(
-    signInValidationPipeline,
-    requestValidatorMiddleware,
-    controller.userSignInRoute
-  )
+// router.route('/login')
+//   .post(
+//     signInValidationPipeline,
+//     requestValidatorMiddleware,
+//     controller.userSignInRoute
+//   )
 // /**
 //  * @swagger
 //  *  /v1/auth/sign-out:

@@ -66,6 +66,8 @@ router.route('/')
  *  /v1/admin-accounts:
  *    post:
  *      summary: Create Admin Account.
+ *      security:
+ *        - adminBearerAuth: []
  *      tags: 
  *        - "Admin Account"
  *      requestBody:
@@ -75,6 +77,7 @@ router.route('/')
  *          description: "OK"
  */
   .post(
+    authorizeAdminAccount(),
     adminValidations.FormPipeline,
     requestValidatorMiddleware,
     controller.createAdminAccountRoute
@@ -97,7 +100,8 @@ router.route('/')
  *        '200':
  *          description: "OK"
  */
-  .get(authorizeAdminAccount(),
+  .get(
+    authorizeAdminAccount(),
     PaginationQueryPipeline,
     requestValidatorMiddleware,
     controller.adminAccountListRoute
