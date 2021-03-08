@@ -39,6 +39,25 @@ router.route('/payment-methods')
  *        description: Stripe Payment Object
  */
   .get(controller.getCustomerPaymentMethods)
+router.route('/payment-methods/:paymentMethodId')
+/**
+ * @swagger
+ * /v1/users/{userId}/settings/payment-card/payment-methods/{paymentMethodId}:
+ *  delete:
+ *    summary: "delete the specific payment method attached to the user"
+ *    tags:
+ *      - "User Settings"
+ *    security:
+ *      - userBearerAuth: []
+ *      - adminBearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/User/id'
+ *      - $ref: '#/components/requestParams/User/paymentMethodId'
+ *    responses:
+ *      '200':
+ *        description: Stripe Payment Object
+ */
+  .delete(controller.detachPaymentMethodToCustomer)
   // .get(validate(PurchaseValidation), controller.getCustomerPaymentMethods)
 
 export default router;

@@ -21,9 +21,21 @@ export default {
     paymentMethod: {
       detach: async (pmId: string) => {
         try {
+          console.log('pmId :>> ', pmId);
           const paymentMethod = await stripe.paymentMethods.detach(pmId);
+          return paymentMethod
         } catch (error) {
-          console.log('failed to detach payment method ', error.message);
+          console.log('failed to detach paxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyment method ', error.message);
+          throw error
+        }
+      },
+      updateOne: async (pmId: string) => {
+        try {
+          console.log('pmId :>> ', pmId);
+          const paymentMethod = await stripe.paymentMethods.detach(pmId);
+          return paymentMethod
+        } catch (error) {
+          console.log('failed to detach paxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyment method ', error.message);
           throw error
         }
       },
