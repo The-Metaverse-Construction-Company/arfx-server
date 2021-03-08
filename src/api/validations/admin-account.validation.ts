@@ -3,10 +3,14 @@ import {adminAccountValidateEmailService} from '../service-configurations/admin-
 import { EmailAddressPattern, HumanNamePattern } from '../utils/regex-pattern'
 import {ADMIN_ROLE_LEVEL} from '../domain/entities/admin-accounts'
 import enumExtract from 'ts-enum-extractor'
+import { validateEmailDomain } from '../helper'
   // POST /v1/auth/register
 const validateAdminEmail = async (value: string, {req}: any) => {
   try {
     // validate productId
+    if (!validateEmailDomain(value)) {
+      throw new Error(`Invalid email organization domain.`)
+    }
     await adminAccountValidateEmailService().validateOne(value).catch(() => {
       throw new Error('email address is already exist on the repository.')
     })

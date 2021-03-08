@@ -65,8 +65,13 @@ export const AZURE_BLOB_CONTAINER_NAME = {
   PRIVATE_BLOB: 'private-blob',
   PUBLIC_BLOB: 'public-blob',
 }
-// ## AZURE AD CONFIG ###
+// ## AZURE AD CONFIG ##
+export const AZURE_AD_ACCOUNT_NAME = process.env.AZURE_AD_ACCOUNT_NAME || ''
+export const AZURE_AD_TENANT_ID = process.env.AZURE_AD_TENANT_ID || ''
+// ## AZURE AD USER CONFIG ###
 export const AZURE_AD_CLIENT_ID = process.env.AZURE_AD_CLIENT_ID || ''
-export const AZURE_AD_ACCOUNT_NAME = process.env.AZURE_AD_ACCOUNT_NAME || ' '
-export const AZURE_AD_TENANT_ID = process.env.AZURE_AD_TENANT_ID || ' '
-export const AZURE_AD_CLIENT_SECRET_ID = process.env.AZURE_AD_CLIENT_SECRET_ID || ' '
+export const AZURE_AD_CLIENT_SECRET_ID = process.env.AZURE_AD_CLIENT_SECRET_ID || ''
+// ## AZURE AD ADMIN CONFIG ###
+export const AZURE_AD_ADMIN_CLIENT_ID = process.env.AZURE_AD_ADMIN_CLIENT_ID || ''
+export const AZURE_AD_ADMIN_CLIENT_SECRET_ID = process.env.AZURE_AD_ADMIN_CLIENT_SECRET_ID || ''
+export const AZURE_AD_ADMIN_CLIENT_SECRET_VALUE = process.env.AZURE_AD_ADMIN_CLIENT_SECRET_VALUE || ''

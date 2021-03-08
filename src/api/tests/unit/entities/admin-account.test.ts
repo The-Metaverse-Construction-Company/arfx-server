@@ -3,12 +3,14 @@ import {expect} from 'chai'
 // import {v4} from 'uuid'
 import AdminEntity, { ADMIN_ROLE_LEVEL, ALLOWED_ADMIN_ROLE_LEVEL, IAdminAccountsEntity } from '../../../domain/entities/admin-accounts'
 import { validateBoolean, validateNumeric, validateString, getNestedPropertyValue, setNestedPropertyValue } from '../general'
+import { validateEmailDomain } from '../../../helper'
 
 export const Entity = AdminEntity({
   generateId: () => {
     return '1'
   },
-  hash: (hash: string) => "simple hash"
+  hash: (hash: string) => "simple hash",
+  validateEmailDomain: validateEmailDomain
 })
 describe('@Admin Account Entity', () => {
   const entityObject:Partial<IAdminAccountsEntity> = {

@@ -28,16 +28,23 @@ import {
 
 import AuthToken from '../helper/admin-account-token'
 import {compare} from '../helper/encryptor'
-
+import MSGraphAPI from '../../app-plugins/api/ms-graph'
+import {
+  AZURE_AD_ACCOUNT_NAME,
+  AZURE_AD_ADMIN_CLIENT_ID,
+  AZURE_AD_ADMIN_CLIENT_SECRET_ID,
+  AZURE_AD_ADMIN_CLIENT_SECRET_VALUE
+} from '../../config/vars'
 export const adminAccountValidateEmailService = () => (
   new AdminAccountValidateEmailService({
     repositoryGateway: new AdminAccountRepository(),
   })
 )
-export const createAdminAccountService = (redis: RedisClient) => (
+export const createAdminAccountService = () => (
   new CreateAdminAccountService({
     repositoryGateway: new AdminAccountRepository(),
-    adminAccountValidateEmailService: adminAccountValidateEmailService()
+    adminAccountValidateEmailService: adminAccountValidateEmailService(),
+    MSGraphAPI: new MSGraphAPI(AZURE_AD_ACCOUNT_NAME, AZURE_AD_ADMIN_CLIENT_ID, AZURE_AD_ADMIN_CLIENT_SECRET_VALUE)
     // generateToken: (new AuthToken({redisClient: redis})).generateAccessToken,
     // sendEmail: sendVerificationEmail().sendOne,
     // validateEmail: validateUserEmail().validateOne

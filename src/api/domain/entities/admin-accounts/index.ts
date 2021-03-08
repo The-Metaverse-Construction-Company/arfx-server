@@ -2,7 +2,7 @@ import {
   IGeneralEntityDependencies, IGeneralVerificationEntityProperties,
 } from '../../interfaces'
 import {
-  IAdminAccountsEntity
+  IAdminAccountsEntity, IAuthenticationServices
 } from './interfaces'
 import {
   ADMIN_ROLE_LEVEL,
@@ -14,12 +14,13 @@ export * from './constants'
 export * from './repository-gateway-interfaces'
 
 import GeneralEntity from '../general'
-import e from 'express'
 interface IDeps extends IGeneralEntityDependencies {
-  hash(pwd: string): string 
+  hash(pwd: string): string,
+  validateEmailDomain(email: string): boolean
 }
 export default ({
   generateId,
+  validateEmailDomain,
   hash
 }: IDeps) => (
   /**
@@ -37,6 +38,7 @@ export default ({
     public readonly roleLevel!: number
     public email!: IGeneralVerificationEntityProperties
     public password: string = '';
+    public oauth: IAuthenticationServices
     constructor ({
       _id = '',
       firstName = '',
@@ -44,6 +46,7 @@ export default ({
       roleLevel = ADMIN_ROLE_LEVEL.USER,
       email = {value: '', verified: false, verifiedAt: 0},
       password = '',
+      oauth = {azureAd: ''}
     }: Partial<IAdminAccountsEntity>) {
       super()
       if (this.validateString(firstName, 'firstName')) {
@@ -57,6 +60,9 @@ export default ({
         password = hash(password)
       }
       email.value = this.validateString(email.value, 'email.value')
+      if (!validateEmailDomain(email.value)) {
+        throw new Error('Invalid email domain.')
+      }
         // add more business rule validation here.
         // add more validation like the format of it.
       email.verified = this.validateBoolean(email.verified, 'email.verified')
@@ -73,6 +79,9 @@ export default ({
       this.lastName = lastName
       this.roleLevel = roleLevel
       this.password = password
+      this.oauth = {
+        azureAd: oauth?.azureAd ?? ''
+      }
     }
   }
 )

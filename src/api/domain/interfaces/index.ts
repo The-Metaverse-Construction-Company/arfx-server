@@ -93,3 +93,11 @@ export interface IImageResizeOption {
 export interface IValidateProductTotalAmount {
   (price: number, discountPercentage: number): boolean
 }
+export interface IMSGraphCreateAdminUser {
+  username: string
+  fullName: string
+}
+export interface IMSGraphAPIGateway {
+  generateAccessToken(): Promise<string>
+  createAdminAccount(data: IMSGraphCreateAdminUser): Promise<any>
+}

@@ -12,8 +12,12 @@ export interface IAdminAccountsParams {
   password: string
   email: string
 }
+export interface IAuthenticationServices {
+  azureAd: string
+}
 export interface IAdminAccountsEntityBody extends Omit<IAdminAccountsParams, 'email'> {
   email: IGeneralVerificationEntityProperties
+  oauth: IAuthenticationServices
 }
 export interface IAdminAccountsEntity extends IAdminAccountsEntityBody, IGeneralEntityProperties {
 }

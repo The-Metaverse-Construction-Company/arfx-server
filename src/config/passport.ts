@@ -27,10 +27,17 @@ import {
   userDetails
 } from '../api/service-configurations/users'
 /**
+ * @services
+ */
+import {
+  createAdminAccountService,
+  adminAccountDetailsService
+} from '../api/service-configurations/admin-accounts'
+/**
  * @app_entities
  */
 import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
-import { ADMIN_ACCOUNT_TOKEN_TYPES } from '../api/domain/entities/admin-accounts';
+import { ADMIN_ACCOUNT_TOKEN_TYPES, ADMIN_ROLE_LEVEL } from '../api/domain/entities/admin-accounts';
 import {
   adminAccountVerifyAuthTokenService
 } from '../api/service-configurations/admin-accounts'
@@ -122,14 +129,38 @@ const azureADAdminAuthHandler = async (req: any, data: any, done: any = () => nu
   try {
     const accessToken = req.headers['authorization'].split(' ')[1]
     if (!data.oid) {
-      throw new Error('No user auth found.')
+      throw new Error('No admin user auth found.')
     }
-    console.log('object :>> ', req);
-    console.log('object :>> ', data);
-    done(null, data)
-    return
+    const adminAccount = await adminAccountDetailsService()
+      .getOneByAzureAdId(data.oid)
+      .catch(async (err) => {
+        if (err.message === 'No admin account found.') {
+          console.log('data :>> ', data);
+          const email = data.preferred_username || ((data.emails && data.emails.length >= 1) ? data.emails[0] : '')
+          console.log('email :>> ', email);
+          if (!email) {
+            throw new Error('No primary email found.')
+          }
+          const {admin} = await createAdminAccountService()
+            .createOne({
+              firstName: `ARFXHome`,
+              lastName: `Admin`,
+              roleLevel: ADMIN_ROLE_LEVEL.ADMIN,
+              email: email,
+              password: 'qweQWE123!@#', // default pwd
+              azureAdId: data.oid,
+            })
+            console.log('admin :>> ', admin);
+          return admin
+        }
+        throw err
+      })
+    if (!adminAccount) {
+      throw new Error('No admin account found.')
+    }
+    return done(null, JSON.parse(JSON.stringify({...adminAccount, isAdmin: true})));
   } catch (error) {
-    console.log('error :>> ', error);
+    console.log('err@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2or :>> ', error);
     done(error, null, {})
   }
 };
@@ -155,13 +186,18 @@ export const AzureADAdminAuthJWT = new BearerStrategy({
   identityMetadata: "https://login.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6/v2.0/.well-known/openid-configuration",
   // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.b2clogin.com/${AZURE_AD_ACCOUNT_NAME}.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration`, 
   clientID: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
-  clientSecret: `3cc11fa8-efd3-4e8c-8920-d7738c595190`,
+  // clientSecret: `3cc11fa8-efd3-4e8c-8920-d7738c595190`,
   validateIssuer: false,
   // isB2C: true,
   // policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
   audience: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
-  scope: ['dev.read'],
+  scope: [
+    'User.Read',
+    'profile',
+    'openid',
+    'dev.read'
+  ],
   // scope: ['dev.read'],
   loggingLevel: 'info',
   loggingNoPII: false,
