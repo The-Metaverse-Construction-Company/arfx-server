@@ -149,18 +149,20 @@ export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
 export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy(AzureADConfig, azureADAuthHandler);
 export const AzureADAdminAuthJWT = new BearerStrategy({
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
+  // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6.onmicrosoft.com/v2.0/.well-known/openid-configuration`, 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/v2.0/authorize', 
-  identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.b2clogin.com/${AZURE_AD_ACCOUNT_NAME}.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration`, 
+  identityMetadata: "https://login.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6/v2.0/.well-known/openid-configuration",
+  // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.b2clogin.com/${AZURE_AD_ACCOUNT_NAME}.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration`, 
   clientID: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
-  // clientSecret: `3cc11fa8-efd3-4e8c-8920-d7738c595190`,
+  clientSecret: `3cc11fa8-efd3-4e8c-8920-d7738c595190`,
   validateIssuer: false,
-  isB2C: true,
-  policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
+  // isB2C: true,
+  // policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
-  audience: `7dad8244-d201-41a9-9fa1-4236025372df`,
-  scope: ["openid", "profile", "User.Read", 'dev.read'],
+  audience: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
+  scope: ['dev.read'],
+  // scope: ['dev.read'],
   loggingLevel: 'info',
   loggingNoPII: false,
 }, azureADAdminAuthHandler);
