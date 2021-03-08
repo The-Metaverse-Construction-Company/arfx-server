@@ -68,8 +68,8 @@ export const detachPaymentMethodToCustomer = async (req: Request, res: Response,
   try {
     const {stripeCustomerId = ''} = <IUserEntity>req.user
     const { paymentMethodId = '' } = req.params 
-    const paymentMethodList = await PaymentGateway.customer.paymentMethod.detach(paymentMethodId)
-    res.status(httpStatus.OK).send(successReponse(paymentMethodList))
+    const paymentId = await PaymentGateway.customer.paymentMethod.detach(paymentMethodId)
+    res.status(httpStatus.OK).send(successReponse(paymentId))
     return
   } catch (error) {
     next(new AppError({
