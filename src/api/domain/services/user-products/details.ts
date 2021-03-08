@@ -29,9 +29,12 @@ export class UserProductDetailsService {
       const userProduct = await this.dependencies.repositoryGateway.getOneByUserId(userId, id)
       if (userProduct) {
         // get the blob name by convertiong the string to array and separated by "/" and then get the last element to get the blob name.
-        const blobName = userProduct.contentZip.blobURL.split('/').pop()
+        const blobName = userProduct.contentZip.blobURL.split(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB).pop()
         // generate azure AD SAS Query params for the client app to fetch or able to donwload the content zip
-        const azureADSASQueryParams = this.dependencies.blobStorage.generateSASToken(AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB, blobName)
+        const azureADSASQueryParams = this.dependencies.blobStorage.generateSASToken(
+          AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB,
+          decodeURIComponent(blobName.substr(1)) // substring the blobname start to 1 to remove the first character which is "/"
+        )
         // overwrite the value of content zip blob url which is the zip file for the product/scene.
         userProduct.contentZip.blobURL = `${userProduct.contentZip.blobURL}?${azureADSASQueryParams}`
       }
