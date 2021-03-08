@@ -31,7 +31,7 @@ const blobStorage = {
             bbc
               .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5, {
                 blobHTTPHeaders: {
-                  blobContentType: mimetype
+                  blobContentType: mimetype,
                   // blobContentDisposition: `form-data; name="${fieldname}"; filename="${originalname}"`
                 }
               })
@@ -40,8 +40,9 @@ const blobStorage = {
                 // throw err
               })
               .finally(() => {
-                callback(bbc.url)
-                resolve(bbc.url)
+                const blobUrl = decodeURIComponent(bbc.url)
+                callback(blobUrl)
+                resolve(blobUrl)
               })
             blobLoc = bbc.url
           // } else {
