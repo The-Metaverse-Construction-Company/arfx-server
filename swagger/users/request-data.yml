@@ -76,3 +76,10 @@ components:
           type: string
           required: true
           description: id of the user/customer.
+      paymentMethodId:
+        in: path
+        name: paymentMethodId
+        schema:
+          type: string
+          required: true
+          description: paymentMethodId to be detach thru the user.
