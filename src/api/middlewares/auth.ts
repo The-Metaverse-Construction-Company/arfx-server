@@ -53,7 +53,7 @@ const handleJWT = (req: Request, res: Response, next: NextFunction, roles: any) 
 export const authorize = (roles: string|string[] = ALLOWED_USER_ROLES) => (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
     // ['admin-auth'], { session: false },
-    ['admin-auth', 'azure-oauth-bearer'], { session: false },
+    ['azure-oauth-bearer', 'azure-admin-oauth-bearer'], { session: false },
     handleJWT(req, res, next, roles),
   )(req, res, next);
 export const authorizeAdminAccount = () => (req: Request, res: Response, next: NextFunction) =>

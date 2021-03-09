@@ -7,6 +7,7 @@ import { validateEmailDomain } from '../helper'
   // POST /v1/auth/register
 const validateAdminEmail = async (value: string, {req}: any) => {
   try {
+    console.log('validateEmailDomain(value) :>> ', validateEmailDomain(value));
     // validate productId
     if (!validateEmailDomain(value)) {
       throw new Error(`Invalid email organization domain.`)

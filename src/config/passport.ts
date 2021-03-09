@@ -89,14 +89,14 @@ const adminJWTOptions = {
 // };
 const azureADAuthHandler = async (req: any, data: any, done: any = () => null) => {
   try {
-    const accessToken = req.headers['authorization'].split(' ')[1]
+    // const accessToken = req.headers['authorization'].split(' ')[1]
     if (!data.oid) {
       throw new Error('No user auth found.')
     }
     const user = await userDetails()
       .findByAzureAdUserId(data.oid)
       .catch(async (err) => {
-        console.log('data :>> ', data);
+        // console.log('data :>> ', data);
         if (err.message === 'No data found.') {
           const email = data.preferred_username ?? (data.emails && data.emails.length >= 1) ? data.emails[0] : ''
           if (!email) {
