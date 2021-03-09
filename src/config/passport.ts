@@ -49,7 +49,7 @@ import { TOKEN_TYPE } from '../api/utils/constants';
  * @config_variable
  */
 import AzureADConfig  from '../config/azure-ad'
-import RedisClient from './redis'
+// import RedisClient from './redis'
 
 const jwtOptions = {
   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
@@ -62,31 +62,31 @@ const adminJWTOptions = {
   passReqToCallback: true
 };
 
-const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
-  try {
-    const {authorization = ''} = req.headers
-    const accessToken = authorization.split(' ')[1]
-    const user = await userVerifyToken(RedisClient)
-      .verifyOne(accessToken, TOKEN_TYPE.SIGN_IN)
-    if (user) return done(null, JSON.parse(JSON.stringify({...user, isAdmin: false})));
-    return done(null, false);
-  } catch (error) {
-    return done(error, false);
-  }
-};
-const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
-  try {
-    const {authorization = ''} = req.headers
-    const accessToken = authorization.split(' ')[1]
-    const adminAccount = await adminAccountVerifyAuthTokenService(RedisClient)
-      .verifyOne(accessToken, ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN)
-    if (adminAccount) return done(null, JSON.parse(JSON.stringify({...adminAccount, isAdmin: true})));
-    return done(null, false);
-  } catch (error) {
-    console.log('error :>> ', error);
-    return done(error, false);
-  }
-};
+// const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
+//   try {
+//     const {authorization = ''} = req.headers
+//     const accessToken = authorization.split(' ')[1]
+//     const user = await userVerifyToken(RedisClient)
+//       .verifyOne(accessToken, TOKEN_TYPE.SIGN_IN)
+//     if (user) return done(null, JSON.parse(JSON.stringify({...user, isAdmin: false})));
+//     return done(null, false);
+//   } catch (error) {
+//     return done(error, false);
+//   }
+// };
+// const AdminAccountAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
+//   try {
+//     const {authorization = ''} = req.headers
+//     const accessToken = authorization.split(' ')[1]
+//     const adminAccount = await adminAccountVerifyAuthTokenService(RedisClient)
+//       .verifyOne(accessToken, ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN)
+//     if (adminAccount) return done(null, JSON.parse(JSON.stringify({...adminAccount, isAdmin: true})));
+//     return done(null, false);
+//   } catch (error) {
+//     console.log('error :>> ', error);
+//     return done(error, false);
+//   }
+// };
 const azureADAuthHandler = async (req: any, data: any, done: any = () => null) => {
   try {
     const accessToken = req.headers['authorization'].split(' ')[1]
@@ -176,8 +176,8 @@ const azureADAdminAuthHandler = async (req: any, data: any, done: any = () => nu
 //     return done(err);
 //   }
 // };
-export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
-export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
+// export const jwt = new JwtStrategy(jwtOptions, JWTAuthHandler);
+// export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy(AzureADConfig, azureADAuthHandler);
 export const AzureADAdminAuthJWT = new BearerStrategy({
   // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6.onmicrosoft.com/v2.0/.well-known/openid-configuration`, 

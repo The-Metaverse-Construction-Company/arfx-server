@@ -50,7 +50,7 @@ export const createAdminAccountService = () => (
     // validateEmail: validateUserEmail().validateOne
   })
 )
-export const updateAdminAccountService = (redis: RedisClient) => (
+export const updateAdminAccountService = () => (
   new UpdateAdminAccountService({
     repositoryGateway: new AdminAccountRepository(),
     adminAccountValidateEmailService: adminAccountValidateEmailService()
