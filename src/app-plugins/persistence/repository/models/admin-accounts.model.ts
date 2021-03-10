@@ -12,7 +12,7 @@ export interface IAdminAccountsRepositoryModel extends Document, IAdminAccountsE
   _id: any
 }
 // this will automatically error when it have a changes on the purchase history entity interface
-const RepositoryModel = <Record<keyof IAdminAccountsEntity, any>> {
+const RepositoryModel = <Record<keyof IAdminAccountsEntity, SchemaTypeOpts<Object>>> {
 // const RepositoryModel = <Record<keyof IAdminAccountsEntity, SchemaTypeOpts<Object>>> {
   _id: {
     type: String,
@@ -28,7 +28,15 @@ const RepositoryModel = <Record<keyof IAdminAccountsEntity, any>> {
     default: '',
     required: true,
   },
+  oauth: {
+    type: Object,
+    azureAd: {
+      type: String,
+      default: ''
+    }
+  },
   email: {
+    type: Object,
     value: {
       type: String,
       default: '',
