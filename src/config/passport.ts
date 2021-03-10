@@ -191,7 +191,7 @@ export const AzureADAdminAuthJWT = new BearerStrategy({
     'User.Read',
     'profile',
     'openid',
-    'dev.read'
+    'full'
   ],
   loggingLevel: 'info',
   loggingNoPII: false,

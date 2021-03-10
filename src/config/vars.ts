@@ -71,7 +71,9 @@ export const AZURE_AD_TENANT_ID = process.env.AZURE_AD_TENANT_ID || ''
 // ## AZURE AD USER CONFIG ###
 export const AZURE_AD_CLIENT_ID = process.env.AZURE_AD_CLIENT_ID || ''
 export const AZURE_AD_CLIENT_SECRET_ID = process.env.AZURE_AD_CLIENT_SECRET_ID || ''
+export const AZURE_AD_CLIENT_SCOPES = process.env.AZURE_AD_CLIENT_SCOPES ? process.env.AZURE_AD_CLIENT_SCOPES.split(' ') : ['openid', 'offline_access']
 // ## AZURE AD ADMIN CONFIG ###
 export const AZURE_AD_ADMIN_CLIENT_ID = process.env.AZURE_AD_ADMIN_CLIENT_ID || ''
 export const AZURE_AD_ADMIN_CLIENT_SECRET_ID = process.env.AZURE_AD_ADMIN_CLIENT_SECRET_ID || ''
 export const AZURE_AD_ADMIN_CLIENT_SECRET_VALUE = process.env.AZURE_AD_ADMIN_CLIENT_SECRET_VALUE || ''
+export const AZURE_AD_ADMIN_SCOPES = process.env.AZURE_AD_ADMIN_SCOPES ? process.env.AZURE_AD_ADMIN_SCOPES.split(' ') : ['User.Read', 'profile', 'openid','full']
