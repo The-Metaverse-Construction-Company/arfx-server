@@ -43,19 +43,19 @@ router.route('/azure')
   (req, res) => {
     res.status(httpStatus.OK).send(successReponse(req.user))
   })
-/**
- * @swagger
- *  /v1/auth/login:
- *    post:
- *      tags: 
- *      - "Authentication"
- *      summary: Authenticate the registered users.
- *      requestBody:
- *        $ref: '#/components/requestBody/User/signIn'
- *      responses:
- *        '200':
- *          $ref: '#/components/responses/User/Detail'
- */
+// /**
+//  * @swagger
+//  *  /v1/auth/login:
+//  *    post:
+//  *      tags: 
+//  *      - "Authentication"
+//  *      summary: Authenticate the registered users.
+//  *      requestBody:
+//  *        $ref: '#/components/requestBody/User/signIn'
+//  *      responses:
+//  *        '200':
+//  *          $ref: '#/components/responses/User/Detail'
+//  */
 // router.route('/login')
 //   .post(
 //     signInValidationPipeline,

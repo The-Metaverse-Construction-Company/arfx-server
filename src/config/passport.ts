@@ -8,13 +8,14 @@ import {
 import {
   BearerStrategy,
 } from 'passport-azure-ad'
-import {Request} from 'express'
 /**
  * @env_variables
  */
 import {
   ADMIN_JWT_ACCESS_TOKEN_SECRET,
   AZURE_AD_ACCOUNT_NAME,
+  AZURE_AD_ADMIN_CLIENT_ID,
+  AZURE_AD_TENANT_ID,
   JWT_ACCESS_TOKEN_SECRET
 } from '../config/vars'
 /**
@@ -38,9 +39,9 @@ import {
  */
 import { ALLOWED_USER_ROLE } from '../api/domain/entities/users';
 import { ADMIN_ACCOUNT_TOKEN_TYPES, ADMIN_ROLE_LEVEL } from '../api/domain/entities/admin-accounts';
-import {
-  adminAccountVerifyAuthTokenService
-} from '../api/service-configurations/admin-accounts'
+// import {
+//   adminAccountVerifyAuthTokenService
+// } from '../api/service-configurations/admin-accounts'
 /**
  * @constant
  */
@@ -118,6 +119,7 @@ const azureADAuthHandler = async (req: any, data: any, done: any = () => null) =
           return user
         }
       })
+      console.log('user :>> ', user);
     done(null, user)
     return
   } catch (error) {
@@ -180,25 +182,17 @@ const azureADAdminAuthHandler = async (req: any, data: any, done: any = () => nu
 // export const adminAuthJWT = new JwtStrategy(adminJWTOptions, AdminAccountAuthHandler);
 export const AzureADAuthJWT = new BearerStrategy(AzureADConfig, azureADAuthHandler);
 export const AzureADAdminAuthJWT = new BearerStrategy({
-  // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6.onmicrosoft.com/v2.0/.well-known/openid-configuration`, 
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
-  // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/v2.0/authorize', 
-  identityMetadata: "https://login.microsoftonline.com/ed3b5426-dadf-4250-bc15-9e6aefe47fd6/v2.0/.well-known/openid-configuration",
-  // identityMetadata: `https://${AZURE_AD_ACCOUNT_NAME}.b2clogin.com/${AZURE_AD_ACCOUNT_NAME}.onmicrosoft.com/B2C_1_SIGN_UP_SIGN_IN1/v2.0/.well-known/openid-configuration`, 
-  clientID: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
-  // clientSecret: `3cc11fa8-efd3-4e8c-8920-d7738c595190`,
+  identityMetadata: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/v2.0/.well-known/openid-configuration`,
+  clientID: AZURE_AD_ADMIN_CLIENT_ID,
   validateIssuer: false,
-  // isB2C: true,
-  // policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
-  audience: `ceea412b-1a99-4a30-b0a2-d857209d8169`,
+  audience: AZURE_AD_ADMIN_CLIENT_ID,
   scope: [
     'User.Read',
     'profile',
     'openid',
     'dev.read'
   ],
-  // scope: ['dev.read'],
   loggingLevel: 'info',
   loggingNoPII: false,
 }, azureADAdminAuthHandler);

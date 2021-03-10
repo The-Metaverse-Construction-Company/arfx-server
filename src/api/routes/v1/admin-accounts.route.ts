@@ -38,26 +38,26 @@ router.get('/auth', authorizeAdminAccount(), authCrontroller.validateAuthTokenRo
  *          description: "OK"
  */
 router.post('/auth/azure', authorizeAdminAccount(), authCrontroller.validateAuthTokenRoute)
-/**xx
- * @swagger
- * paths:
- *  /v1/admin-accounts/auth/sign-in:
- *    post:
- *      summary: sign in or login admin account.
- *      tags: 
- *        - "Admin Account Authentication"
- *      requestBody:
- *         $ref: '#/components/requestBody/AdminAccount/signIn'
- *      responses:
- *        '200':
- *          description: "OK"
- */
-router.route('/auth/sign-in')
-  .post(
-    adminValidations.SignInFormValidationPipeline,
-    requestValidatorMiddleware,
-    authCrontroller.signInAdminAccountRoute
-  )
+// /**
+//  * @swagger
+//  * paths:
+//  *  /v1/admin-accounts/auth/sign-in:
+//  *    post:
+//  *      summary: sign in or login admin account.
+//  *      tags: 
+//  *        - "Admin Account Authentication"
+//  *      requestBody:
+//  *         $ref: '#/components/requestBody/AdminAccount/signIn'
+//  *      responses:
+//  *        '200':
+//  *          description: "OK"
+//  */
+// router.route('/auth/sign-in')
+//   .post(
+//     adminValidations.SignInFormValidationPipeline,
+//     requestValidatorMiddleware,
+//     authCrontroller.signInAdminAccountRoute
+//   )
 // router.use('/', authorizeAdminAccount()) // disable this to create the first admin acct.
 router.route('/')
 /**

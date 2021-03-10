@@ -59,7 +59,7 @@ export const authorize = (roles: string|string[] = ALLOWED_USER_ROLES) => (req: 
 export const authorizeAdminAccount = () => (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
     // ['admin-auth'], { session: false },
-    [`azure-admin-oauth-bearer`, 'admin-auth'], { session: false },
+    [`azure-admin-oauth-bearer`], { session: false },
     handleJWT(req, res, next, ALLOWED_USER_ROLE.ADMIN),
   )(req, res, next);
 // export const authAzureAD = () => (req: Request, res: Response, next: NextFunction) =>
