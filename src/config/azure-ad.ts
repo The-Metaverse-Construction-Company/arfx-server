@@ -10,9 +10,9 @@ import {
 import { 
   AZURE_AD_ACCOUNT_NAME,
   AZURE_AD_CLIENT_ID,
+  AZURE_AD_CLIENT_SCOPES,
   AZURE_AD_CLIENT_SECRET_ID
 } from '../config/vars'
-console.log('AZURE_AD_SCOPES :>> ', process.env.AZURE_AD_SCOPES.split(' '));
 const AZURE_AD_CONFIG = <IBearerStrategyOption> {
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/v2.0/.well-known/openid-configuration', 
   // identityMetadata: 'https://login.microsoftonline.com/shawmakesmagicgmail.onmicrosoft.com/oauth2/token', 
@@ -25,7 +25,7 @@ const AZURE_AD_CONFIG = <IBearerStrategyOption> {
   policyName: 'B2C_1_SIGN_UP_SIGN_IN1',
   passReqToCallback: true,
   audience: AZURE_AD_CLIENT_ID,
-  scope: process.env.AZURE_AD_SCOPES ? process.env.AZURE_AD_SCOPES.split(' ') : ['openid', 'offline_access'],
+  scope: AZURE_AD_CLIENT_SCOPES,
   loggingLevel: 'info',
   loggingNoPII: false,
 }
