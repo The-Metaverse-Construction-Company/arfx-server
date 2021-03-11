@@ -28,6 +28,7 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
+import { BlobUploaderMiddleware } from '../../helper/blob-uploader'
 
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
@@ -48,10 +49,12 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Product'
  */
-  .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.fields([]),
-  validations.ProductFormValidationPipeline,
-  requestValidatorMiddleware,
-  controller.createProductRoute)
+  .post(
+    authorize(ALLOWED_USER_ROLE.ADMIN),
+    uploader.fields([]),
+    validations.ProductFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.createProductRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
 /**x
  * @swagger
@@ -140,11 +143,13 @@ router.route('/:productId')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .patch(authorizeAdminAccount(),
-  uploader.fields([]),
-  validations.ProductFormValidationPipeline,
-  requestValidatorMiddleware,
-  controller.updateProductRoute)
+  .patch(
+    authorizeAdminAccount(),
+    uploader.fields([]),
+    validations.ProductFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.updateProductRoute
+  )
   /**
  * @swagger
  * /v1/products/{productId}:
@@ -189,7 +194,7 @@ router.route('/:productId/published')
     validations.UpdateProductPublishValidation,
     requestValidatorMiddleware,
     controller.updateProductPublishStatusRoute
-    )
+  )
 /**
  * @swagger
  * /v1/products/{productId}/{blobType}:
@@ -209,13 +214,14 @@ router.route('/:productId/published')
  *        $ref: '#/components/schemas/Product'
  */
 router
-  .post('/:productId/:blobType',
-  authorizeAdminAccount(),
-  uploader.single('blob'), 
-  validations.ProductBlobTypeValidationPipeline,
-  requestValidatorMiddleware,
-  controller.uploadCreatedProductBlobRoute
-)
+  .post(
+    '/:productId/:blobType',
+    authorizeAdminAccount(),
+    BlobUploaderMiddleware,
+    validations.ProductBlobTypeValidationPipeline,
+    requestValidatorMiddleware,
+    controller.uploadCreatedProductBlobRoute
+  )
 /**
  * @swagger
  * /v1/products/{productId}/{blobType}:
@@ -235,13 +241,14 @@ router
  *        $ref: '#/components/schemas/Product'
  */
 router
-  .patch('/:productId/:blobType',
-  authorizeAdminAccount(),
-  uploader.single('blob'), 
-  validations.ProductBlobTypeValidationPipeline,
-  requestValidatorMiddleware,
-  controller.uploadUpdateProductBlobRoute
-)
+  .patch(
+    '/:productId/:blobType',
+    authorizeAdminAccount(),
+    BlobUploaderMiddleware,
+    validations.ProductBlobTypeValidationPipeline,
+    requestValidatorMiddleware,
+    controller.uploadUpdateProductBlobRoute
+  )
 router.route('/:productId/:blobType\.:fileType')
   .get(
     // authorize(),

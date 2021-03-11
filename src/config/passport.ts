@@ -15,6 +15,7 @@ import {
   ADMIN_JWT_ACCESS_TOKEN_SECRET,
   AZURE_AD_ACCOUNT_NAME,
   AZURE_AD_ADMIN_CLIENT_ID,
+  AZURE_AD_ADMIN_SCOPES,
   AZURE_AD_TENANT_ID,
   JWT_ACCESS_TOKEN_SECRET
 } from '../config/vars'
@@ -50,6 +51,7 @@ import { TOKEN_TYPE } from '../api/utils/constants';
  * @config_variable
  */
 import AzureADConfig  from '../config/azure-ad'
+import { ADMIN } from '../api/middlewares/auth';
 // import RedisClient from './redis'
 
 const jwtOptions = {
@@ -187,12 +189,7 @@ export const AzureADAdminAuthJWT = new BearerStrategy({
   validateIssuer: false,
   passReqToCallback: true,
   audience: AZURE_AD_ADMIN_CLIENT_ID,
-  scope: [
-    'User.Read',
-    'profile',
-    'openid',
-    'full'
-  ],
+  scope: AZURE_AD_ADMIN_SCOPES,
   loggingLevel: 'info',
   loggingNoPII: false,
 }, azureADAdminAuthHandler);
