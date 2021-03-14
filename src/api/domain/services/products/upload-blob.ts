@@ -56,8 +56,9 @@ export class UploadProductBlobService {
       let uploadToStorageStatus = false
       let blobContainerName = AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
       //@ts-expect-error
-      let {path: blobLocalPath = ''} = uploadedBlob
-      const blobArr = blobLocalPath.split('.')
+      let {path: blobLocalPath = '', filename = ''} = uploadedBlob
+      console.log('uploadedBlob :>> ', uploadedBlob);
+      const blobArr = filename.split('.')
       let originalFileExtension = blobArr.length >= 2 ? blobArr.pop() : ''
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${originalFileExtension}`
