@@ -57,8 +57,8 @@ export class UploadProductBlobService {
       let blobContainerName = AZURE_BLOB_CONTAINER_NAME.PUBLIC_BLOB
       //@ts-expect-error
       let {path: blobLocalPath = ''} = uploadedBlob
-
-      let originalFileExtension = blobLocalPath.split('.').pop()
+      const blobArr = blobLocalPath.split('.')
+      let originalFileExtension = blobArr.length >= 2 ? blobArr.pop() : ''
       if (type === PRODUCT_BLOB_TYPE.CONTENT_ZIP) {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.CONTENT_ZIP}.${originalFileExtension}`
         blobContainerName = AZURE_BLOB_CONTAINER_NAME.PRIVATE_BLOB
@@ -130,10 +130,9 @@ export class UploadProductBlobService {
         blobFileName = `${productId}/${PRODUCT_BLOB_TYPE.PREVIEW_IMAGE}.${originalFileExtension}`
       } else if (type === PRODUCT_BLOB_TYPE.THUMBNAIL) {
         const origPreviewImage = blobLocalPath.split('.')
-        const blobType = origPreviewImage.pop()
         const
           width = 400;
-        const newFilepath = `${origPreviewImage.join('.')}-w${width}.${blobType}`
+        const newFilepath = `${blobArr.join('.')}-w${width}.${originalFileExtension}`
         // resize the image preview to 150(h)x150(w)
         try {
           // overwrite the path of the previewVideo to new path of newly generated thumbnail.
