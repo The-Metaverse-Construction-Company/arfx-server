@@ -54,16 +54,17 @@ import AzureADConfig  from '../config/azure-ad'
 import { ADMIN } from '../api/middlewares/auth';
 // import RedisClient from './redis'
 
-const jwtOptions = {
-  secretOrKey: JWT_ACCESS_TOKEN_SECRET,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
-  passReqToCallback: true
-};
-const adminJWTOptions = {
-  secretOrKey: ADMIN_JWT_ACCESS_TOKEN_SECRET,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
-  passReqToCallback: true
-};
+console.log('AZURE_AD_CONFIG :>> ', AzureADConfig);
+// const jwtOptions = {
+//   secretOrKey: JWT_ACCESS_TOKEN_SECRET,
+//   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+//   passReqToCallback: true
+// };
+// const adminJWTOptions = {
+//   secretOrKey: ADMIN_JWT_ACCESS_TOKEN_SECRET,
+//   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+//   passReqToCallback: true
+// };
 
 // const JWTAuthHandler = async (req: Request, payload: any, done: any = () => null) => {
 //   try {
