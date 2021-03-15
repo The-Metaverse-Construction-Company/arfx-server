@@ -22,7 +22,7 @@ stages:
       displayName: Login to Docker Hub
       inputs:
         command: login
-        containerRegistry: dockerRegistry
+        containerRegistry: Docker Hub
     - task: Docker@2
       displayName: Build an image
       inputs:
