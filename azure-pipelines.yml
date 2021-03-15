@@ -45,7 +45,8 @@ stages:
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push'
         repository: arfxhome/backend-service
-      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
+        tags: |
+          latest
       
 - stage: Deploy
   displayName: Deploy Image to Azure App Service
