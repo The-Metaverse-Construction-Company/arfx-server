@@ -29,7 +29,7 @@ stages:
         command: build
         dockerfile: './Dockerfile'
         tags: |
-          arfxhome/backend-service:latest
+          latest
 - stage: Push
   displayName: Push image to DockerHub
   jobs:
@@ -45,7 +45,6 @@ stages:
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push'
         repository: arfxhome/backend-service
-        imageName: arfxhome/backend-service:latest
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
       
 - stage: Deploy
