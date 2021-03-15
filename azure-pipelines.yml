@@ -1,0 +1,61 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- development
+
+resources:
+- repo: self
+
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: './Dockerfile'
+        tags: |
+          arfxhome/backend-service:latest
+- stage: Push
+  displayName: Push image to DockerHub
+  jobs:
+  - job: Push
+    displayName: 'Push the Docker image to Dockerhub'
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Push an image to docker hub
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push'
+        imageName: arfxhome/backend-service:latest
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
+      
+- stage: Deploy
+  displayName: Deploy Image to Azure App Service
+  jobs:
+  - job: Deploy 
+    displayName: AzureDeploy
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Azure App Service Deploy: backend-dev-api'
+      inputs:
+        appType: webAppContainer
+        azureSubscription: 'Azure subscription 1 (4dd5d45b-2973-4ccf-9d12-8d2eea033878)'
+        WebAppName: backend-dev-api
+        DockerNamespace: arfxhome
+        DockerRepository: 'backend-service'
+        DockerImageTag: latest
