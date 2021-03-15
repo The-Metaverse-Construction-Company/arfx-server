@@ -4,4 +4,5 @@ const AZURE_COSMOS_CONFIG = {
   key: process.env.AZURE_COSMOS_KEY || '',
   port: process.env.AZURE_COSMOS_DATABASE_PORT || 10255
 }
+console.log('AZURE_COSMOS_CONFIG :>> ', AZURE_COSMOS_CONFIG);
 export default AZURE_COSMOS_CONFIG
