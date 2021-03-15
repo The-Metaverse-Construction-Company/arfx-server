@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./dist/server.js",
-    "dev": "nodemon -L ./dist/server.js",
+    "dev": "cross-env NODE_ENV=production node ./dist/server.js",
     "dev:watch": "tsc -w",
     "build": "tsc -p .",
     "test:unit": "cross-env NODE_ENV=test mocha src/api/tests/unit",
