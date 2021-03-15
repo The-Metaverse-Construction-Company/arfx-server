@@ -51,30 +51,27 @@ describe('@Signup Service', () => {
   it('should verify the user', (done) => {
     http
       .get(`/v1/auth/sign-up/verify`)
-      .query({token: signUpResponse.token})
+      .query({
+        token: signUpResponse.token
+      })
       .expect(httpStatus.OK)
       .then((data) => {
         const {success, result} = data.body
         assert.isOk(true)
         done()
       })
-      .catch((err) => {
-        assert.isOk(false)
-        done(err)
-      })
+      .catch(done)
   })
   it('should failed. invalid token for verify user', (done) => {
     http
       .get(`/v1/auth/sign-up/verify`)
       .query({token: signUpResponse.token})
-      .expect(httpStatus.OK)
+      .expect(httpStatus.BAD_REQUEST)
       .then(({body, status}) => {
-        assert.isOk(false)
-        done(true)
-      })
-      .catch((err) => {
-        assert.isOk(true)
+        const {success} = body
+        assert.isFalse(success)
         done()
       })
+      .catch(done)
   })
 })

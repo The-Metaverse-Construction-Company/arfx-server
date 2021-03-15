@@ -4,7 +4,6 @@ import {
 import {
   IUserAuthenticationServices,
   IUserEntity,
-  IUserParams
 } from './interfaces'
 export * from './interfaces'
 export * from './constants'
@@ -13,11 +12,13 @@ export * from './RepositoryGatewayInterfaces'
 const { ALLOWED_USER_ROLE } = require("./constants")
 const allowed_roles = Object.values(ALLOWED_USER_ROLE)
 interface IDeps extends IGeneralEntityDependencies {
-  hash(pwd: string): string 
+  hash(pwd: string): string
+  validateEmail(email: string): boolean
 }
 export default ({
   generateId,
-  hash
+  hash,
+  validateEmail
 }: IDeps) => (
   /**
    * _id: user id
@@ -48,13 +49,31 @@ export default ({
       password = '',
       role = '',
       stripeCustomerId = '',
-      suspended = false
+      suspended = false,
+      service = {
+        facebook: '',
+        google: '',
+        azureAd: ''
+      }
     }: Partial<IUserEntity>) {
       if (!_id) {
         _id = generateId()
       }
       if (!allowed_roles.includes(role)) {
         throw new Error(`Invalid user roles. Valid Roles: ${allowed_roles.join(', ')}.`)
+      }
+      if (service) {
+        if (service.azureAd && !(typeof(service.azureAd) === 'string')) {
+          throw new Error('service.azureAd must be a string.')
+        }
+      }
+      if (!email.value) {
+        throw new Error('email is required to initialize user entity.')
+      } else if (!validateEmail(email.value)) {
+        throw new Error('invalid email address format.')
+      }
+      if (suspended && typeof(suspended) !== 'boolean') {
+        throw new Error(`suspended must be a boolean. found: ${typeof(suspended)}`)
       }
       this._id = _id
       this.email = email
@@ -63,14 +82,13 @@ export default ({
       this.role = role
       this.suspended = suspended
       this.stripeCustomerId = stripeCustomerId
-      this.password = hash(password)
+      if (password) {
+        this.password = hash(password)
+      }
       // this.avatarUrl = avatarUrl
       this.createdAt = Date.now()
       this.updatedAt = Date.now()
-      this.service = {
-        facebook: '',
-        google: '',
-      }
+      this.service = service
     }
   }
 )

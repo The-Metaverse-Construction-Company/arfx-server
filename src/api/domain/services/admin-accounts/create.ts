@@ -1,37 +1,68 @@
+/**
+ * @admin_entitiy
+ */
 import {
   AdminAccountsEntity
 } from '../../entities'
-import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
-import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @admin_entity_interfaces
+ */
 import { 
   IAdminAccountRepositoryGateway,
-  IAdminAccountsParams
+  IAdminAccountsParams,
  } from '../../entities/admin-accounts'
+ /**
+  * @general_interfaces
+  */
+import { 
+  IGeneralServiceDependencies,
+  IMSGraphAPIGateway,
+} from '../../interfaces'
+/**
+ * @admin_services
+ */
 import {
   AdminAccountValidateEmailService
 } from './index'
 interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
-  // generateToken: IGenerateToken
-  // sendEmail(userId: string, token: string): Promise<any>
   adminAccountValidateEmailService: AdminAccountValidateEmailService
+  MSGraphAPI: IMSGraphAPIGateway
 }
 export class CreateAdminAccountService {
   constructor (protected deps: IServiceDependencies) {
   }
-  public createOne = async (requestParams: IAdminAccountsParams) => {
+  /**
+   * create admin account.
+   * @param adminParams 
+   */
+  public createOne = async (adminParams: IAdminAccountsParams & {azureAdId?: string}) => {
     try {
+      const {
+        azureAdId = ''
+      } = adminParams
       // initiate admin entity to run the validation for business rules.
       const newAdminAccount = new AdminAccountsEntity({
-        ...requestParams,
+        ...adminParams,
         email: {
-          value: requestParams.email,
-          verifiedAt: 0,
-          verified: false
+          value: adminParams.email.toLowerCase(),
+          verifiedAt: azureAdId ? Date.now() : 0,
+          verified: !(!azureAdId)
         },
+        oauth: {
+          azureAd: azureAdId
+        }
       })
       // check duplicate email.
       await this.deps.adminAccountValidateEmailService.validateOne(newAdminAccount.email.value)
-      // insert to repository.
+      // create account on the ms graph api
+      if (!azureAdId) {
+        const azureAd = await this.deps.MSGraphAPI.createAdminAccount({
+          fullName: `${newAdminAccount.firstName} ${newAdminAccount.lastName}`,
+          username: newAdminAccount.email.value.split("@").shift()
+        })
+        newAdminAccount.oauth.azureAd = azureAd.id
+      }
+      // save to repository.
       await this.deps.repositoryGateway.insertOne(newAdminAccount)
       // const token = await this.deps.generateToken({
       //   referenceId: newAdminAccount._id,

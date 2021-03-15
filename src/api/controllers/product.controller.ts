@@ -6,9 +6,11 @@ import {
   createProduct,
   productList,
   updateProduct,
-  productDetails,
-  removeProduct,
-  updateProductPublishStatus
+  productDetailService,
+  removeProductService,
+  updateProductPublishStatus,
+  updateProductBlobService,
+  featuredProductList
 } from '../service-configurations/products'
 import { errorResponse, successReponse } from '../helper/http-response'
 import { IAdminAccountsEntity } from '../domain/entities/admin-accounts'
@@ -90,6 +92,40 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
     }))
   }
 };
+
+export const uploadCreatedProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
+    const file = <any> req.file || {};
+    console.log('file :>> ', file);
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    res.end()
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+export const uploadUpdateProductBlobRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {productId = '', blobType = PRODUCT_BLOB_TYPE.PREVIEW_IMAGE} = req.params
+    const file = <any> req.file || {};
+    const updatedProduct = await updateProductBlobService()
+      .updateOne(productId, <any>blobType, file)
+    res.status(httpStatus.ACCEPTED)
+      .json(successReponse(removeProductOriginalFilepath(updatedProduct)))
+    res.end()
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
 /**
  * @public
  * product list
@@ -100,11 +136,42 @@ export const updateProductRoute = async (req: Request, res: Response, next: Next
  */
 export const productListRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {_id = ''} = <IUserEntity>req.user
+    const {_id = '', isAdmin = false} = <any>req.user
     const newProduct = await productList()
       .getList({
         ...req.query,
-        userId: _id,
+        userId: !isAdmin ? _id : '',
+        isAdmin: isAdmin
+      })
+    res.status(httpStatus.OK)
+      .json(successReponse(newProduct))
+  } catch (error) {
+    next(new AppError({
+      message: error.message,
+      httpStatus: httpStatus.BAD_REQUEST
+    }))
+  }
+};
+/**
+ * @public
+ * featured product list
+ * @requestQuery
+ *  @field -> searchText: string
+ *  @field -> startAt: number
+ *  @field -> limitTo: number
+ */
+export const featuredProductListRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {_id = '', isAdmin = false} = <any>req.user
+    const {limit = 0, pageNo = 0, searchText = ''} = req.query
+    const newProduct = await featuredProductList()
+      .getList({
+        searchText: searchText.toString(),
+        userId: !isAdmin ? _id : '',
+        isAdmin: isAdmin,
+        onFeaturedList: true,
+        limit: parseInt(limit as string),
+        pageNo: parseInt(pageNo as string)
       })
     res.status(httpStatus.OK)
       .json(successReponse(newProduct))
@@ -126,7 +193,7 @@ export const productDetailsMiddleware = async (req: Request, res: Response, next
     const {
       productId = ''
     } = req.params
-    const product = await productDetails()
+    const product = await productDetailService()
       .findOne(productId)
       // set productDetails on the response locals to access other routes.
     res.locals['productDetails'] = product
@@ -185,7 +252,7 @@ export const removeProductRoute = async (req: Request, res: Response, next: Next
     const {
       productId = ''
     } = req.params
-    const product = await removeProduct()
+    const product = await removeProductService()
       .removeOne(productId)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(removeProductOriginalFilepath(product)))
@@ -230,6 +297,7 @@ export const downloadContentZipRoute = async (req: Request, res: Response, next:
       throw new Error('Invalid url')
     }
     res.sendFile(blobOriginalFilepath)
+    return;
   } catch (error) {
     res
       .status(httpStatus.BAD_REQUEST)

@@ -8,7 +8,7 @@ import { EmailAddressPattern } from '../utils/regex-pattern'
 const validateDuplicateEmail = async (value: string) => {
   try {
     await validateUserEmail()
-      .validateOne({email: value})
+      .validateOne(value)
     return true
   } catch (error) {
     throw new Error('Email already exists.')

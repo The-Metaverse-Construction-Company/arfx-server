@@ -9,7 +9,7 @@ import { logs } from './vars'
 import * as strategies from './passport'
 import * as error from '../api/middlewares/error'
 
-import RedisClient from './redis'
+// import RedisClient from './redis'
 
 const Fingerprint = require('express-fingerprint')
 import swaggerUI from 'swagger-ui-express'
@@ -32,16 +32,6 @@ app.use(morgan(logs));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, '../../public')))
-// initialize busboy middleware
-// app.use((req: Request, _: any, next: NextFunction) => {
-//   if (req.method === 'POST') {
-//     req.app.set('busboy', new Busboy({ headers: req.headers }))
-//     // req.busboy.on('field', (fieldname, value) => {
-//     //   req.body[fieldname] = value
-//     // });
-//   }
-//   next()
-// })
 // setup request fingerprint
 app.use(Fingerprint({
   parameters: [
@@ -59,7 +49,7 @@ app.use((req, res, next) => {
 })
 // // console.log('RedisClient :>> ', RedisClient);
 // load redis
-app.set('redisPublisher', RedisClient)
+// app.set('redisPublisher', RedisClient)
 
 // gzip compression
 app.use(compress());
@@ -76,11 +66,16 @@ app.use(cors());
 
 // enable authentication
 app.use(passport.initialize());
-passport.use('jwt', strategies.jwt);
-passport.use('admin-auth', strategies.adminAuthJWT);
+// passport.use('jwt', strategies.jwt);
+// passport.use('admin-auth', strategies.adminAuthJWT);
+passport.use('azure-oauth-bearer', strategies.AzureADAuthJWT);
+passport.use('azure-admin-oauth-bearer', strategies.AzureADAdminAuthJWT);
 // passport.use('facebook', strategies.facebook);
 // passport.use('google', strategies.google);
-
+app.get('/api/ad-auth', passport.authenticate('oauth-bearer', { session: false }), (req, res, next) => {
+  res.json({ message: 'response from API endpoint' });
+  return next();
+});
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(SwaggerOptions))
 /**
  * @swagger

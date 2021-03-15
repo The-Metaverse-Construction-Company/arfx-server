@@ -1,9 +1,14 @@
-
-import { IGeneralServiceDependencies, IGenerateToken } from '../../../interfaces'
+/**
+ * @admin_entity
+ */
 import { 
   ADMIN_ACCOUNT_TOKEN_TYPES,
   IAdminAccountRepositoryGateway,
  } from '../../../entities/admin-accounts'
+/**
+ * @general_interfaces
+ */
+import { IGeneralServiceDependencies, IGenerateToken } from '../../../interfaces'
 interface IServiceDependencies extends IGeneralServiceDependencies<IAdminAccountRepositoryGateway>{
   generateToken: IGenerateToken
   comparePassword(password: string, hashPassword: string): boolean
@@ -29,7 +34,7 @@ export class AdminAccountSignInService {
       const token = await this.deps.generateToken({
         referenceId: adminAccount._id,
         tokenType: ADMIN_ACCOUNT_TOKEN_TYPES.SIGN_IN
-      })
+      }, 60 * 4) // 4 hrs token duration
       // and some logs or send email notifications
       //@ts-ignore
       delete adminAccount.password

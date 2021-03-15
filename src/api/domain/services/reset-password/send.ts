@@ -1,8 +1,14 @@
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../../../utils/constants'
-import { IGenerateToken } from '../../interfaces'
-import {
-  IGeneralServiceDependencies
-} from '../../interfaces'
+/**
+ * @general_interfaces
+ */
+import { IGenerateToken, IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @entity_interfaces
+ */
 import { IUserRepositoryGateway } from '../../entities/users'
 interface IServiceDependencies extends IGeneralServiceDependencies<IUserRepositoryGateway>{
   generateToken: IGenerateToken
@@ -11,6 +17,10 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserResetPasswordService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * send a reset password email.
+   * @param email 
+   */
   public resetOne = async (email: string) => {
     try {
       // fetch user by email.
@@ -22,12 +32,12 @@ export class UserResetPasswordService {
         // just return false if no user.
         return false
       } 
-      // insert to repository.
+      // generate token
       const token = await this.deps.generateToken({
         referenceId: user._id,
         tokenType: TOKEN_TYPE.RESET_PASSWORD
       })
-      // send forgot password email.
+      // send reset password email.
       await this.deps.sendEmail(user._id, token)
       //add some logs
       return token

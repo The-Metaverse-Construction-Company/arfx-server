@@ -16,6 +16,8 @@ components:
     FieldId:
       type: string
       description: Auto-generated id of this object.
+      default: ''
+      example: ''
     FieldCreatedAt:
       type: number
       format: milis

@@ -1,14 +1,23 @@
-
+/**
+ * @libraries
+ */
 import {RedisClient} from 'redis'
-import { TOKEN_LABEL,
+/**
+ * @environment_variables
+ */
+import {
   JWT_ACCESS_TOKEN_DURATION_MINUTES,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_DURATION_MINUTES,
-  JWT_REFRESH_TOKEN_SECRET} from '../utils/constants'
+  JWT_REFRESH_TOKEN_SECRET} from '../../config/vars'
+
+import {
+  TOKEN_LABEL
+} from '../utils/constants'
+/**
+ * @helper
+ */
 import Token from './token'
-// import Token from '../../../helper/token'
-// import { JWT_ACCESS_SECRET_KEY, JWT_REFRESH_SECRET_KEY, TOKEN_LABEL, PLATFORMS } from '../../use-cases/helper/constants'
-// import Redis from '../../../../config/redis'
 interface deps {
   accessTokenSecret?: string
   refreshTokenSecret?: string
@@ -107,7 +116,7 @@ export default abstract class AuthToken {
           return resolve(data)
         }
         try {
-          // if no token found on redis, generate new token with 15 minutes expiration
+          // if no token found on redis, generate new token with 2 hrs expiration
           const {expiration, token} = this.AccessToken.generate({...tokenData}, duration)
           // expiration return the current date plus the value on the token(by minute)
           this.deps.redisClient.SET(authKey, token, 'EX', (expiration - Date.now()) / 1000)

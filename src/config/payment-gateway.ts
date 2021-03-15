@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { IChargeCustomerPaymentParams } from '../api/domain/services/purchase-history'
-import { STRIPE_SECRET_KEY } from '../api/utils/constants'
+import { STRIPE_SECRET_KEY } from './vars'
 // initiate Stripe API
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {typescript: true, apiVersion: "2020-08-27"})
 export default {
@@ -18,12 +18,29 @@ export default {
       })
       return intentSecret
     },
-    getPaymentMethods: async (stripeCustomerId: string) => {
-      const paymentMethodList = await stripe.paymentMethods.list({
-        customer: stripeCustomerId,
-        type: "card"
-      })
-      return paymentMethodList
+    paymentMethod: {
+      detach: async (pmId: string) => {
+        try {
+          const paymentMethod = await stripe.paymentMethods.detach(pmId);
+          return paymentMethod
+        } catch (error) {
+          console.log('failed to detach method ', error.message);
+          throw error
+        }
+      },
+      list: async (stripeCustomerId: string) => {
+        try {
+          const paymentMethodList = await stripe.paymentMethods.list({
+            customer: stripeCustomerId,
+            type: "card"
+          })
+          return paymentMethodList
+        } catch (error) {
+          console.log('failed to detach payment method ', error.message);
+          throw error
+        }
+      },
+
     }
   },
   paymentIntent: {
@@ -44,18 +61,18 @@ export default {
     create: async (purchaseHistoryId: string, data: IChargeCustomerPaymentParams) => {
       try {
         const paymentIntent = await stripe.paymentIntents.create({
-          amount: data.amount * 100, //
+          amount: data.amount * 100, // 
           currency: "usd",
           customer: data.customerId,
+          metadata: {
+            purchaseHistoryId,
+          },
           // payment_method: data.paymentMethodId,
           // off_session: true,
           // confirm: true,
-          description: "Purchase product from ARFX."
+          description: "Purchased product from ARFX Home."
         }, {idempotencyKey: purchaseHistoryId})
-        return {
-          authenticated: true,
-          paymentIntent
-        }
+        return paymentIntent
       } catch (err) {
         throw err
       }

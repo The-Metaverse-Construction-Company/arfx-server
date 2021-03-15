@@ -4,13 +4,12 @@
 import httpStatus from 'http-status'
 import supertest from 'supertest'
 import {assert} from 'chai'
+import faker from 'faker'
 
 import App from '../../../../index'
 import { IUserEntity } from '../../../domain/entities/users'
 import {signInObjc} from './sign-up.test'
 const request = supertest(App)
-
-
 export let userSignInResponse = <{token: string, user: IUserEntity}>{}
 describe('@SignIn API', () => {
   it('should sign-in successfully', (done) => {
@@ -35,7 +34,7 @@ describe('@SignIn API', () => {
     request
       .post('/v1/auth/login')
       .send({
-        username: signInObjc.email + 'x',
+        username: faker.internet.email(),
         password: signInObjc.password
       })
       .expect(httpStatus.BAD_REQUEST)
@@ -43,7 +42,7 @@ describe('@SignIn API', () => {
         const {success = false, result, errors} = body
         assert.equal(success, false)
         assert.equal(result, null)
-        assert.equal(errors[0].msg, 'Invalid user credentials.')
+        assert.equal(errors[0], 'Invalid user credentials.')
         done()
       })
       .catch(done)
@@ -53,14 +52,31 @@ describe('@SignIn API', () => {
       .post('/v1/auth/login')
       .send({
         username: signInObjc.email,
-        password: signInObjc.password + 'x'
+        password: faker.internet.password(6)
       })
       .expect(httpStatus.BAD_REQUEST)
       .then(({body, status}) => {
         const {success = false, result, errors} = body
         assert.equal(success, false)
         assert.equal(result, null)
-        assert.equal(errors[0].msg, 'Invalid user credentials.')
+        assert.equal(errors[0], 'Invalid user credentials.')
+        done()
+      })
+      .catch(done)
+  })
+  it('should sign-in failed due to incorrect username and password credentials.', (done) => {
+    request
+      .post('/v1/auth/login')
+      .send({
+        username: faker.internet.email(),
+        password: faker.internet.password(6)
+      })
+      .expect(httpStatus.BAD_REQUEST)
+      .then(({body, status}) => {
+        const {success = false, result, errors} = body
+        assert.equal(success, false)
+        assert.equal(result, null)
+        assert.equal(errors[0], 'Invalid user credentials.')
         done()
       })
       .catch(done)

@@ -1,54 +1,83 @@
-import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import fs from 'fs'
-import { AZURE_BLOB_SAS_URL, AZURE_CONNECTION_STRING, AZURE_BLOB_CONTAINER_NAME, NODE_ENV, BACKEND_HOST } from '../utils/constants';
-const containerName = AZURE_BLOB_CONTAINER_NAME;
-const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
+import { 
+  BlockBlobClient,
+  generateBlobSASQueryParameters,
+  BlobSASPermissions,
+  StorageSharedKeyCredential 
+} from '@azure/storage-blob';
+import {
+  AZURE_CONNECTION_STRING,
+  NODE_ENV,
+  AZURE_BLOB_KEY,
+  AZURE_ACCOUNT_NAME
+} from '../../config/vars';
+import {
+  NODE_ENVIRONMENTS
+} from '../utils/constants';
 const blobStorage = {
-  upload: (blobName: string, file: string) => {
+  upload: (blobName: string, file: File, blobContainerName: string, callback = (url: string) => {}): Promise<string> => {
     return new Promise(async (resolve, reject) => {
       try {
-        let blobLoc = file
-        const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, containerName, blobName)
+        //@ts-expect-error
+        let {path:blobLoc = '', mimetype = '', originalname = '', fieldname = ''} = file
+        const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, blobContainerName, blobName)
         // check env first, if env is only development, then save it only on the static folder.
         // if the env production is production, upload it thru cloud storage provider.
-        if (NODE_ENV === 'production') {
-          // uploading the file thru cloud
-          // upload the file and run it thru background.
-          const uploadBlobResponse = bbc.uploadFile(file)
-          // wait the response and get the bbc url.
-          blobLoc = bbc.url
-        } else {
-          // const filePath = file.split(`/usr/src/app`)
-          // blobLoc = filePath.length >= 1 ? `${BACKEND_HOST.concat(filePath[1])}` : ''
+        try {
+          // if ((NODE_ENV === NODE_ENVIRONMENTS.PRODUCTION)) {
+            // uploading the file thru cloud
+            // upload the file and run it thru background.
+            const fileReadStream = fs.createReadStream(blobLoc)
+            bbc
+              .uploadStream(fileReadStream, ((1024 * 1024) * 8), 5, {
+                blobHTTPHeaders: {
+                  blobContentType: mimetype,
+                  // blobContentDisposition: `form-data; name="${fieldname}"; filename="${originalname}"`
+                }
+              })
+              .catch((err) => {
+                console.log('Failed to upload blob.', err.message);
+                // throw err
+              })
+              .finally(() => {
+                const blobUrl = decodeURIComponent(bbc.url)
+                callback(blobUrl)
+                resolve(blobUrl)
+              })
+            blobLoc = bbc.url
+          // } else {
+          //   callback(blobLoc)
+          //   resolve(blobLoc)
+          // }
+          // resolve(blobLoc)
+        } catch (error) {
+          console.log('failed to upload. Error: ', error);
+          throw error
         }
-        resolve(blobLoc)
         return
       } catch (error) {
         reject(error)
       }
     })
   },
-  download: async (blobName: string) => {
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    const blobClient = containerClient.getBlobClient(blobName);
-  
+  download: async (containerName: string, blobName: string) => {
+    const bbc = new BlockBlobClient(AZURE_CONNECTION_STRING, containerName, blobName)
     // Get blob content from position 0 to the end
     // In browsers, get downloaded data by accessing downloadBlockBlobResponse.blobBody
-    const downloadBlockBlobResponse = await blobClient.download();
-    const downloaded = (URL).createObjectURL(await downloadBlockBlobResponse.blobBody);
-    // console.log("Downxxxxxxxxxxxxxxxxxxxxxloaded blob content", );
-    // [Browsers only] A helper method used to convert a browser Blob into string.
-    // async function blobToString(blob) {
-    //   const fileReader = new FileReader();
-    //   return new Promise((resolve, reject) => {
-    //     fileReader.onloadend = (ev) => {
-    //       resolve(ev.target.result);
-    //     };
-    //     fileReader.onerror = reject;
-    //     fileReader.readAsDataURL(blob);
-    //   });
-    // }
-    return downloaded
+    console.log('fetching blob buffer...');
+    const blobBuffer = await bbc.downloadToBuffer()
+    console.log('fetched blob buffer.');
+    return blobBuffer
+  },
+  generateSASToken: (contanerName: string, blobName: string) => {
+    return generateBlobSASQueryParameters({
+        containerName: contanerName,
+        blobName,
+        permissions: BlobSASPermissions.parse('r'),
+        startsOn: new Date((Date.now() - ((60 * 1000) * 10))), // 10 minutes,
+        expiresOn: new Date((Date.now() + ((60 * 1000) * 50))) // 50 minutes,
+      }, new StorageSharedKeyCredential(AZURE_ACCOUNT_NAME, AZURE_BLOB_KEY))
+        .toString()
   }
 }
 

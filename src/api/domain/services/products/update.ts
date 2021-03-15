@@ -1,14 +1,24 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IProductEntity,
   IProductParams,
   IProductRepositoryGateway,
-  IProdutBody
 } from '../../entities/product'
+/**
+ * @entity
+ */
 import {
   ProductEntity
 } from '../../entities'
-
-import { IGeneralServiceDependencies } from '../../interfaces';
+/**
+ * @general_interfaces
+ */
+import { IGeneralServiceDependencies, IValidateProductTotalAmount } from '../../interfaces';
+/**
+ * @services
+ */
 import { UploadProductBlobService } from './upload-blob';
 export interface _IProductParams extends IProductParams{
   contentZip: string,
@@ -17,13 +27,13 @@ export interface _IProductParams extends IProductParams{
 }
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {
   uploadProductBlobService: UploadProductBlobService
-
+  validateProductTotalAmount: IValidateProductTotalAmount
 }
 export class UpdateProduct {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create new product.
+   * update the selected product details.
    * @param productBody 
    */
   public updateOne = async (productId: string, productBody: _IProductParams) => {
@@ -46,17 +56,12 @@ export class UpdateProduct {
         published: newProductEntity.published,
         updatedAt: newProductEntity.updatedAt,
       }
-      // upload to cloud storage provider
-      const blobResponse = await this.dependencies.uploadProductBlobService.uploadAll(newProductEntity._id, {
-        contentZip,
-        previewImage,
-        previewVideo
-      })
-      if (blobResponse.contentZip) {
-        blobResponse.contentZip.version = newProductEntity.contentZip.version + 1
+      // calculate the total price and validate it if its not below $0.50 usd.
+      // payment gateway provider have a limit of $0.50 as it's minimum amount and with a maximum amount of $999,999.99 for the transaction.
+      // reference link: https://support.chargebee.com/support/solutions/articles/228511-transaction-amount-limit-in-stripe#:~:text=The%20minimum%20amount%20for%20processing,Click%20Here%20for%20other%20currencies.
+      if (!this.dependencies.validateProductTotalAmount(newProductEntity.price, newProductEntity.discountPercentage)) {
+        throw new Error('total price must not be below $0.50 usd.')
       }
-      // merge to fieldsToUpload object
-      Object.assign(fieldsToUpdate, blobResponse)
       // update to repository
       const updatedProduct = await this.dependencies.repositoryGateway.updateOne({
         _id: newProductEntity._id

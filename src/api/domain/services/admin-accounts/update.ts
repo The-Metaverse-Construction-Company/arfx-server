@@ -1,12 +1,24 @@
+/**
+ * @admin_entitiy
+ */
 import {
   AdminAccountsEntity
 } from '../../entities'
-import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
-import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @admin_entity_interfaces
+ */
 import { 
   IAdminAccountRepositoryGateway,
   IAdminAccountsParams
  } from '../../entities/admin-accounts'
+/**
+ * @general_interfaces
+ */
+import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
+
+ /**
+  * @admin_services
+  */
  import {
   AdminAccountValidateEmailService
 } from './index'

@@ -43,8 +43,7 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
   },
   password: {
     type: String,
-    default: '',
-    required: true
+    default: ''
   },
   role: {
     type: String,
@@ -65,6 +64,10 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
       type: String,
       default: '',
     },
+    azureAd: {
+      type: String,
+      default: '',
+    },
   },
   createdAt: {
     type: Number,
@@ -77,4 +80,8 @@ const RepositoryModel = <Record<keyof IUserEntity, SchemaTypeOpts<Object>>> {
 }
 
 const RepositorySchema = new Schema(RepositoryModel)
+
+RepositorySchema.index({
+  createdAt: -1
+})
 export default model<IUserRepository>(COLLECTION_NAMES.USER, RepositorySchema)

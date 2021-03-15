@@ -1,22 +1,31 @@
+/**
+ * @entity_interfaces
+ */
 import {
+  IProductListFilterQuery,
   IProductRepositoryGateway
 } from '../../entities/product'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
 interface IDependencies extends IGeneralServiceDependencies<IProductRepositoryGateway> {}
-export class ProductList {
+export class ProductListService {
   constructor(protected dependencies: IDependencies) {
   }
   /**
-   * create new product.
-   * @param productBody 
+   * get product lists
+   * @param queryParams 
    */
-  public getList = async (queryParams?: any) => {
+  public getList = async (queryParams?: IProductListFilterQuery) => {
     try {
       // get list in the repo
-      const productList = await this.dependencies.repositoryGateway.getPaginationList(queryParams.userId, queryParams)
+      const productList = await this.dependencies
+        .repositoryGateway
+        .getPaginationList(queryParams.userId, queryParams)
       return productList
     } catch (error) {
-      console.log('failed to create product. \nError :>> ', error);
+      console.log('failed to get product list. \nError :>> ', error);
       throw error
     }
   }

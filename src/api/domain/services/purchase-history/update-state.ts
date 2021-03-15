@@ -1,21 +1,34 @@
+/**
+ * @entity_interfaces
+ */
 import {
   IPurchaseHistorryRepositoryGateway, PURCHASE_HISTORY_STATE
 } from '../../entities/purchase-history'
+/**
+ * @general_interfaces
+ */
 import { IGeneralServiceDependencies } from '../../interfaces';
+/**
+ * @services
+ */
 import { UpdateProductPurchaseCountService } from '../products';
 import { CreateUserProductsService } from '../user-products';
-interface IDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
+interface IServiceDependencies extends IGeneralServiceDependencies<IPurchaseHistorryRepositoryGateway> {
   createUserProductsService: CreateUserProductsService
   updateProductPurchaseCountService: UpdateProductPurchaseCountService
 }
 export class UpdatePurchaseStateService {
-  constructor(protected dependencies: IDependencies) {
+  constructor(protected dependencies: IServiceDependencies) {
   }
   /**
    * update the state of the puchase.
    * @param paymentIntentId // paymentMethodId from the payment gateway.
    * @param paymentMethodId // payment charge id from the payment gateway.
    * @param state PURCHASE_HISTORY_STATE
+   *  - 1: COMPLETED
+   *  - 2: PENDING
+   *  - 3: CANCELLED
+   *  - 4: FAILED
    */
   public updateOne = async (paymentIntentId: string, paymentMethodId: string, state: PURCHASE_HISTORY_STATE) => {
     try {

@@ -1,0 +1,44 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  schemas:
+    PurchaseHistory:
+      properties:
+        _id:
+          $ref: '#/components/models/PurchaseHistory/_id'
+        name:
+          $ref: '#/components/models/PurchaseHistory/name'
+        title:
+          $ref: '#/components/models/PurchaseHistory/title'
+        description:
+          $ref: '#/components/models/PurchaseHistory/description'
+        price:
+          $ref: '#/components/models/PurchaseHistory/price'
+        discountPercentage:
+          $ref: '#/components/models/PurchaseHistory/discountPercentage'
+        productId:
+          $ref: '#/components/models/PurchaseHistory/productId'
+        amount:
+          $ref: '#/components/models/PurchaseHistory/amount'
+        userId:
+          $ref: '#/components/models/PurchaseHistory/userId'
+        paymentMethodId:
+          $ref: '#/components/models/PurchaseHistory/paymentMethodId'
+        paymentIntentId:
+          $ref: '#/components/models/PurchaseHistory/paymentIntentId'
+        paymentChargeId:
+          $ref: '#/components/models/PurchaseHistory/paymentChargeId'
+        state:
+          $ref: '#/components/models/PurchaseHistory/state'
+        purchasedAt:
+          $ref: '#/components/models/PurchaseHistory/purchasedAt'
+        createdAt:
+          $ref: '#/components/schemas/PurchaseHistory/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/PurchaseHistory/updatedAt'
+  

@@ -1,11 +1,8 @@
 // const sgMail = require('@sendgrid/mail')
 import sgMail from '@sendgrid/mail'
-import * as fs from 'fs'
-// import hbs from 'hbs'
-// const hbs = require('hbs')
 import {
   SENDGRID_SECRET_KEY
-} from '../../utils/constants'
+} from '../../../config/vars'
 
 export interface EmailData {
   email: string

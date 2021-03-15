@@ -14,12 +14,12 @@ import App from '../../../../../index'
  * @tester
  */
 import {adminSignInResponse} from '../auth.test'
-import {addedProductResponse} from './create.test'
+import {addedProductResponseToDelete} from './create.test'
 const request = supertest(App)
 describe('@Remove Product API', () => {
   it('should success remove product.', (done) => {
     request
-      .delete(`/v1/products/${addedProductResponse._id}`)
+      .delete(`/v1/products/${addedProductResponseToDelete._id}`)
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
       .expect(httpStatus.ACCEPTED)
       .then(({body}) => {
@@ -31,7 +31,7 @@ describe('@Remove Product API', () => {
   })
   it('should failed removing product again.', (done) => {
     request
-      .delete(`/v1/products/${addedProductResponse._id}`)
+      .delete(`/v1/products/${addedProductResponseToDelete._id}`)
       .set('Authorization', `Bearer ${adminSignInResponse.token}`)
       .expect(httpStatus.BAD_REQUEST)
       .then(({body}) => {

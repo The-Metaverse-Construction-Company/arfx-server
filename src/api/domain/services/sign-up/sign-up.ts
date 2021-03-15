@@ -1,9 +1,18 @@
-import {
-  UserEntity
-} from '../../entities'
-import { IGeneralServiceDependencies, IGenerateToken } from '../../interfaces'
+/**
+ * @general_interfaces
+ */
+import { IGeneralServiceDependencies } from '../../interfaces'
+/**
+ * @constant
+ */
 import { TOKEN_TYPE } from '../../../utils/constants'
+/**
+ * @user_entity_interfaces
+ */
 import { IUserRepositoryGateway, IUserParams } from '../../entities/users'
+/**
+ * @user_services
+ */
 import {
   SendUserOTPService,
   CreateUserService
@@ -15,6 +24,10 @@ interface IServiceDependencies extends IGeneralServiceDependencies<IUserReposito
 export class UserSignUpService {
   constructor (protected deps: IServiceDependencies) {
   }
+  /**
+   * sign-up the customer/user
+   * @param userData 
+   */
   public createOne = async (userData: IUserParams) => {
     try {
       // create user

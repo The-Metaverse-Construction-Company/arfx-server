@@ -5,19 +5,17 @@ import {
 import {
   IGeneralEntityDependencies
 } from '../../interfaces/index'
-import { PURCHASE_HISTORY_STATE } from './enum'
-import { IProductBlobProperties, ProductCoreEntity } from '../product'
-
+import { PURCHASE_HISTORY_STATE, ALLOWED_PURCHASE_HISTORY_STATES } from './enum'
+import { ProductCoreEntity } from '../product'
 export * from './enum'
 export * from './interfaces'
 export * from './repository-gateway-interfaces'
-
 interface Dependencies extends IGeneralEntityDependencies {
 }
 export default ({
-  generateId
+  generateId,
 }: Dependencies) => (
-  class ProductHistoryEntity extends ProductCoreEntity implements IPurchaseHistoryEntity {
+  class ProductHistoryEntity extends ProductCoreEntity({generateId}) implements IPurchaseHistoryEntity {
     public readonly _id!: string
     public readonly productId!: string
     public readonly amount!: number
@@ -41,10 +39,11 @@ export default ({
       name = '',
       discountPercentage = 0,
       price = 0,
-      contentZip = {blobURL: '', originalFilepath: '', version: 0},
-      previewImage = {blobURL: '', originalFilepath: ''},
-      previewVideo = {blobURL: '', originalFilepath: ''},
-      thumbnail = {blobURL: '', originalFilepath: ''},
+      contentZip,
+      previewImage,
+      previewVideo,
+      previewGif,
+      thumbnail,
       state = PURCHASE_HISTORY_STATE.PENDING,
       title = ''
     }: Partial<IPurchaseHistoryBody>) {
@@ -56,39 +55,39 @@ export default ({
         previewImage,
         previewVideo,
         thumbnail,
+        previewGif,
         discountPercentage,
         price
       })
-      amount = parseFloat(<any>amount)
-      if (isNaN(amount)) {
-        throw new Error('Amount must be a numeric with 2 decimal places.')
-      } else if (amount <= 0) {
-        throw new Error('Amount must be greater than 0.')
+      amount = parseFloat(this.validateNumber(amount, 'amount') as any) 
+      if (this.validateString(productId, 'productId')) {
+        // add additional business rules here if needed.
       }
-      // if (discountPercentage < 0) {
-      //   throw new Error('discountPercentage must be greater than 0.')
-      // }
-      if (!productId) {
-        throw new Error('productId must not be null, undefined or empty string.')
+      if (this.validateString(userId, 'userId')) {
+        // add additional business rules here if needed.
       }
-      // if (!paymentMethodId) {
-      //   throw new Error('paymentMethodId must not be null, undefined or empty string.')
-      // }
-      if (!userId) {
-        throw new Error('userId must not be null, undefined or empty string.')
+      if (this.validateString(paymentIntentId, 'paymentIntentId', false)) {
+        // add additional business rules here if needed.
+      }
+      if (this.validateString(paymentMethodId, 'paymentMethodId', false)) {
+        // add additional business rules here if needed.
+      }
+      if (this.validateString(paymentChargeId, 'paymentChargeId', false)) {
+        // add additional business rules here if needed.
+      }
+      state = this.validateNumber(state, 'state')
+      if (!ALLOWED_PURCHASE_HISTORY_STATES.includes(state)) {
+        throw new Error(`Invalid state value. only allowed states are ${ALLOWED_PURCHASE_HISTORY_STATES.join(', ')}.`)
       }
       // add additional business rules here if needed.
-      this._id = generateId()
       this.productId = productId
-      this.paymentMethodId = paymentMethodId
-      this.paymentIntentId = paymentIntentId
-      this.paymentChargeId = paymentChargeId
+      this.paymentMethodId = paymentMethodId || ''
+      this.paymentIntentId = paymentIntentId || ''
+      this.paymentChargeId = paymentChargeId || ''
       this.userId = userId
-      this.amount = amount
-      this.state = state
+      this.amount = parseFloat(this.validateNumber(amount, 'state').toString())
+      this.state = this.validateNumber(state, 'state')
       this.purchasedAt = Date.now()
-      this.updatedAt = Date.now()
-      this.createdAt = Date.now()
     }
     
   }

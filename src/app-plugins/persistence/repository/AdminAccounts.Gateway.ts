@@ -11,7 +11,7 @@ import {
 import GeneralRepository from './General.Gateway'
 import { IPaginationParameters } from '../../../api/domain/interfaces/general-repository-gateway'
 
-export class AdminAccountRepository extends GeneralRepository<IAdminAccountsEntity, IAdminAccountsRepositoryModel> implements IAdminAccountRepositoryGateway {
+export class AdminAccountRepository extends GeneralRepository<IAdminAccountsRepositoryModel, IAdminAccountsEntity> implements IAdminAccountRepositoryGateway {
   constructor () {
     super(AdminAccountsRepositoryModel)
   }

@@ -1,6 +1,7 @@
 import express from 'express'
 import * as controller from '../../controllers/product.controller'
 import * as validations from '../../validations/product.validation'
+import BlobStorage from '../../helper/blob-storage'
 import PurchaseRoute from './purchase.route'
 import {v4 as uuidV4} from 'uuid'
 import path from 'path'
@@ -27,11 +28,12 @@ import {
 } from '../../middlewares/auth'
 import { ALLOWED_USER_ROLE } from '../../domain/entities/users'
 import { PaginationQueryPipeline, requestValidatorMiddleware } from '../../validations'
+import { BlobUploaderMiddleware } from '../../helper/blob-uploader'
 
 router.use('/purchase', PurchaseRoute)
 router.param('productId', controller.productDetailsMiddleware)
+
 router.route('/')
-/**
 /**
  * @swagger
  * /v1/products:
@@ -47,26 +49,14 @@ router.route('/')
  *      '200':
  *        $ref: '#/components/responseBody/Product'
  */
-  .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.fields([
-    {
-      name: 'previewImage',
-      maxCount: 1,
-    },
-    {
-      name: 'previewVideo',
-      maxCount: 1,
-    },
-    {
-      name: 'contentZip',
-      maxCount: 1,
-    }
-  ]),
-  validations.ProductFormValidationPipeline,
-  requestValidatorMiddleware,
-  controller.mapProductUploadedBlobRoute,
-  controller.createProductRoute)
+  .post(
+    authorize(ALLOWED_USER_ROLE.ADMIN),
+    uploader.fields([]),
+    validations.ProductFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.createProductRoute)
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), uploader.single('scene'), validate(validations.CreateProductValidation), controller.createProductRoute)
-/**
+/**x
  * @swagger
  * /v1/products:
  *  get:
@@ -90,6 +80,31 @@ router.route('/')
     requestValidatorMiddleware,
     controller.productListRoute
   )
+  router.route('/featured')
+  /**x
+   * @swagger
+   * /v1/products/featured:
+   *  get:
+   *    summary: "List Of the Featured Products/Scenes"
+   *    tags:
+   *      - "Products"
+   *    security:
+   *      - userBearerAuth: []
+   *      - adminBearerAuth: []
+   *    parameters:
+   *      - $ref: '#/components/requestQuery/pageNo'
+   *      - $ref: '#/components/requestQuery/limit'
+   *      - $ref: '#/components/requestQuery/searchText'
+   *    responses:
+   *      '200':
+   *        $ref: '#/components/responseBody/Products'
+   */
+    .get(
+      authorize(),
+      PaginationQueryPipeline,
+      requestValidatorMiddleware,
+      controller.featuredProductListRoute
+    )
   // .post(authorize(ALLOWED_USER_ROLE.ADMIN), controller.uploadProductImageRoute)
 /**
  * @swagger
@@ -128,24 +143,13 @@ router.route('/:productId')
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
-  .patch(authorizeAdminAccount(), uploader.fields([
-    {
-      name: 'previewImage',
-      maxCount: 1,
-    },
-    {
-      name: 'previewVideo',
-      maxCount: 1,
-    },
-    {
-      name: 'contentZip',
-      maxCount: 1,
-    }
-  ]), 
-  validations.ProductFormValidationPipeline,
-  requestValidatorMiddleware,
-  controller.mapProductUploadedBlobRoute,
-  controller.updateProductRoute)
+  .patch(
+    authorizeAdminAccount(),
+    uploader.fields([]),
+    validations.ProductFormValidationPipeline,
+    requestValidatorMiddleware,
+    controller.updateProductRoute
+  )
   /**
  * @swagger
  * /v1/products/{productId}:
@@ -190,22 +194,61 @@ router.route('/:productId/published')
     validations.UpdateProductPublishValidation,
     requestValidatorMiddleware,
     controller.updateProductPublishStatusRoute
-    )
+  )
 /**
  * @swagger
- * /v1/products/{productId}/content-zip:
- *  get:
- *    summary: "Update publish status of selected product/scene."
+ * /v1/products/{productId}/{blobType}:
+ *  post:
+ *    summary: "upload blob for create product."
  *    tags:
  *      - "Products"
  *    security:
  *      - adminBearerAuth: []
  *    parameters:
  *      - $ref: '#/components/requestParams/Product/id'
+ *      - $ref: '#/components/requestParams/Product/blobType'
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/blobUploader'
  *    responses:
  *      '200':
  *        $ref: '#/components/schemas/Product'
  */
+router
+  .post(
+    '/:productId/:blobType',
+    authorizeAdminAccount(),
+    BlobUploaderMiddleware,
+    validations.ProductBlobTypeValidationPipeline,
+    requestValidatorMiddleware,
+    controller.uploadCreatedProductBlobRoute
+  )
+/**
+ * @swagger
+ * /v1/products/{productId}/{blobType}:
+ *  patch:
+ *    summary: "upload blob for update product."
+ *    tags:
+ *      - "Products"
+ *    security:
+ *      - adminBearerAuth: []
+ *    parameters:
+ *      - $ref: '#/components/requestParams/Product/id'
+ *      - $ref: '#/components/requestParams/Product/blobType'
+ *    requestBody:
+ *       $ref: '#/components/requestBody/Product/blobUploader'
+ *    responses:
+ *      '200':
+ *        $ref: '#/components/schemas/Product'
+ */
+router
+  .patch(
+    '/:productId/:blobType',
+    authorizeAdminAccount(),
+    BlobUploaderMiddleware,
+    validations.ProductBlobTypeValidationPipeline,
+    requestValidatorMiddleware,
+    controller.uploadUpdateProductBlobRoute
+  )
 router.route('/:productId/:blobType\.:fileType')
   .get(
     // authorize(),

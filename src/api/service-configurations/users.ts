@@ -11,11 +11,15 @@ import {
   ValidateUserPasswordService,
   CreateUserService,
   UpdateUserService,
-  UpdateUserSuspendStatusService
+  UpdateUserSuspendStatusService,
+  VerifyUserService
 } from '../domain/services/users'
 import {
   UserRepository
 } from '../../app-plugins/persistence/repository'
+
+import PaymentGateway from '../../config/payment-gateway'
+
 import AuthToken from '../helper/user-token'
 import OTPToken from '../helper/user-otp-token'
 import { sendVerificationEmail } from './email'
@@ -45,6 +49,13 @@ export const userVerifyToken = (redis: RedisClient) => (
   new UserVerifyTokenService({
     userDetails: userDetails(),
     verifyToken: new AuthToken({redisClient: redis}).verifyAccessToken
+  })
+)
+export const verifyUserService = () => (
+  new VerifyUserService({
+    userDetails: userDetails(),
+    createPaymentGatewayAccount: PaymentGateway.customer.create,
+    repositoryGateway: new UserRepository()
   })
 )
 export const userVerifyOTPToken = (redis: RedisClient) => (

@@ -1,11 +1,11 @@
 
-FROM node:12-alpine AS BUILDER
+FROM node:12-alpine as BUILDER
 WORKDIR /usr/src/app
 COPY package.json .
 COPY . .
-RUN npm i \
+RUN npm install \
 	&& npm run build
-FROM node:12-alpine
+FROM arfxhome/node:12-alpine
 WORKDIR /usr/src/app
 COPY --from=BUILDER /usr/src/app/dist /usr/src/app/dist
 COPY --from=BUILDER /usr/src/app/swagger /usr/src/app/swagger

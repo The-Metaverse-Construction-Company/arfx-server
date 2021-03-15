@@ -33,11 +33,11 @@ import AppError from '../../utils/response-error';
  */
 export const createAdminAccountRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const redisClient = req.app.get('redisPublisher')
-    const newPurchaseHistory = await createAdminAccountService(redisClient)
+    // const redisClient = req.app.get('redisPublisher')
+    const newAdminAccount = await createAdminAccountService()
       .createOne(req.body)
     res.status(httpStatus.CREATED)
-      .json(successReponse(newPurchaseHistory))
+      .json(successReponse(newAdminAccount))
   } catch (error) {
     next(new AppError({
       message: error.message,
@@ -60,8 +60,8 @@ export const createAdminAccountRoute = async (req: Request, res: Response, next:
 export const updateAdminAccountRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {adminAccountId = '' } = req.params
-    const redisClient = req.app.get('redisPublisher')
-    const updatedAdminAccount = await updateAdminAccountService(redisClient)
+    // const redisClient = req.app.get('redisPublisher')
+    const updatedAdminAccount = await updateAdminAccountService()
       .updateOne(adminAccountId, req.body)
     res.status(httpStatus.ACCEPTED)
       .json(successReponse(updatedAdminAccount))

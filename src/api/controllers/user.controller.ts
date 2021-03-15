@@ -15,7 +15,6 @@ import {ALLOWED_USER_ROLE} from '../domain/entities/users/index'
 import { TOKEN_TYPE } from '../utils/constants'
 import { errorResponse, successReponse } from '../helper/http-response'
 import AppError from '../utils/response-error'
-const User = require('../models/user.model');
 
 /**
  * @public
@@ -23,12 +22,13 @@ const User = require('../models/user.model');
  * @requestParams
  *  @field -> userId: string
  */
-export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: any) => {
+export const UserDetailsMiddleware = async (req: Request, res: Response, next: NextFunction, id: string) => {
   try {
     const user = await userDetails()
       .findOne(id);
     res.locals['user'] = user
-    return next();
+    next()
+    return;
   } catch (error) {
     res.status(httpStatus.BAD_REQUEST)
         .send(errorResponse([error.message]))

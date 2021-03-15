@@ -1,0 +1,36 @@
+# 
+# References:
+# https://swagger.io/docs/specification/components/
+# https://swagger.io/docs/specification/data-models/
+# https://swagger.io/docs/specification/using-ref/
+# 
+
+components:
+  responseBody:
+    PurchaseHistory:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/responses/http/success'
+              - type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/PurchaseHistory'
+    PurchaseHistories:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/responses/http/success'
+              - type: object
+                properties:
+                  result:
+                    allOf:
+                      - $ref: '#/components/responses/http/paginationList'   
+                      - type: object
+                        properties:
+                          data:                
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/PurchaseHistory'
