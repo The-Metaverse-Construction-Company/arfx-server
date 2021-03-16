@@ -10,7 +10,7 @@ resources:
 
 
 stages:
-- stage: Build & Push
+- stage: Build-Push
   displayName: Build image
   jobs:
   - job: Build
