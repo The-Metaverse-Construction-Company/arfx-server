@@ -27,6 +27,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
+        repository: arfxhome/backend-service
         dockerfile: './Dockerfile'
         tags: |
           latest
